@@ -35,7 +35,7 @@
                     </div>
                 <?php endif; ?>
                 <div class="table-responsive">
-                    <table style="" class="table table-bordered table-striped dataTable dtr-inline collapsed" id="daftar-mitra" width="100%" cellspacing="0">
+                    <table class="table table-bordered table-striped dataTable dtr-inline collapsed" id="daftar-mitra" width="100%" cellspacing="0">
                         <thead>
                             <tr>
                                 <th width="5%" class="text-center">No</th>

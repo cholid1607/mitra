@@ -34,6 +34,7 @@
                 <?php endif ?>
                 <!-- error data -->
                 <form action="<?= base_url(); ?>mitra/update" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="id_mitra" value="<?= $mitra[0]['id_mitra']; ?>">
                     <?= csrf_field() ?>
                     <div class="card-body">
                         <div class="form-group row">
