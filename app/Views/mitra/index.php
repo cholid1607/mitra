@@ -35,14 +35,15 @@
                     </div>
                 <?php endif; ?>
                 <div class="table-responsive">
-                    <table style="font-size:14px" class="table table-bordered table-striped dataTable dtr-inline collapsed" id="daftar-mitra" width="100%" cellspacing="0">
+                    <table style="" class="table table-bordered table-striped dataTable dtr-inline collapsed" id="daftar-mitra" width="100%" cellspacing="0">
                         <thead>
                             <tr>
                                 <th width="5%" class="text-center">No</th>
-                                <th width="10%" class="text-center">ID Mitra</th>
-                                <th width="25%" class="text-center">Nama Mitra</th>
-                                <th width="20%" class="text-center">Alamat</th>
-                                <th width="15%" class="text-center">Status</th>
+                                <th width="10%" class="text-center">Kode Mitra</th>
+                                <th width="20%" class="text-center">Nama Mitra</th>
+                                <th width="15%" class="text-center">Alamat</th>
+                                <th width="15%" class="text-center">Pelanggan</th>
+                                <th width="10%" class="text-center">Status</th>
                                 <th width="15%" class="text-center">Aksi</th>
                             </tr>
                         </thead>

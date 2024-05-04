@@ -62,6 +62,10 @@
                 transform: rotate(360deg);
             }
         }
+
+        .disabled-link {
+            pointer-events: none;
+        }
     </style>
 </head>
 
@@ -275,20 +279,32 @@
                         "id_mitra": "id_mitra",
                         "nama_mitra": "nama_mitra",
                         "penanggung_jawab": "penanggung_jawab",
+                        "telepon": "telepon",
+                        "username": "username",
                     }],
                     "data": "nama_mitra",
                     render: function(data, type, row) {
-                        html = row.nama_mitra + "<br/><br/><i><b>Penanggung Jawab: </b>";
-                        html += row.penanggung_jawab + "</i>";
+                        html = row.nama_mitra + "<br/><br/><b>Penanggung Jawab: </b>";
+                        html += row.penanggung_jawab + "<br>";
+                        html += "<b>Telepon :</b> 0" + row.telepon + "<br>";
+                        html += "<span style='font-size:15px' class='badge badge-success'><b>Username :</b> " + row.username + "</span>";
                         return html;
                     },
                 }, {
                     "data": "alamat",
                 }, {
+                    "data": "id_mitra",
+                    "className": 'dt-body-center',
+                    render: function(data, type, row) {
+                        html = "<a href='pelanggan/" + data + "' class='btn btn-sm bg-maroon' title='Klik untuk Melihat Daftar Pelanggan'><i class = 'fas fa-users'></i> Lihat Pelanggan</a>";
+                        return html;
+                    }
+                }, {
                     "creator": [{
                         "id_mitra": "id_mitra",
                         "kode_mitra": "kode_mitra",
                         "nama_mitra": "nama_mitra",
+                        "username": "username",
                     }],
                     "data": "status",
                     "className": 'dt-body-center',
@@ -300,6 +316,7 @@
                             html += "<input type='hidden' name='kode_mitra' value='" + row.kode_mitra + "'>";
                             html += "<input type='hidden' name='nama_mitra' value='" + row.nama_mitra + "'>";
                             html += "<input type='hidden' name='id_mitra' value='" + row.id_mitra + "'>";
+                            html += "<input type='text' name='username' value='" + row.username + "'>";
                             html += "<div class='modal-dialog' role='document'>";
                             html += "<div class='modal-content'>";
                             html += "<div class='modal-header'>";
@@ -328,6 +345,7 @@
                             html += "<input type='hidden' name='kode_mitra' value='" + row.kode_mitra + "'>";
                             html += "<input type='hidden' name='nama_mitra' value='" + row.nama_mitra + "'>";
                             html += "<input type='hidden' name='id_mitra' value='" + row.id_mitra + "'>";
+                            html += "<input type='text' name='username' value='" + row.username + "'>";
                             html += "<div class='modal-dialog' role='document'>";
                             html += "<div class='modal-content'>";
                             html += "<div class='modal-header'>";
@@ -354,7 +372,10 @@
                     "data": "id_mitra",
                     "className": 'dt-body-center',
                     render: function(data, type, row) {
-                        return "<a href = '<?= base_url(); ?>mitra/detail/" + data + "' class = 'btn btn-primary btn-circle btn-sm' title='Detail Data Mitra'> <i class='fas fa-eye'> </i> Lihat Pelanggan</a> <br/><a href = '<?= base_url(); ?>mitra/edit/" + data + "'class = 'btn btn-warning btn-circle btn-sm mt-2' title = 'Edit Data Mitra' ><i class='fas fa-edit'></i> Edit Data</a>";
+                        html = "<a href = '<?= base_url(); ?>mitra/detail/" + data + "' class = 'btn btn-primary btn-block btn-circle btn-sm' title='Detail Data Mitra'> <i class='fas fa-eye'> </i> Lihat Mitra</a>";
+                        html += "<a href = '<?= base_url(); ?>mitra/edit/" + data + "'class = 'btn btn-warning btn-block btn-circle btn-sm mt-2' title = 'Edit Data Mitra' ><i class='fas fa-edit'></i> Edit Data</a>";
+                        html += "<a href='<?= base_url(); ?>users/changePassword/" + data + "' class='btn btn-secondary btn-block btn-circle btn-sm mt-2' title='Ubah Password'> <i class='fas fa-key'></i> Reset Password</a>";
+                        return html;
                     }
                 }],
                 "responsive": true,

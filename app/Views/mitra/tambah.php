@@ -54,7 +54,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-handshake"></i></span>
                                     </div>
-                                    <input name="nama_mitra" value="<?= old('nama_mitra') ?>" type="text" class="form-control <?php if (session('errors.nama_mitra')) : ?>is-invalid<?php endif ?>" id="nama_mitra" placeholder="Nama Mitra">
+                                    <input name="nama_users" value="<?= old('nama_mitra') ?>" type="text" class="form-control <?php if (session('errors.nama_mitra')) : ?>is-invalid<?php endif ?>" id="nama_mitra" placeholder="Nama Mitra">
                                 </div>
                             </div>
                         </div>
@@ -105,6 +105,50 @@
                                     </div>
                                 </div>
                                 <i style="font-size:14px;">Logo maksimal memiliki dimensi 300 pixels x 100 pixels</i>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
+                            <div class="col-sm-10">
+                                <div class="input-group row">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                    </div>
+                                    <input id="inputEmail" type="email" class="form-control form-control-user <?php if (session('errors.email')) : ?>is-invalid<?php endif ?>" name="email" aria-describedby="emailHelp" placeholder="<?= lang('Auth.email') ?>" value="<?= old('email') ?>">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputUsername" class="col-sm-2 col-form-label">Username</label>
+                            <div class="col-sm-10">
+                                <div class="input-group row">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                    </div>
+                                    <input type="text" id="inputUsername" class="form-control form-control-user <?php if (session('errors.username')) : ?>is-invalid<?php endif ?>" name="username" placeholder="<?= lang('Auth.username') ?>" value="<?= old('username') ?>">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
+                            <div class="col-sm-10">
+                                <div class="input-group row">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-key"></i></span>
+                                    </div>
+                                    <input type="password" id="inputPassword" name="password" class="form-control form-control-user <?php if (session('errors.password')) : ?>is-invalid<?php endif ?>" placeholder="<?= lang('Auth.password') ?>" autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputUlangiPassword" class="col-sm-2 col-form-label">Ulangi Password</label>
+                            <div class="col-sm-10">
+                                <div class="input-group row">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-key"></i></span>
+                                    </div>
+                                    <input type="password" id="inputUlangiPassword" name="pass_confirm" class="form-control form-control-user <?php if (session('errors.pass_confirm')) : ?>is-invalid<?php endif ?>" placeholder="<?= lang('Auth.repeatPassword') ?>" autocomplete="off">
+                                </div>
                             </div>
                         </div>
 

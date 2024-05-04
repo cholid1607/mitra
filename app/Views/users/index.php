@@ -59,11 +59,11 @@
                                     </td>
                                     <td class="text-center">
                                         <?php if ($active == 1) { ?>
-                                            <a href="#" data-target="#activateModal<?= $row->id; ?>" data-toggle="modal" class="btn btn-sm bg-success" title="Klik untuk Menonaktifkan">
+                                            <a href="#" <?php if ($row->nama_grup == 'superuser') : ?> data-target="#activateModal<?= $row->id; ?>" <?php endif; ?> data-toggle="modal" class="btn btn-sm bg-success" title="Klik untuk Menonaktifkan">
                                                 <i class="fas fa-check"></i> Aktif
                                             </a>
                                         <?php } else if ($active == 0) { ?>
-                                            <a href="#" data-target="#activateModal<?= $row->id; ?>" data-toggle="modal" class="btn btn-sm bg-danger" title="Klik untuk Mengaktifkan">
+                                            <a href="#" <?php if ($row->nama_grup == 'superuser') : ?> data-target="#activateModal<?= $row->id; ?>" <?php endif; ?> data-toggle="modal" class="btn btn-sm bg-danger" title="Klik untuk Mengaktifkan">
                                                 <i class="fas fa-times-circle"></i> Tidak Aktif
                                             </a>
                                         <?php } ?>

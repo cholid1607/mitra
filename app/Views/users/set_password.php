@@ -55,7 +55,7 @@
                         <label for="pass_confirm" class="col-sm-2 col-form-label"></label>
                         <div class="col-sm-10">
                             <button type="submit" class="btn btn-primary">Update Password</button>
-                            <a onclick="location.replace('<?= base_url(); ?>users')" class=" btn btn-default">Kembali</a>
+                            <a onclick="history.back()" class=" btn btn-default">Kembali</a>
                         </div>
                     </div>
 
