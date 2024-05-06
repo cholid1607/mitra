@@ -42,6 +42,43 @@ class Mitra extends BaseController
         return view('mitra/index', $data);
     }
 
+    public function ajaxSearch()
+    {
+        $request = service('request');
+        $postData = $request->getPost();
+
+        if (!isset($postData['searchTerm'])) {
+            // Fetch record
+            $mitra = new MitraModel();
+            $mitralist = $mitra->select('id_mitra, nama_mitra, kode_mitra')
+                ->orderBy('id_mitra')
+                ->findAll(5);
+        } else {
+            $searchTerm = $postData['searchTerm'];
+
+            // Fetch record
+            $mitra = new MitraModel();
+            $mitralist = $mitra->select('id_mitra, nama_mitra, kode_mitra')
+                ->like('nama_mitra', $searchTerm)
+                ->orderBy('id_mitra')
+                ->findAll(5);
+        }
+        $data = array();
+        foreach ($mitralist as $row) {
+            $text = $row['nama_mitra'];
+            $kode_mitra = $row['kode_mitra'];
+
+            $data[] = array(
+                "id" => $row['id_mitra'],
+                "text" => $text . ' (' . $kode_mitra . ')',
+            );
+        }
+
+        $response['data'] = $data;
+
+        return $this->response->setJSON($response);
+    }
+
     function mitraAjax()
     {
         $param['draw'] = isset($_REQUEST['draw']) ? $_REQUEST['draw'] : '';

@@ -47,6 +47,7 @@ class PelangganModel extends Model
         if ($builder != '0') {
             $builder = $builder->where('id_mitra', $id);
         }
+        $builder = $builder->where('status', '1');
         if ($katakunci) {
             $arr_katakunci = explode(" ", $katakunci);
             for ($x = 0; $x < count($arr_katakunci); $x++) {
@@ -58,5 +59,24 @@ class PelangganModel extends Model
             $builder = $builder->limit($length, $start);
         }
         return $builder->orderBy('id_pelanggan')->get()->getResult();
+    }
+
+    function searchAndDisplayAll($katakunci = null, $start = 0, $length = 0)
+    {
+        $builder = $this->table('pelanggan');
+        $builder->select('pelanggan.*, mitra.nama_mitra'); // Menambahkan kolom nama_mitra
+        $builder->join('mitra', 'mitra.id_mitra = pelanggan.id_mitra', 'left'); // Melakukan LEFT JOIN dengan tabel mitra
+        if ($katakunci) {
+            $arr_katakunci = explode(" ", $katakunci);
+            for ($x = 0; $x < count($arr_katakunci); $x++) {
+                $builder = $builder->like('pelanggan.nama_pelanggan', $arr_katakunci[$x]);
+                $builder = $builder->orLike('pelanggan.kode_pelanggan', $arr_katakunci[$x]);
+            }
+        }
+        if ($start != 0 || $length != 0) {
+            $builder = $builder->limit($length, $start);
+        }
+        $builder = $builder->orderBy('pelanggan.id_mitra', 'desc');
+        return $builder->orderBy('pelanggan.id_pelanggan')->get()->getResult();
     }
 }

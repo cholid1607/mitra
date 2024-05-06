@@ -261,6 +261,114 @@
                 "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
             }).buttons().container().appendTo('#table-responsive .col-md-6:eq(0)');
 
+            $("#daftar-pelanggan-all").DataTable({
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "<?= site_url('pelanggan/pelangganAjaxAll'); ?>",
+                    "type": "POST",
+                    "data": function(data) {
+                        data.start = data.start || 0;
+                        data.length = data.length || 10;
+                    }
+                },
+                "columns": [{
+                    "data": "id_pelanggan",
+                    render: function(data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    },
+                    "className": 'dt-body-center',
+                }, {
+                    "data": "kode_pelanggan",
+                    "className": 'dt-body-center',
+                }, {
+                    "data": "nama_mitra",
+                }, {
+                    "data": "nama_pelanggan",
+                }, {
+                    "data": "alamat_pelanggan",
+                }, {
+                    "data": "telp_pelanggan",
+                    "className": 'dt-body-center',
+                }, {
+                    "creator": [{
+                        "id_pelanggan": "id_pelanggan",
+                        "kode_pelanggan": "kode_pelanggan",
+                        "nama_pelanggan": "nama_pelanggan",
+                    }],
+                    "data": "status",
+                    "className": 'dt-body-center',
+                    render: function(data, type, row) {
+                        if (data == 1) {
+                            html = "<a href='#' data-target='#activateModal" + row.id_pelanggan + "' data-toggle='modal' class='btn btn-sm bg-success' title='Klik untuk Menonaktifkan'><i class = 'fas fa-check'></i> Aktif </a>";
+                            html += "<div class='modal fade' id='activateModal" + row.id_pelanggan + "' tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true'>";
+                            html += "<form action='<?= base_url(); ?>pelanggan/activate' method='post'>";
+                            html += "<input type='hidden' name='kode_pelanggan' value='" + row.kode_pelanggan + "'>";
+                            html += "<input type='hidden' name='nama_pelanggan' value='" + row.nama_pelanggan + "'>";
+                            html += "<input type='hidden' name='id_pelanggan' value='" + row.id_pelanggan + "'>";
+                            html += "<div class='modal-dialog' role='document'>";
+                            html += "<div class='modal-content'>";
+                            html += "<div class='modal-header'>";
+                            html += "<h5 class='modal-title' id='exampleModalLabel'>Update Pelanggan</h5>";
+                            html += "<button class='close' type='button' data-dismiss='modal' aria-label='Close'>";
+                            html += "<span aria-hidden='true'>×</span>";
+                            html += "</button>";
+                            html += "</div>";
+                            html += "<div class='text-left modal-body'>Pilih 'Ya' untuk mengupdate Pelanggan</div>";
+                            html += "<div class='modal-footer'>";
+                            html += "<input type='hidden' name='id_pelanggan' class='id' value='" + row.id_pelanggan + "'>";
+                            html += "<input type='hidden' name='active' class='active' value='" + data + "'>";
+                            html += "<button class='btn btn-secondary' type='button' data-dismiss='modal'>Tidak</button>";
+                            html += "<button type='submit' class='btn btn-primary'>Ya</button>";
+                            html += "</div>";
+                            html += "</div>";
+                            html += "</div>";
+                            html += "</form>";
+                            html += "</div>";
+                            return html;
+
+                        } else if (data == 0) {
+                            html = "<a href='#' data-target='#activateModal" + row.id_pelanggan + "' data-toggle='modal' class='btn btn-sm bg-danger' title='Klik untuk Mengaktifkan'><i class='fas fa-times-circle'></i> Tidak Aktif</a>";
+                            html += "<div class='modal fade' id='activateModal" + row.id_pelanggan + "' tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true'>";
+                            html += "<form action='<?= base_url(); ?>pelanggan/activate' method='post'>";
+                            html += "<input type='hidden' name='kode_pelanggan' value='" + row.kode_pelanggan + "'>";
+                            html += "<input type='hidden' name='nama_pelanggan' value='" + row.nama_pelanggan + "'>";
+                            html += "<input type='hidden' name='id_pelanggan' value='" + row.id_pelanggan + "'>";
+                            html += "<div class='modal-dialog' role='document'>";
+                            html += "<div class='modal-content'>";
+                            html += "<div class='modal-header'>";
+                            html += "<h5 class='modal-title' id='exampleModalLabel'>Update Pelanggan</h5>";
+                            html += "<button class='close' type='button' data-dismiss='modal' aria-label='Close'>";
+                            html += "<span aria-hidden='true'>×</span>";
+                            html += "</button>";
+                            html += "</div>";
+                            html += "<div class='text-left modal-body'>Pilih 'Ya' untuk mengupdate Pelanggan</div>";
+                            html += "<div class='modal-footer'>";
+                            html += "<input type='hidden' name='id_pelanggan' class='id' value='" + row.id_pelanggan + "'>";
+                            html += "<input type='hidden' name='active' class='active' value='" + data + "'>";
+                            html += "<button class='btn btn-secondary' type='button' data-dismiss='modal'>Tidak</button>";
+                            html += "<button type='submit' class='btn btn-primary'>Ya</button>";
+                            html += "</div>";
+                            html += "</div>";
+                            html += "</div>";
+                            html += "</form>";
+                            html += "</div>";
+                            return html;
+                        }
+                    }
+                }, {
+                    "data": "id_pelanggan",
+                    "className": 'dt-body-center',
+                    render: function(data, type, row) {
+                        return "<a href = '<?= base_url(); ?>pelanggan/detail/" + data + "' class = 'btn btn-primary btn-circle btn-sm' title='Detail Data Pelanggan'> <i class='fas fa-eye'> </i> </a> <a href = '<?= base_url(); ?>pelanggan/edit/" + data + "'class = 'btn btn-warning btn-circle btn-sm' title = 'Edit Data Pelanggan' ><i class='fas fa-edit'></i> </a>";
+                    }
+                }],
+                "responsive": true,
+                "lengthChange": true,
+                "autoWidth": false,
+                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            }).buttons().container().appendTo('#table-responsive .col-md-6:eq(0)');
+
             $("#daftar-mitra").DataTable({
                 "processing": true,
                 "serverSide": true,
@@ -300,10 +408,15 @@
                 }, {
                     "data": "alamat",
                 }, {
+                    "creator": [{
+                        "id_mitra": "id_mitra",
+                        "jumlah_pelanggan": "jumlah_pelanggan",
+                    }],
                     "data": "id_mitra",
                     "className": 'dt-body-center',
                     render: function(data, type, row) {
                         html = "<a href='pelanggan/daftar/" + data + "' class='btn btn-sm bg-maroon' title='Klik untuk Melihat Daftar Pelanggan'><i class = 'fas fa-users'></i> Lihat Pelanggan</a>";
+                        html += "<br/><span style='font-size:14px;padding:7px;' class='mt-2 badge badge bg-lightblue'>Jumlah Pelanggan : " + row.jumlah_pelanggan + "</span>";
                         return html;
                     }
                 }, {
@@ -1154,6 +1267,26 @@
             $("#selBTS").select2({
                 ajax: {
                     url: "<?= site_url('error/ajaxbts') ?>",
+                    type: "post",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            searchTerm: params.term // search term
+                        };
+                    },
+                    processResults: function(response) {
+                        return {
+                            results: response.data
+                        };
+                    },
+                    cache: true
+                }
+            });
+
+            $("#selMitra").select2({
+                ajax: {
+                    url: "<?= site_url('mitra/ajaxsearch') ?>",
                     type: "post",
                     dataType: 'json',
                     delay: 250,

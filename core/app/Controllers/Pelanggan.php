@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\LogModel;
+use App\Models\MitraModel;
 use App\Models\PelangganModel;
 use App\Models\PendaftaranModel;
 use PhpParser\Node\Expr\New_;
@@ -26,7 +27,7 @@ class Pelanggan extends BaseController
     {
         $data = [
             'menu' => 'user',
-            'title' => 'Detail Pelanggan',
+            'title' => 'Daftar Semua Pelanggan Mitra',
         ];
         //dd($pelanggan);
         return view('pelanggan/index', $data);
@@ -37,13 +38,13 @@ class Pelanggan extends BaseController
         $db      = \Config\Database::connect();
         $builder = $db->table('log');
         $log   = $builder->where('id_pelanggan', $id)->limit(55)->orderBy('tgl', 'desc')->get()->getResultArray();
+        $builder_mitra = $db->table('mitra');
+        $mitra = $builder_mitra->where('id_mitra', $id)->get()->getResultArray();
+        $nama_mitra = $mitra[0]['nama_mitra'];
 
-        $pelanggan = $this->pelangganModel->where('id_pelanggan', $id)->first();
-        //$log = $logModel->where('id_pelanggan', $id)->limit(0,5)->orderBy('tgl', 'desc')->findAll();
         $data = [
             'menu' => 'user',
-            'title' => 'Detail Pelanggan',
-            'detail' => $pelanggan,
+            'title' => 'Daftar Pelanggan Mitra : ' . $nama_mitra,
             'id_mitra' => $id,
             'log' => $log,
         ];
@@ -58,7 +59,7 @@ class Pelanggan extends BaseController
         $search_value = isset($_REQUEST['search']['value']) ? $_REQUEST['search']['value'] : '';
         $datapelanggan = new PelangganModel();
         $data = $datapelanggan->searchAndDisplay($search_value, $id, $start, $length);
-        $total_count = $datapelanggan->searchAndDisplay($search_value, $id,);
+        $total_count = $datapelanggan->searchAndDisplay($search_value, $id);
 
         $json_data = array(
             'draw' => intval($param['draw']),
@@ -69,11 +70,40 @@ class Pelanggan extends BaseController
         echo json_encode($json_data);
     }
 
+    function pelangganAjaxAll()
+    {
+        $param['draw'] = isset($_REQUEST['draw']) ? $_REQUEST['draw'] : '';
+        $start = isset($_REQUEST['start']) ? $_REQUEST['start'] : '';
+        $length = isset($_REQUEST['length']) ? $_REQUEST['length'] : '';
+        $search_value = isset($_REQUEST['search']['value']) ? $_REQUEST['search']['value'] : '';
+        $datapelanggan = new PelangganModel();
+        $data = $datapelanggan->searchAndDisplayAll($search_value, $start, $length);
+        $total_count = $datapelanggan->searchAndDisplayAll($search_value);
+
+        $json_data = array(
+            'draw' => intval($param['draw']),
+            'recordsTotal' => count($total_count),
+            'recordsFiltered' => count($total_count),
+            'data' => $data,
+        );
+        echo json_encode($json_data);
+    }
+
+
     public function tambah(): string
+    {
+        $id_mitra = $this->request->getVar('id_mitra');
+        $data['title'] = 'Tambah Pelanggan';
+        $data['menu'] = 'user';
+        $data['id_mitra'] = $id_mitra;
+        return view('pelanggan/tambah', $data);
+    }
+
+    public function add(): string
     {
         $data['title'] = 'Tambah Pelanggan';
         $data['menu'] = 'user';
-        return view('pelanggan/tambah', $data);
+        return view('pelanggan/add', $data);
     }
 
     public function detail($id): string
@@ -100,34 +130,25 @@ class Pelanggan extends BaseController
 
     public function simpan()
     {
+        $rules = [
+            'kode_pelanggan' => [
+                'rules' => 'required|is_unique[pelanggan.kode_pelanggan]',
+                'errors' => [
+                    'required' => '{field} harus diisi',
+                    'is_unique' => '{field} sudah digunakan',
+                ]
+            ],
+        ];
+
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
 
         $pelangganModel = new PelangganModel();
-        $pendaftaranModel = new PelangganModel();
         $logModel = new LogModel();
         $username = user()->username;
 
-        $id_pendaftaran = !empty($this->request->getVar('id_pendaftaran')) ? $this->request->getVar('id_pendaftaran') : '';
-        if ($id_pendaftaran != '') {
-            $datapendaftaran = [
-                'id_pendaftaran' => $id_pendaftaran,
-                'status' => '4'
-            ];
-            $pendaftaranModel->save($datapendaftaran);
-            $deskripsi = $username . " meregistrasi data pelanggan a.n <b>" . $this->request->getVar('nama_pelanggan') . "</b>";
-            $datalog = [
-                'tgl' => date("Y-m-d H:i:s"),
-                'akun' => $username,
-                'deskripsi' => $deskripsi,
-                'tipe_log' => 'update-pendaftaran',
-                'id_pendaftaran' => $id_pendaftaran,
-            ];
-            $logModel->save($datalog);
-        }
-
-        $id_pelanggan = !empty($this->request->getVar('id_pelanggan')) ? $this->request->getVar('id_pelanggan') : '';
         $kode_pelanggan = !empty($this->request->getVar('kode_pelanggan')) ? $this->request->getVar('kode_pelanggan') : '';
-        $tgl_pemasangan = !empty($this->request->getVar('tgl_pemasangan')) ? $this->request->getVar('tgl_pemasangan') : '';
-        $tgl_tagihan = !empty($this->request->getVar('tgl_tagihan')) ? $this->request->getVar('tgl_tagihan') : '';
         $nama_pelanggan = !empty($this->request->getVar('nama_pelanggan')) ? $this->request->getVar('nama_pelanggan') : '';
         $nik_pelanggan = !empty($this->request->getVar('nik_pelanggan')) ? $this->request->getVar('nik_pelanggan') : '';
         $alamat_pelanggan = !empty($this->request->getVar('alamat_pelanggan')) ? $this->request->getVar('alamat_pelanggan') : '';
@@ -137,11 +158,8 @@ class Pelanggan extends BaseController
         } else {
             $telp_pelanggan = !empty($this->request->getVar('telp_pelanggan_registrasi')) ? $this->request->getVar('telp_pelanggan_registrasi') : '';
         }
-
         $paket_langganan = !empty($this->request->getVar('paket_langganan')) ? $this->request->getVar('paket_langganan') : '';
         $bandwidth = !empty($this->request->getVar('bandwidth')) ? $this->request->getVar('bandwidth') : '';
-        $kualifikasi = !empty($this->request->getVar('kualifikasi')) ? $this->request->getVar('kualifikasi') : '';
-        $periode = !empty($this->request->getVar('periode')) ? $this->request->getVar('periode') : '';
         $hargaold = !empty($this->request->getVar('harga')) ? $this->request->getVar('harga') : '';
         $harga = str_replace(',', '', $hargaold);
         $status_ppn = $this->request->getVar('status_ppn');
@@ -152,34 +170,7 @@ class Pelanggan extends BaseController
             $nominal = $harga;
             $ppn = 0;
         }
-        $kualifikasi_prioritas = !empty($this->request->getVar('kualifikasi_prioritas')) ? $this->request->getVar('kualifikasi_prioritas') : '';
         $ket_pelanggan = !empty($this->request->getVar('ket_pelanggan')) ? $this->request->getVar('ket_pelanggan') : '';
-        $alamat_pemasangan = !empty($this->request->getVar('alamat_pemasangan')) ? $this->request->getVar('alamat_pemasangan') : '';
-        $bts = !empty($this->request->getVar('bts')) ? $this->request->getVar('bts') : '';
-        $metode_pemasangan = !empty($this->request->getVar('metode_pemasangan')) ? $this->request->getVar('metode_pemasangan') : '';
-        $ap_nama_dude = !empty($this->request->getVar('ap_nama_dude')) ? $this->request->getVar('ap_nama_dude') : '';
-        $ip_akses_point = !empty($this->request->getVar('ip_akses_point')) ? $this->request->getVar('ip_akses_point') : '';
-        $ap_nama_device = !empty($this->request->getVar('ap_nama_device')) ? $this->request->getVar('ap_nama_device') : '';
-        $ap_ssid = !empty($this->request->getVar('ap_ssid')) ? $this->request->getVar('ap_ssid') : '';
-        $ap_antena = !empty($this->request->getVar('ap_antena')) ? $this->request->getVar('ap_antena') : '';
-        $ap_besi = !empty($this->request->getVar('ap_besi')) ? $this->request->getVar('ap_besi') : '';
-        $ap_login = !empty($this->request->getVar('ap_login')) ? $this->request->getVar('ap_login') : '';
-        $ap_password = !empty($this->request->getVar('ap_password')) ? $this->request->getVar('ap_password') : '';
-        $ket_ap = !empty($this->request->getVar('ket_ap')) ? $this->request->getVar('ket_ap') : '';
-        $ip_station = !empty($this->request->getVar('ip_station')) ? $this->request->getVar('ip_station') : '';
-        $st_nama_device = !empty($this->request->getVar('st_nama_device')) ? $this->request->getVar('st_nama_device') : '';
-        $st_ssid = !empty($this->request->getVar('st_ssid')) ? $this->request->getVar('st_ssid') : '';
-        $st_antena = !empty($this->request->getVar('st_antena')) ? $this->request->getVar('st_antena') : '';
-        $st_besi = !empty($this->request->getVar('st_besi')) ? $this->request->getVar('st_besi') : '';
-        $st_login = !empty($this->request->getVar('st_login')) ? $this->request->getVar('st_login') : '';
-        $st_password = !empty($this->request->getVar('st_password')) ? $this->request->getVar('st_password') : '';
-        $ket_st = !empty($this->request->getVar('ket_st')) ? $this->request->getVar('ket_st') : '';
-        $nama_hotspot = !empty($this->request->getVar('nama_hotspot')) ? $this->request->getVar('nama_hotspot') : '';
-        $ip_hotspot = !empty($this->request->getVar('ip_hotspot')) ? $this->request->getVar('ip_hotspot') : '';
-        $login_hotspot = !empty($this->request->getVar('login_hotspot')) ? $this->request->getVar('login_hotspot') : '';
-        $password_hotspot = !empty($this->request->getVar('password_hotspot')) ? $this->request->getVar('password_hotspot') : '';
-        $ket_perangkat = !empty($this->request->getVar('ket_perangkat')) ? $this->request->getVar('ket_perangkat') : '';
-
 
         $deskripsi = $username . " menambahkan pelanggan baru " . $this->request->getVar('kode_pelanggan') . " a.n " .
             $this->request->getVar('nama_pelanggan');
@@ -187,46 +178,17 @@ class Pelanggan extends BaseController
 
         $data = [
             'kode_pelanggan' => $kode_pelanggan,
-            'tgl_pemasangan' => $tgl_pemasangan,
-            'tgl_tagihan' => $tgl_tagihan,
+            'id_mitra' => $this->request->getVar('id_mitra'),
             'nama_pelanggan' => $nama_pelanggan,
             'nik_pelanggan' => $nik_pelanggan,
             'alamat_pelanggan' => $alamat_pelanggan,
             'telp_pelanggan' => $telp_pelanggan,
             'paket_langganan' => $paket_langganan,
             'bandwidth' => $bandwidth,
-            'kualifikasi' => $kualifikasi,
-            'periode' => $periode,
             'harga' => $harga,
             'ppn' => $ppn,
             'nominal' => $nominal,
-            'kualifikasi_prioritas' => $kualifikasi_prioritas,
             'ket_pelanggan' => $ket_pelanggan,
-            'alamat_pemasangan' => $alamat_pemasangan,
-            'bts' => $bts,
-            'metode_pemasangan' => $metode_pemasangan,
-            'ap_nama_dude' => $ap_nama_dude,
-            'ip_akses_point' => $ip_akses_point,
-            'ap_nama_device' => $ap_nama_device,
-            'ap_ssid' => $ap_ssid,
-            'ap_antena' => $ap_antena,
-            'ap_besi' => $ap_besi,
-            'ap_login' => $ap_login,
-            'ap_password' => $ap_password,
-            'ket_ap' => $ket_ap,
-            'ip_station' => $ip_station,
-            'st_nama_device' => $st_nama_device,
-            'st_ssid' => $st_ssid,
-            'st_antena' => $st_antena,
-            'st_besi' => $st_besi,
-            'st_login' => $st_login,
-            'st_password' => $st_password,
-            'ket_st' => $ket_st,
-            'nama_hotspot' => $nama_hotspot,
-            'ip_hotspot' => $ip_hotspot,
-            'login_hotspot' => $login_hotspot,
-            'password_hotspot' => $password_hotspot,
-            'ket_perangkat' => $ket_perangkat,
             'status' => '1'
         ];
 
@@ -239,7 +201,7 @@ class Pelanggan extends BaseController
         $pelangganModel->save($data);
         $logModel->save($datalog);
         session()->setFlashdata('pesan', 'Data Berhasil Disimpan');
-        return redirect()->to(base_url('/pelanggan/index'));
+        return redirect()->to(base_url('/pelanggan/daftar/' . $this->request->getVar('id_mitra')));
     }
 
     public function update()

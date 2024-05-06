@@ -25,8 +25,10 @@
         <!-- Default box -->
         <div class="card">
             <div class="card-body">
-                <a href="<?= base_url(); ?>pelanggan/tambah" class="btn btn-success"><i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;Tambah Pelanggan&nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="<?= base_url(); ?>pelanggan/download" class="btn btn-primary"><i class="fas fa-download"></i>&nbsp;&nbsp;&nbsp;Download Data</a>
+                <form method="post" action="<?= base_url(); ?>pelanggan/tambah">
+                    <input type="hidden" name="id_mitra" value="<?= $id_mitra ?>">
+                    <button type="submit" class="btn btn-success"><i class='fas fa-plus'></i>&nbsp;&nbsp;Tambah Pelanggan</button>
+                </form>
                 <br /><br />
                 <?php if (session()->getFlashdata('pesan')) : ?>
                     <div class="alert alert-success alert-dismissible">

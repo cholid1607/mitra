@@ -57,7 +57,7 @@
                                 <div class="col-sm-10">
                                     <div class="input-group row">
                                         <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                            <span class="input-group-text"><i class="fas fa-id-card"></i></span>
                                         </div>
                                         <input name="nik_pelanggan" value="<?= $pelanggan['nik_pelanggan']; ?>" type="text" class="form-control" id="nik" placeholder="NIK Pelanggan">
                                     </div>

@@ -33,8 +33,20 @@
                     </ul>
                 <?php endif ?>
                 <form action="<?= base_url(); ?>pelanggan/simpan" method="post">
-                    <input type="hidden" name="id_mitra" value="<?= $id_mitra; ?>">
                     <div class="card-body">
+                        <div class="form-group row">
+                            <label for="nama_mitra" class="col-sm-2 col-form-label">Nama Mitra</label>
+                            <div class="col-sm-10">
+                                <div class="input-group row">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-tools"></i></span>
+                                    </div>
+                                    <select id="selMitra" class="form-control" name="id_mitra">
+                                        <option value="0">-- Pilih Mitra --</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                         <div class="form-group row">
                             <label for="kodepelanggan" class="col-sm-2 col-form-label">Kode Pelanggan</label>
                             <div class="col-sm-10">
@@ -62,7 +74,7 @@
                             <div class="col-sm-10">
                                 <div class="input-group row">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fas fa-id_card"></i></span>
+                                        <span class="input-group-text"><i class="fas fa-id-card"></i></span>
                                     </div>
                                     <input required name="nik_pelanggan" type="text" value="<?= old('nik_pelanggan') ?>" class="form-control" id="nik" placeholder="NIK Pelanggan">
                                 </div>
