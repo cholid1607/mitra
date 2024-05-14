@@ -396,4 +396,51 @@ class Mitra extends BaseController
         session()->setFlashdata('pesan', 'Data Berhasil Disimpan');
         return redirect()->to(base_url('/mitra'));
     }
+
+    public function hapus()
+    {
+        $mitraModel = new MitraModel();
+        $logModel = new LogModel();
+        $userModel = model(UserModel::class);
+        $username = user()->username;
+        $id_mitra = $this->request->getVar('id_mitra');
+        $db      = \Config\Database::connect();
+
+        //Cek Pemasukan Terakhir
+        $builder = $db->table('mitra');
+        $mitra   = $builder->where('id_mitra', $id_mitra)
+            ->get()->getResultArray();
+        $nama_mitra = $mitra[0]['nama_mitra'];
+        $logo = $mitra[0]['logo'];
+        $username_mitra = $mitra[0]['username'];
+        // Menghapus Gambar Lama
+
+        $file_path = FCPATH . 'img/logo/' . $logo;
+        if (file_exists($file_path)) {
+            unlink($file_path);
+        }
+
+        $deskripsi = $username . " menghapus mitra <b>" . $nama_mitra;
+        $datalog = [
+            'tgl' => date("Y-m-d H:i:s"),
+            'akun' => $username,
+            'deskripsi' => $deskripsi,
+            'tipe_log' => 'hapus-aset',
+        ];
+        $logModel->save($datalog);
+
+        $log = $logModel->where('id_mitra', $id_mitra)->first();
+        if (!empty($log)) {
+            $logModel->where('id_mitra', $id_mitra)->delete();
+        }
+
+        $builder_user = $db->table('users');
+        $builder_user->where('username', $username_mitra);
+        $builder_user->delete();
+
+        $mitraModel->delete($id_mitra);
+        session()->setFlashdata('pesan', 'Data Berhasil Dihapus');
+
+        return redirect()->to('/mitra');
+    }
 }
