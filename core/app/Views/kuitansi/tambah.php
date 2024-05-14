@@ -37,20 +37,29 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-user"></i></span>
                                         </div>
-                                        <select id="selUser" class="form-control" name="nama_pelanggan">
-                                            <option value="0">-- Pilih Pelanggan --</option>
-                                        </select>
+                                        <input name="nama_pelanggan" type="text" placeholder="Nama Pelanggan" class="form-control" id="nama_pelanggan">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="kode_pelanggan" class="col-sm-2 col-form-label">Kode Pelanggan</label>
+                                <div class="col-sm-10">
+                                    <div class="input-group row">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-info-circle"></i></span>
+                                        </div>
+                                        <input name="kode_pelanggan" type="text" placeholder="Kode Pelanggan" class="form-control" id="kode_pelanggan">
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="tgl_pemasukan" class="col-sm-2 col-form-label">Tanggal Input</label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-3">
                                     <div class="input-group row">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
                                         </div>
-                                        <input name="tgl_pemasukan" type="date" placeholder="yyyy/mm/dd" class="form-control" id="tanggalinstalasi" data-inputmask-alias="datetime" data-inputmask-inputformat="yyyy/mm/dd" data-mask="" inputmode="numeric">
+                                        <input name="tgl_pemasukan" type="date" placeholder="yyyy/mm/dd" class="form-control" id="tanggalinstalasi">
                                     </div>
                                 </div>
                             </div>
@@ -59,9 +68,9 @@
                                 <div class="col-sm-10">
                                     <div class="input-group row">
                                         <div class="input-group-prepend">
-
+                                            <span class="input-group-text"><i class="fas fa-list"></i></span>
                                         </div>
-                                        <textarea name="item_pemasukan" class="form-control" id="summernote" placeholder="Nama Item Layanan Tambahan"></textarea>
+                                        <textarea name="item_pemasukan" class="form-control" placeholder="Nama Item Layanan Tambahan"></textarea>
                                     </div>
                                 </div>
                             </div>

@@ -75,6 +75,14 @@
                             </p>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a href="<?= base_url(); ?>kuitansi" class="nav-link">
+                            <i class="nav-icon fas fa-receipt"></i>
+                            <p>
+                                Kustom Kuitansi
+                            </p>
+                        </a>
+                    </li>
                 <?php endif; ?>
                 <?php if (in_groups('mitra')) : ?>
                     <li class="nav-item">

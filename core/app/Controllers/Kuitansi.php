@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-require '../vendor/autoload.php';
+require 'core/vendor/autoload.php';
 
 use App\Models\PelangganModel;
 use App\Models\LogModel;
@@ -46,8 +46,8 @@ class Kuitansi extends BaseController
         $username = user()->username;
 
         //Mendapatkan Variabel Input
-        $id_pelanggan = $this->request->getVar('nama_pelanggan');
-        $tgl_pemasukan = !empty($this->request->getVar('tgl_pemasukan')) ? $this->request->getVar('tgl_pemasukan') : '';
+        $nama_pelanggan = !empty($this->request->getVar('nama_pelanggan')) ? $this->request->getVar('nama_pelanggan') : '';
+        $kode_pelanggan = !empty($this->request->getVar('kode_pelanggan')) ? $this->request->getVar('kode_pelanggan') : '';
         $item_pemasukan = !empty($this->request->getVar('item_pemasukan')) ? $this->request->getVar('item_pemasukan') : '';
         $nominal = !empty($this->request->getVar('nominal')) ? $this->request->getVar('nominal') : '';
         $status_ppn = !empty($this->request->getVar('status_ppn')) ? $this->request->getVar('status_ppn') : '';
@@ -58,12 +58,6 @@ class Kuitansi extends BaseController
             $total_tagihan = $nominal;
         }
 
-        $pelangganModel = new PelangganModel();
-        $pelanggan = $pelangganModel->select('nama_pelanggan,kode_pelanggan')
-            ->where('id_pelanggan', $id_pelanggan)
-            ->findAll();
-        $nama_pelanggan = $pelanggan[0]['nama_pelanggan'];
-        $kode_pelanggan = $pelanggan[0]['kode_pelanggan'];
         $deskripsi = $username . " menambahkan pemasukan baru <b>" . $this->request->getVar('item_pemasukan') . "</b> a.n <b>" . $nama_pelanggan . "</b> senilai <b>Rp." .
             number_format($this->request->getVar('nominal')) . "</b>";
 
@@ -104,16 +98,14 @@ class Kuitansi extends BaseController
         }
 
         //Mendapatkan Nomer Kuitansi Terbaru
-        foreach ($pelanggan as $row) :
-            $tahunnomer = substr(date("Y"), 2, 2);
-            $no_kuitansi = 'KWT/' . $row['kode_pelanggan'] . '/' . $bulannomer . '/' . $tahunnomer . '/T-' . ++$last_kuitansi;
-        endforeach;
+        $tahunnomer = substr(date("Y"), 2, 2);
+        $no_kuitansi = 'KWT/' . $kode_pelanggan . '/' . $bulannomer . '/' . $tahunnomer . '/T-' . ++$last_kuitansi;
 
         //Menyimpan Data Awal Kuitansi
         $datakuitansi = [
             'no_urut' => $last_kuitansi++,
             'no_kuitansi' => $no_kuitansi,
-            'id_pelanggan' => $id_pelanggan,
+            'id_pelanggan' => 0,
             'nama_pelanggan' => $nama_pelanggan,
             'kode_pelanggan' => $kode_pelanggan,
             'tgl_kuitansi' => date("Y-m-d"),

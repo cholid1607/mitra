@@ -32,7 +32,7 @@
                             <div class="card-body">
                                 <div class="form-group row">
                                     <label for="tgl_pemasukan" class="col-sm-2 col-form-label">Tanggal Input</label>
-                                    <div class="col-sm-10">
+                                    <div class="col-sm-3">
                                         <div class="input-group row">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
@@ -46,9 +46,9 @@
                                     <div class="col-sm-10">
                                         <div class="input-group row">
                                             <div class="input-group-prepend">
-
+                                                <span class="input-group-text"><i class="fas fa-list"></i></span>
                                             </div>
-                                            <textarea name="item_pemasukan" class="form-control" id="summernote" placeholder="Nama Item Layanan Tambahan"><?= $kuitansi['item_layanan'] ?></textarea>
+                                            <textarea name="item_pemasukan" class="form-control" placeholder="Nama Item Layanan Tambahan"><?= $kuitansi['item_layanan'] ?></textarea>
                                         </div>
                                     </div>
                                 </div>

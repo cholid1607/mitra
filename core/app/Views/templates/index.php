@@ -569,7 +569,7 @@
                     render: function(data, type, row) {
                         //Tombol Buat Kuitansi
                         if (data == 1 || data == 2 || data == 4) {
-                            html = "<a target='_blank' href='<?= base_url() ?>tagihan/buatkuitansi/" + row.id_pelanggan + "/" + row.id_tagihan + "/" + row.tahun + "/" + row.bulan + "' class='btn btn-warning btn-sm '>";
+                            html = "<a href='<?= base_url() ?>tagihan/buatkuitansi/" + row.id_pelanggan + "/" + row.id_tagihan + "/" + row.tahun + "/" + row.bulan + "' class='btn btn-warning btn-sm '>";
                             html += "<i class='fas fa-plus-circle'></i> Buat Kuitansi";
                             html += "</a>";
                         }
@@ -1067,7 +1067,7 @@
             // Initialize select2
             $("#selUser").select2({
                 ajax: {
-                    url: "<?= site_url('pemasukan/ajaxsearch') ?>",
+                    url: "<?= site_url('pelanggan/ajaxsearch') ?>",
                     type: "post",
                     dataType: 'json',
                     delay: 250,

@@ -326,7 +326,9 @@
                         </table>
                     </td>
                     <td width="50%" class="text-center">
-                        <b>PT. TONGGAK TEKNOLOGI NETIKOM</b><br /><br /><br /><br /><br /><br /><br />
+                        <b>PT. TONGGAK TEKNOLOGI NETIKOM</b><br>
+                        <img src="ttd.png" width="40%">
+                        <br />
                         <b>Mei Wulan</b>
                         <br />
                         <b>Finance & Billing</b>

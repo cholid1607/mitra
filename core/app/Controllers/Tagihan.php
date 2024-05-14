@@ -732,8 +732,325 @@ class Tagihan extends BaseController
         }
     }
 
+    public function buatkuitansi($id_pelanggan = '0', $id_tagihan = '0', $tahun = '0', $bulan = '0')
+    {
+        //DB Connect dan Model Loader
+        $db      = \Config\Database::connect();
+        $kuitansiModel = new KuitansiModel();
+        $tagihanModel = new TagihanModel();
+        $tagihankuitansiModel = new TagihankuitansiModel();
+        $logModel = new LogModel();
+
+        //Menampilkan Data Pelanggan Berdasarkan ID Pelanggan
+        $builder = $db->table('pelanggan');
+        $pelanggan   = $builder->where('id_pelanggan', $id_pelanggan)->get()->getResultArray();
+        $nama_pelanggan = $pelanggan[0]['nama_pelanggan'];
+        $kode_pelanggan = $pelanggan[0]['kode_pelanggan'];
+        $id_mitra = $pelanggan[0]['id_mitra'];
+
+        $builder_tagihanakhir2 = $db->table('tagihan');
+        $tagihan_akhir_builder2   = $builder_tagihanakhir2->where('id_tagihan', $id_tagihan)
+            ->get()->getResultArray();
+        //dd($id_tagihan_last);
+        $nominal_kuitansi = $tagihan_akhir_builder2[0]['nominal'] + $tagihan_akhir_builder2[0]['ppn'];
+
+        //Mendapatkan ID Kuitansi Terkahir
+        $builderinv = $db->table('kuitansi');
+        $kuitansi   = $builderinv->where('tahun', date("Y"))->orderBy('id_kuitansi', 'desc')->get()->getResultArray();
+
+        if (!empty($kuitansi)) {
+            $last_kuitansi = $kuitansi[0]['no_urut'];
+        } else {
+            $last_kuitansi = '0';
+        }
+        $bulan = date("m");
+        if ($bulan == '01') {
+            $bulannomer = 'I';
+        } else if ($bulan == '02') {
+            $bulannomer = 'II';
+        } else if ($bulan == '03') {
+            $bulannomer = 'III';
+        } else if ($bulan == '04') {
+            $bulannomer = 'IV';
+        } else if ($bulan == '05') {
+            $bulannomer = 'V';
+        } else if ($bulan == '06') {
+            $bulannomer = 'VI';
+        } else if ($bulan == '07') {
+            $bulannomer = 'VII';
+        } else if ($bulan == '08') {
+            $bulannomer = 'VIII';
+        } else if ($bulan == '09') {
+            $bulannomer = 'IX';
+        } else if ($bulan == '10') {
+            $bulannomer = 'X';
+        } else if ($bulan == '11') {
+            $bulannomer = 'XI';
+        } else if ($bulan == '12') {
+            $bulannomer = 'XII';
+        }
+
+        if ($bulan == '01') {
+            $bulanhuruf = 'Januari';
+        } else if ($bulan == '02') {
+            $bulanhuruf = 'Februari';
+        } else if ($bulan == '03') {
+            $bulanhuruf = 'Maret';
+        } else if ($bulan == '04') {
+            $bulanhuruf = 'April';
+        } else if ($bulan == '05') {
+            $bulanhuruf = 'Mei';
+        } else if ($bulan == '06') {
+            $bulanhuruf = 'Juni';
+        } else if ($bulan == '07') {
+            $bulanhuruf = 'Juli';
+        } else if ($bulan == '08') {
+            $bulanhuruf = 'Agustus';
+        } else if ($bulan == '09') {
+            $bulanhuruf = 'September';
+        } else if ($bulan == '10') {
+            $bulanhuruf = 'Oktober';
+        } else if ($bulan == '11') {
+            $bulanhuruf = 'November';
+        } else if ($bulan == '12') {
+            $bulanhuruf = 'Desember';
+        }
+
+        //Mendapatkan Nomer Kuitansi Terbaru
+        foreach ($pelanggan as $row) :
+            $tahunnomer = substr(date("Y"), 2, 2);
+            $no_kuitansi = 'PYI/' . $row['kode_pelanggan'] . '/' . $bulannomer . '/' . $tahunnomer . '/' . ++$last_kuitansi;
+        endforeach;
+
+        //Menyimpan Data Awal Kuitansi
+        $datakuitansi = [
+            'no_urut' => $last_kuitansi++,
+            'no_kuitansi' => $no_kuitansi,
+            'id_pelanggan' => $id_pelanggan,
+            'tgl_kuitansi' => date("Y-m-d"),
+            'akun_bank' => '-',
+            'bulan' => date("m"),
+            'tahun' => date("Y"),
+            'status' => 1
+        ];
+        $kuitansiModel->save($datakuitansi);
+
+        //Get Data Terakhir Kuitansi
+        $builder = $db->table('kuitansi');
+        $kuitansiid   = $builder->where('id_pelanggan', $id_pelanggan)
+            ->limit(0, 1)->orderBy('id_kuitansi', 'desc')
+            ->get()->getResultArray();
+        $last_idkuitansi = $kuitansiid[0]['id_kuitansi'];
+
+        //Update Tagihan Terkahir yang Dipilih
+        $datatagihanlast = [
+            'id_tagihan' => $id_tagihan,
+            'id_kuitansi' => $last_idkuitansi,
+            'terbayar' => $nominal_kuitansi,
+            'status' => '3'
+        ];
+        $tagihanModel->save($datatagihanlast);
+
+        //Memasukkan Data Tagihan dan Kuitansi
+        $item_layanan = 'Abonemen Internet bulan ' . $bulanhuruf . ' ' . $tahun;
+        $datakuitansitagihan = [
+            'id_tagihan' => $id_tagihan,
+            'item_layanan' => $item_layanan,
+            'total_bayar' => $nominal_kuitansi,
+            'kurang_bayar' => '0',
+            'id_kuitansi' => $last_idkuitansi,
+        ];
+        $tagihankuitansiModel->save($datakuitansitagihan);
+
+        $informasi_kuitansi = 'Pembayaran tagihan internet bulan ' . $bulanhuruf;
+        $datakuitansi2 = [
+            'id_kuitansi' => $last_idkuitansi,
+            'nominal_kuitansi' => $nominal_kuitansi,
+            'informasi_kuitansi' => $informasi_kuitansi,
+            'piutang' => 0,
+        ];
+        $kuitansiModel->save($datakuitansi2);
+        $username = user()->username;
+        $deskripsilog_old = $username . " mengupdate pembayaran tagihan internet bulan <b>" . $bulanhuruf . " " . $tahun . "</b> 
+        a.n <b>" . $nama_pelanggan . " (" . $kode_pelanggan . ")</b> senilai <b>Rp." . number_format($nominal_kuitansi) . "</b> 
+        dengan nomor kuitansi <b>" . $no_kuitansi . "</b>";
+        $cek1 = str_replace('<p>', '', $deskripsilog_old);
+        $cek2 = str_replace('</p>', '', $cek1);
+        $cek3 = str_replace('<ol>', '<ul>', $cek2);
+        $deskripsilog = str_replace('<li>', '; ', $cek3);
+
+        $datalog = [
+            'tgl' => date("Y-m-d H:i:s"),
+            'akun' => $username,
+            'deskripsi' => $deskripsilog,
+            'id_tagihan' => $id_tagihan,
+            'tipe_log' => 'bayar-tagihan',
+        ];
+
+        $logModel->save($datalog);
+        session()->setFlashdata('pesan', 'Data Berhasil Disimpan');
+        return redirect()->to(base_url('/tagihan/daftar/' . $id_mitra . '/' . $bulan . '/' . $tahun));
+    }
+
     public function generate()
     {
-        dd($_POST);
+        $id_mitra = $this->request->getVar('id_mitra');
+        $bulan = $this->request->getVar('bulan');
+        $tahun = $this->request->getVar('tahun');
+
+        $db      = \Config\Database::connect();
+        $builder = $db->table('pelanggan');
+        $pelanggan   = $builder->where('status', '1')->where('id_mitra', $id_mitra)->get()->getResultArray();
+
+        $pelangganModel = new PelangganModel();
+        $tagihanModel = new TagihanModel();
+        $invoiceModel = new InvoiceModel();
+        $logModel = new LogModel();
+        $username = user()->username;
+
+        //$pelanggan = $pelangganModel->findAll();
+        foreach ($pelanggan as $row) :
+            $harga = $row['harga'];
+            $ppn = $row['ppn'];
+            $total_tagihan = $harga + $ppn;
+            $tgl_tagihan_new = $tahun . "-" . $bulan . "-01";
+            $data = [
+                'id_pelanggan' => $row['id_pelanggan'],
+                'id_mitra' => $id_mitra,
+                'kode_pelanggan' => $row['kode_pelanggan'],
+                'nama_pelanggan' => $row['nama_pelanggan'],
+                'tgl_tagihan' => $tgl_tagihan_new,
+                'bulan' => $bulan,
+                'tahun' => $tahun,
+                'nominal' => $harga,
+                'ppn' => $ppn,
+                'total_tagihan' => $total_tagihan,
+                'terbayar' => '0',
+                'status' => '1',
+            ];
+            $tagihanModel->save($data);
+
+            $buildercektagihan = $db->table('tagihan');
+            $cektagihan = $buildercektagihan->where('id_pelanggan', $row['id_pelanggan'])
+                ->where('bulan', $bulan)
+                ->where('tahun', $tahun)
+                ->get()->getResultArray();
+            $id_tagihan = $cektagihan[0]['id_tagihan'];
+
+            if ($bulan == '01') {
+                $bulankirim = 'Januari';
+            } else if ($bulan == '02') {
+                $bulankirim = 'Februari';
+            } else if ($bulan == '03') {
+                $bulankirim = 'Maret';
+            } else if ($bulan == '04') {
+                $bulankirim = 'April';
+            } else if ($bulan == '05') {
+                $bulankirim = 'Mei';
+            } else if ($bulan == '06') {
+                $bulankirim = 'Juni';
+            } else if ($bulan == '07') {
+                $bulankirim = 'Juli';
+            } else if ($bulan == '08') {
+                $bulankirim = 'Agustus';
+            } else if ($bulan == '09') {
+                $bulankirim = 'September';
+            } else if ($bulan == '10') {
+                $bulankirim = 'Oktober';
+            } else if ($bulan == '11') {
+                $bulankirim = 'November';
+            } else if ($bulan == '12') {
+                $bulankirim = 'Desember';
+            }
+
+            $tgl_invoice = $tahun . '-' . $bulan . '-01';
+            $tgl_tempo = date('Y-m-d', strtotime($tgl_invoice . ' + 7 days'));
+
+            $pelanggan   = $builder->where('id_pelanggan', $row['id_pelanggan'])->get()->getResultArray();
+
+            $builderinv = $db->table('invoice');
+            $invoice   = $builderinv->where('tahun', date("Y"))->orderBy('id_invoice', 'desc')->get()->getResultArray();
+
+            if (!empty($invoice)) {
+                $last_inv = $invoice[0]['no_urut'];
+            } else {
+                $last_inv = '0';
+            }
+
+            if ($bulan == '01') {
+                $bulannomer = 'I';
+            } else if ($bulan == '02') {
+                $bulannomer = 'II';
+            } else if ($bulan == '03') {
+                $bulannomer = 'III';
+            } else if ($bulan == '04') {
+                $bulannomer = 'IV';
+            } else if ($bulan == '05') {
+                $bulannomer = 'V';
+            } else if ($bulan == '06') {
+                $bulannomer = 'VI';
+            } else if ($bulan == '07') {
+                $bulannomer = 'VII';
+            } else if ($bulan == '08') {
+                $bulannomer = 'VIII';
+            } else if ($bulan == '09') {
+                $bulannomer = 'IX';
+            } else if ($bulan == '10') {
+                $bulannomer = 'X';
+            } else if ($bulan == '11') {
+                $bulannomer = 'XI';
+            } else if ($bulan == '12') {
+                $bulannomer = 'XII';
+            }
+
+            $tahunnomer = substr(date("Y"), 2, 2);
+            $no_invoice = 'INV/TTN/' . $row['kode_pelanggan'] . '/' . $bulannomer . '/' . $tahunnomer . '/' . ++$last_inv;
+            $item_layanan = 'Abonemen Internet Periode Bulan ' . $bulankirim . ' ' . $tahun;
+
+
+            //Simpan Data Invoice
+            $data = [
+                'no_invoice' => $no_invoice,
+                'no_urut' => $last_inv++,
+                'id_pelanggan' => $row['id_pelanggan'],
+                'id_tagihan' => $id_tagihan,
+                'tgl_invoice' => $tgl_invoice,
+                'tgl_jatuhtempo' => $tgl_tempo,
+                'tahun' => $tahun,
+                'bulan' => $bulan,
+                'kode_pelanggan' => $row['kode_pelanggan'],
+                'nama_pelanggan' => $row['nama_pelanggan'],
+                'item_layanan' => $item_layanan,
+                'keterangan' => '',
+                'status' => 0
+            ];
+            $invoiceModel->save($data);
+
+            //Update Status Tagihan
+            $invoice_idbuilder   = $builderinv->where('no_invoice', $no_invoice)
+                ->get()->getResultArray();
+            $new_idinvoice = $invoice_idbuilder[0]['id_invoice'];
+
+            $datatagihan = [
+                'id_tagihan' => $id_tagihan,
+                'no_invoice' => $no_invoice,
+                'id_invoice' => $new_idinvoice,
+                'status' => 1
+            ];
+            $tagihanModel->save($datatagihan);
+
+            $deskripsi = $username . " menerbitkan tagihan bulan <b>" . $bulankirim . "</b>";
+
+            $datalog = [
+                'tgl' => date("Y-m-d H:i:s"),
+                'akun' => $username,
+                'deskripsi' => $deskripsi,
+                'tipe_log' => 'generate-tagihan'
+            ];
+        endforeach;
+        $logModel->save($datalog);
+        session()->setFlashdata('pesan', 'Berhasil Menerbitkan Periode Tagihan');
+        //return view('tagihan/daftar', $data);  
+        return redirect()->to(base_url('/tagihan/daftar/' . $id_mitra . '/' . $bulan . '/' . $tahun));
     }
 }
