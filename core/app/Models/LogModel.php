@@ -16,7 +16,7 @@ class LogModel extends Model
 
     protected $allowedFields = [
         'tgl', 'akun', 'deskripsi', 'tipe_log', 'id_pelanggan', 'id_pemasukan', 'id_pengeluaran',
-        'id_pendaftaran', 'id_aset', 'id_bts', 'id_error'
+        'id_pendaftaran', 'id_aset', 'id_bts', 'id_error', 'id_mitra'
     ];
 
     protected $useTimestamps = true;

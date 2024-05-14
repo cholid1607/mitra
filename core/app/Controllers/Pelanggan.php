@@ -112,8 +112,6 @@ class Pelanggan extends BaseController
         $builder = $db->table('log');
         $log   = $builder->where('id_pelanggan', $id)->limit(55)->orderBy('tgl', 'desc')->get()->getResultArray();
 
-
-
         $pelangganModel = new PelangganModel();
         $logModel = new LogModel();
         $pelanggan = $pelangganModel->where('id_pelanggan', $id)->first();
@@ -212,6 +210,14 @@ class Pelanggan extends BaseController
         $username = user()->username;
         $pelanggan = $pelangganModel->where('id_pelanggan', $this->request->getVar('id_pelanggan'))->findAll();
 
+        if ($this->request->getVar('id_mitra')) {
+            $ceknama_mitra = $pelanggan[0]['id_mitra'] == $this->request->getVar('id_mitra') ? '' : ',<br/>Nama Mitra <b>' . $pelanggan[0]['id_mitra'] . '</b> menjadi <b>' . $this->request->getVar('id_mitra') . "</b>";
+            $id_mitra = !empty($this->request->getVar('id_mitra')) ? $this->request->getVar('id_mitra') : $pelanggan[0]['id_mitra'];
+        } else {
+            $id_mitra = $pelanggan[0]['id_mitra'];
+            $ceknama_mitra = '';
+        }
+
         $harganew = str_replace(',', '', $this->request->getVar('harga'));
         $cekkode_pelanggan = $pelanggan[0]['kode_pelanggan'] == $this->request->getVar('kode_pelanggan') ? '' : ',<br/>Kode Pelanggan <b>' . $pelanggan[0]['kode_pelanggan'] . '</b> menjadi <b>' . $this->request->getVar('kode_pelanggan') . "</b>";
         $ceknama_pelanggan = $pelanggan[0]['nama_pelanggan'] == $this->request->getVar('nama_pelanggan') ? '' : ',<br/>Nama Pelanggan <b>' . $pelanggan[0]['nama_pelanggan'] . '</b> menjadi <b>' . $this->request->getVar('nama_pelanggan') . "</b>";
@@ -252,6 +258,7 @@ class Pelanggan extends BaseController
 
         $data = [
             'id_pelanggan' => $this->request->getVar('id_pelanggan'),
+            'id_mitra' => $id_mitra,
             'kode_pelanggan' => $kode_pelanggan,
             'nama_pelanggan' => $nama_pelanggan,
             'nik_pelanggan' => $nik_pelanggan,
@@ -267,6 +274,7 @@ class Pelanggan extends BaseController
         $deskripsi = $username . " mengupdate pelanggan " . $this->request->getVar('kode_pelanggan') . " a.n " .
             $this->request->getVar('nama_pelanggan') .
             $cekkode_pelanggan .
+            $ceknama_mitra .
             $ceknama_pelanggan .
             $ceknik_pelanggan .
             $cekalamat_pelanggan .
@@ -308,11 +316,22 @@ class Pelanggan extends BaseController
     {
 
         $pelangganModel = new PelangganModel();
-        $pelanggan = $pelangganModel->where('id_pelanggan', $id)->first();
+        $pelanggan_q = $pelangganModel->where('id_pelanggan', $id)
+            ->first();
+        $id_mitra = $pelanggan_q['id_mitra'];
+        if ($id_mitra != 0) {
+            $pelanggan = $pelangganModel->select('pelanggan.*, mitra.*')
+                ->join('mitra', 'mitra.id_mitra = pelanggan.id_mitra')
+                ->where('pelanggan.id_pelanggan', $id)
+                ->first();
+        } else {
+            $pelanggan = $pelanggan_q;
+        }
         $data = [
             'menu' => 'user',
             'title' => 'Edit Pelanggan',
             'pelanggan' => $pelanggan,
+            'id_mitra' => $id_mitra,
         ];
         //dd($pelanggan);
         return view('pelanggan/edit', $data);

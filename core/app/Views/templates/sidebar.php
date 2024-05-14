@@ -67,8 +67,24 @@
                             </p>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a href="<?= base_url(); ?>tagihan" class="nav-link">
+                            <i class="nav-icon fas fa-file-invoice"></i>
+                            <p>
+                                Data Tagihan
+                            </p>
+                        </a>
+                    </li>
                 <?php endif; ?>
                 <?php if (in_groups('mitra')) : ?>
+                    <li class="nav-item">
+                        <a href="<?= base_url(); ?>tagihan/list" class="nav-link">
+                            <i class="nav-icon fas fa-file-invoice"></i>
+                            <p>
+                                Data Tagihan
+                            </p>
+                        </a>
+                    </li>
                     <li class="nav-item">
                         <a href="<?= base_url(); ?>pelangganmitra" class="nav-link">
                             <i class="nav-icon fas fa-users"></i>

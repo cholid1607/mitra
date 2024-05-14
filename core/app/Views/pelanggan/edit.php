@@ -30,6 +30,24 @@
                     <?php if ((in_groups('superuser')) || (in_groups('mitra'))) : ?>
                         <input name="id_pelanggan" value="<?= $pelanggan['id_pelanggan']; ?>" type="hidden">
                         <div class="card-body">
+                            <?php if ((in_groups('superuser'))) : ?>
+                                <div class="form-group row">
+                                    <label for="nama_mitra" class="col-sm-2 col-form-label">Nama Mitra</label>
+                                    <div class="col-sm-10">
+                                        <div class="input-group row">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-tools"></i></span>
+                                            </div>
+                                            <select id="selMitra" class="form-control" name="id_mitra">
+                                                <?php if ($id_mitra != 0) { ?>
+                                                    <option value="<?= $pelanggan['id_mitra']; ?>"><?= $pelanggan['nama_mitra'] ?>&nbsp;(<?= $pelanggan['kode_mitra']; ?>)</option>
+                                                <?php } ?>
+                                                <option value="0">-- Pilih Mitra --</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
                             <div class="form-group row">
                                 <label for="kodepelanggan" class="col-sm-2 col-form-label">Kode Pelanggan</label>
                                 <div class="col-sm-10">

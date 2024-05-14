@@ -517,171 +517,113 @@
                 "processing": true,
                 "serverSide": true,
                 "serverMethod": 'post',
-                "ajax": "<?= site_url('tagihan/tagihanAjax/' . $bulan_angka . '/' . $tahun . ''); ?>",
+                "ajax": "<?= site_url('tagihan/tagihanAjax/' . $bulan_angka . '/' . $tahun . '/' . $id_mitra . ''); ?>",
                 "columns": [{
-                        "data": "id_tagihan",
-                        render: function(data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        },
-                        "className": 'dt-body-center',
-                    }, {
-                        "data": "kode_pelanggan",
-                        "className": 'dt-body-center',
-                    }, {
-                        "data": "nama_pelanggan",
-                    }, {
-                        "data": "status",
-                        "id_pelanggan": "id_pelanggan",
-                        "className": 'dt-body-center',
-                        render: function(data, id_pelanggan, type, row) {
-                            if (data == 1) {
-                                return "<div class='btn btn-sm bg-primary'><i class='fas fa-info-circle'></i>&nbsp;&nbsp;Invoice Sudah Terbit</div>";
-
-                            } else if (data == 0) {
-                                return "<div class='btn btn-sm bg-danger'><i class='fas fa-times-circle'></i>&nbsp;&nbsp;Invoice Belum Terbit</div>";
-                            } else if (data == 2) {
-                                return "<div class='btn btn-sm bg-warning'><i class='fas fa-paper-plane'></i>&nbsp;&nbsp;Invoice Terkirim</div>";
-                            } else if (data == 3) {
-                                return "<div class='btn btn-sm bg-success'><i class='fas fa-check'></i>&nbsp;&nbsp;Terbayar</div>";
-                            } else if (data == 4) {
-                                return "<div class='btn btn-sm bg-warning'><i class='fas fa-check'></i>&nbsp;&nbsp;Belum Lunas</div>";
-                            }
-                        }
-                    }, {
-                        "data": "total_tagihan",
-                        "className": 'dt-body-center',
-                        render: function(data, type, row) {
-                            html = Intl.NumberFormat("id-ID", {
-                                style: "currency",
-                                currency: "IDR"
-                            }).format(data);
-                            return html;
-                        }
+                    "data": "id_tagihan",
+                    render: function(data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
                     },
-                    {
-                        "creator": [{
-                            "status": "status",
-                            "id_tagihan": "id_tagihan",
-                            "id_pelanggan": "id_pelanggan",
-                            "nama_pelanggan": "nama_pelanggan",
-                            "tahun": "tahun",
-                            "bulan": "bulan",
-                        }],
-                        "data": "status",
-                        "className": 'dt-body-center',
-                        render: function(data, type, row) {
-                            html = "<div class='btn-group'>";
-                            html += "<button type='button' class='btn btn-success'>Aksi</button>";
-                            html += "<button type='button' class='btn btn-success dropdown-toggle' data-toggle='dropdown' aria-expanded='false'>";
-                            html += "<span class='sr-only'>Toggle Dropdown</span>";
-                            html += "</button>";
-                            html += "<div class='dropdown-menu' role='menu'>";
-                            if (data == 0) {
-                                html += "<a href='#' data-target='#terbitInvoice" + row.id_tagihan + "' data-toggle='modal' class='dropdown-item' title='Klik untuk Menonaktifkan'>";
-                                html += "Terbitkan Invoice";
-                                html += "</a>";
-                            }
-                            if (data == 1) {
-                                //html += "<a href='#' class='dropdown-item'>";
-                                //html += "Kirim Invoice";
-                                //html += "</a>";
-                            }
-                            if (data == 1 || data == 2 || data == 4) {
-                                html += "<a target='_blank' href='<?= base_url() ?>tagihan/downloadinvoice/" + row.id_pelanggan + "/" + row.id_tagihan + "/" + row.tahun + "/" + row.bulan + "' class='dropdown-item'>";
-                                html += "Download Invoice";
-                                html += "</a>";
-                            }
-                            if (data == 1 || data == 2 || data == 4) {
-                                html += "<form action='<?= base_url(); ?>tagihan/konfirmasi' method='POST'>";
-                                html += "<input type='hidden' name='id_pelanggan' value='" + row.id_pelanggan + "'>";
-                                html += "<input type='hidden' name='id_tagihan' value='" + row.id_tagihan + "'>";
-                                html += "<input type='hidden' name='bulan' value='" + row.bulan + "'>";
-                                html += "<input type='hidden' name='tahun' value='" + row.tahun + "'>";
-                                html += "<input type='submit' class='dropdown-item' value='Konfirmasi Pembayaran'>";
-                                html += "</form>";
-                            }
-                            if (data == 1 || data == 2 || data == 4) {
-                                html += "<a href='#' data-target='#activateModal" + row.id_tagihan + "' data-toggle='modal' class='dropdown-item'>Tambah Diskon</a>";
-                            }
-                            if (data == 1 || data == 2 || data == 4) {
-                                html += "<a href='#' data-target='#batalTagihan" + row.id_tagihan + "' data-toggle='modal' class='dropdown-item'>Batalkan Tagihan </a>";
-                            }
-                            if (data == 3 || data == 4) {
-                                html += "<a href='<?= base_url(); ?>tagihan/kuitansi/" + row.id_pelanggan + "' class='dropdown-item'>";
-                                html += "Lihat Kuitansi";
-                                html += "</a>";
-                            }
-                            html += "</div>";
-                            html += "</div>";
-
-                            //Modal Batal Tagihan
-                            html += "<div class='modal fade' id='batalTagihan" + row.id_tagihan + "' tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true'>";
-                            html += "<form action='<?= base_url(); ?>tagihan/bataltagihanindividu' method='post'>";
-                            html += "<input type='hidden' name='id_pelanggan' value='" + row.id_pelanggan + "'>";
-                            html += "<input type='hidden' name='id_tagihan' value='" + row.id_tagihan + "'>";
-                            html += "<input type='hidden' name='bulan' value='" + row.bulan + "'>";
-                            html += "<input type='hidden' name='tahun' value='" + row.tahun + "'>";
-                            html += "<div class='modal-dialog' role='document'>";
-                            html += "<div class='modal-content'>";
-                            html += "<div class='modal-header'>";
-                            html += "<h5 class='modal-title' id='exampleModalLabel'>Batalkan Tagihan Pelanggan</h5>";
-                            html += "<button class='close' type='button' data-dismiss='modal' aria-label='Close'>";
-                            html += "<span aria-hidden='true'>×</span>";
-                            html += "</button>";
-                            html += "</div>";
-                            html += "<div class='text-left modal-body'>Pilih 'Ya' untuk membatalkan tagihan Pelanggan</div>";
-                            html += "<div class='modal-footer'>";
-                            html += "<input type='hidden' name='id_pelanggan' class='id' value='" + row.id_pelanggan + "'>";
-                            html += "<input type='hidden' name='active' class='active' value='" + data + "'>";
-                            html += "<button class='btn btn-secondary' type='button' data-dismiss='modal'>Tidak</button>";
-                            html += "<button type='submit' class='btn btn-primary'>Ya</button>";
-                            html += "</div>";
-                            html += "</div>";
-                            html += "</div>";
-                            html += "</form>";
-                            html += "</div>";
-
-                            //Modal Tambah Diskon
-                            html += "<div class='modal fade' id='activateModal" + row.id_tagihan + "' tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true'>";
-                            html += "<form action='<?= base_url(); ?>tagihan/tambahdiskon' method='post'>";
-                            html += "<input type='hidden' name='id_tagihan' value='" + row.id_tagihan + "'>";
-                            html += "<input type='hidden' name='bulan' value='" + row.bulan + "'>";
-                            html += "<input type='hidden' name='tahun' value='" + row.tahun + "'>";
-                            html += "<input type='hidden' name='id_pelanggan' value='" + row.id_pelanggan + "'>";
-                            html += "<div class='modal-dialog' role='document'>";
-                            html += "<div class='modal-content'>";
-                            html += "<div class='modal-header'>";
-                            html += "<h5 class='modal-title' id='exampleModalLabel'>Tambah Diskon a.n " + row.nama_pelanggan + "</h5>";
-                            html += "<button class='close' type='button' data-dismiss='modal' aria-label='Close'>";
-                            html += "<span aria-hidden='true'>×</span>";
-                            html += "</button>";
-                            html += "</div>";
-                            html += "<div class='text-left modal-body'>";
-                            html += "<div class='list-group-item p-3'>";
-                            html += "<div class='row align-items-start'>";
-                            html += "<div class='col-md-4 mb-8pt mb-md-0'>";
-                            html += "<div class='media align-items-left'>";
-                            html += "<div class='d-flex flex-column media-body media-middle'>";
-                            html += "<span class='card-title'>Diskon</span>";
-                            html += "</div>";
-                            html += "</div>";
-                            html += "</div>";
-                            html += "<div class='col mb-8pt mb-md-0'><input type='text' name='diskon' class='form-control'></div>";
-                            html += "</div>";
-                            html += "</div>";
-                            html += "</div>";
-                            html += "<div class='modal-footer'>";
-                            html += "<button class='btn btn-secondary' type='button' data-dismiss='modal'>Batal</button>";
-                            html += "<button type='submit' class='btn btn-primary'>Simpan</button>";
-                            html += "</div>";
-                            html += "</div>";
-                            html += "</div>";
-                            html += "</form>";
-                            html += "</div>";
-                            return html;
-                        }
+                    "className": 'dt-body-center',
+                }, {
+                    "data": "kode_pelanggan",
+                    "className": 'dt-body-center',
+                }, {
+                    "data": "nama_pelanggan",
+                }, {
+                    "data": "total_tagihan",
+                    "className": 'dt-body-center',
+                    render: function(data, type, row) {
+                        html = Intl.NumberFormat("id-ID", {
+                            style: "currency",
+                            currency: "IDR"
+                        }).format(data);
+                        return html;
                     }
-                ],
+                }, {
+                    "data": "id_pelanggan",
+                    "creator": [{
+                        "status": "status",
+                        "id_tagihan": "id_tagihan",
+                        "id_pelanggan": "id_pelanggan",
+                        "nama_pelanggan": "nama_pelanggan",
+                        "tahun": "tahun",
+                        "bulan": "bulan",
+                    }],
+                    "className": 'dt-body-center',
+                    render: function(data, type, row) {
+                        html = "<a target='_blank' href='<?= base_url() ?>tagihan/downloadinvoice/" + row.id_pelanggan + "/" + row.id_tagihan + "/" + row.tahun + "/" + row.bulan + "' class='btn btn-sm  btn-primary'><i class='fas fa-download'></i> Download Invoice</a>";
+                        return html;
+                    }
+                }, {
+                    "creator": [{
+                        "status": "status",
+                        "id_tagihan": "id_tagihan",
+                        "id_kuitansi": "id_kuitansi",
+                        "id_pelanggan": "id_pelanggan",
+                        "nama_pelanggan": "nama_pelanggan",
+                        "tahun": "tahun",
+                        "bulan": "bulan",
+                    }],
+                    "data": "status",
+                    "className": 'dt-body-center',
+                    render: function(data, type, row) {
+                        //Tombol Buat Kuitansi
+                        if (data == 1 || data == 2 || data == 4) {
+                            html = "<a target='_blank' href='<?= base_url() ?>tagihan/buatkuitansi/" + row.id_pelanggan + "/" + row.id_tagihan + "/" + row.tahun + "/" + row.bulan + "' class='btn btn-warning btn-sm '>";
+                            html += "<i class='fas fa-plus-circle'></i> Buat Kuitansi";
+                            html += "</a>";
+                        }
+                        //Tombol Cetak Kuitansi
+                        if (data == 3) {
+                            html = "<a target='_blank' href='<?= base_url(); ?>tagihan/downloadkuitansi/" + row.id_pelanggan + "/" + row.id_kuitansi + "' class='btn btn-sm btn-success'>";
+                            html += "<i class='fas fa-download'></i> Download Kuitansi";
+                            html += "</a>";
+                        }
+                        return html;
+                    }
+                }, {
+                    "data": "id_tagihan",
+                    "creator": [{
+                        "status": "status",
+                        "id_tagihan": "id_tagihan",
+                        "id_kuitansi": "id_kuitansi",
+                        "id_pelanggan": "id_pelanggan",
+                        "id_mitra": "id_mitra",
+                        "nama_pelanggan": "nama_pelanggan",
+                        "tahun": "tahun",
+                        "bulan": "bulan",
+                    }],
+                    "className": 'dt-body-center',
+                    render: function(data, type, row) {
+                        html = "<a href='#' data-target='#batalTagihan" + row.id_tagihan + "' data-toggle='modal' class='btn btn-sm btn-danger'><i class='fas fa-times-circle'></i> Batalkan Tagihan </a>";
+                        //Modal Batal Tagihan
+                        html += "<div class='modal fade' id='batalTagihan" + row.id_tagihan + "' tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true'>";
+                        html += "<form action='<?= base_url(); ?>tagihan/bataltagihanindividu' method='post'>";
+                        html += "<input type='hidden' name='id_pelanggan' value='" + row.id_pelanggan + "'>";
+                        html += "<input type='hidden' name='id_tagihan' value='" + row.id_tagihan + "'>";
+                        html += "<input type='hidden' name='id_mitra' value='" + row.id_mitra + "'>";
+                        html += "<input type='hidden' name='bulan' value='" + row.bulan + "'>";
+                        html += "<input type='hidden' name='tahun' value='" + row.tahun + "'>";
+                        html += "<div class='modal-dialog' role='document'>";
+                        html += "<div class='modal-content'>";
+                        html += "<div class='modal-header'>";
+                        html += "<h5 class='modal-title' id='exampleModalLabel'>Batalkan Tagihan Pelanggan</h5>";
+                        html += "<button class='close' type='button' data-dismiss='modal' aria-label='Close'>";
+                        html += "<span aria-hidden='true'>×</span>";
+                        html += "</button>";
+                        html += "</div>";
+                        html += "<div class='text-left modal-body'>Pilih 'Ya' untuk membatalkan tagihan Pelanggan</div>";
+                        html += "<div class='modal-footer'>";
+                        html += "<button class='btn btn-secondary' type='button' data-dismiss='modal'>Tidak</button>";
+                        html += "<button type='submit' class='btn btn-primary'>Ya</button>";
+                        html += "</div>";
+                        html += "</div>";
+                        html += "</div>";
+                        html += "</form>";
+                        html += "</div>";
+                        return html;
+                    }
+                }],
                 "responsive": true,
                 "lengthChange": true,
                 "autoWidth": false,

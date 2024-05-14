@@ -57,6 +57,7 @@
                             <input type='hidden' name='kode_pelanggan' value='<?= $detail['kode_pelanggan']; ?>'>
                             <input type='hidden' name='nama_pelanggan' value='<?= $detail['nama_pelanggan']; ?>'>
                             <input type='hidden' name='id_pelanggan' value='<?= $detail['id_pelanggan']; ?>'>
+                            <input type='hidden' name='id_mitra' value='<?= $detail['id_mitra']; ?>'>
                             <div class='modal-dialog' role='document'>
                                 <div class='modal-content'>
                                     <div class='modal-header'>

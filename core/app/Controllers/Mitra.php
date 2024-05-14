@@ -222,7 +222,7 @@ class Mitra extends BaseController
             }
 
             // Success!
-            return redirect()->to(base_url('/mitra/index'));
+            return redirect()->to(base_url('/mitra'));
         }
 
         // Simpan Log
