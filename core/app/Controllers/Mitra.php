@@ -98,6 +98,25 @@ class Mitra extends BaseController
         echo json_encode($json_data);
     }
 
+    function mitraAjaxTagihan()
+    {
+        $param['draw'] = isset($_REQUEST['draw']) ? $_REQUEST['draw'] : '';
+        $start = isset($_REQUEST['start']) ? $_REQUEST['start'] : 0;
+        $length = isset($_REQUEST['length']) ? $_REQUEST['length'] : 10;
+        $search_value = isset($_REQUEST['search']['value']) ? $_REQUEST['search']['value'] : '';
+        $datamitra = new MitraModel();
+        $data = $datamitra->searchAndDisplayTagihan($search_value, $start, $length);
+        $total_count = $datamitra->searchAndDisplayTagihan($search_value); // Total count without pagination
+        $filtered_count = $datamitra->searchAndDisplayTagihan($search_value, 0, 0); // Total count for filtered data
+        $json_data = array(
+            'draw' => intval($param['draw']),
+            'recordsTotal' => count($total_count),
+            'recordsFiltered' => count($filtered_count),
+            'data' => $data,
+        );
+        echo json_encode($json_data);
+    }
+
     public function tambah(): string
     {
         session();

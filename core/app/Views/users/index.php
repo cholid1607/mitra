@@ -26,6 +26,8 @@
         <div class="card">
             <div class="card-body">
                 <a href="<?= base_url(); ?>users/tambah" class="btn btn-success"><i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;Tambah Akun&nbsp;&nbsp;&nbsp;</a>
+                <br />
+                <br />
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped dataTable dtr-inline collapsed" id="daftar-user" width="100%" cellspacing="0">
                         <thead>
@@ -39,7 +41,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($users as $row) : ?>
+                            <?php
+                            $no = 1;
+                            foreach ($users as $row) : ?>
                                 <?php
                                 if ($row->active == 0) {
                                     $active = '0';
@@ -47,7 +51,7 @@
                                     $active = '1';
                                 } ?>
                                 <tr>
-                                    <td class="text-center"><?= $row->id; ?></td>
+                                    <td class="text-center"><?= $no++; ?></td>
                                     <td><?= $row->username; ?></td>
                                     <td><?= $row->email; ?></td>
                                     <td class="text-center">

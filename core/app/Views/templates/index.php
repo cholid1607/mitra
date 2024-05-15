@@ -525,6 +525,57 @@
                 "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
             }).buttons().container().appendTo('#table-responsive .col-md-6:eq(0)');
 
+            $("#daftar-mitra-tagihan").DataTable({
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "<?= site_url('mitra/mitraAjaxTagihan'); ?>",
+                    "type": "POST",
+                    "data": function(data) {
+                        data.start = data.start || 0;
+                        data.length = data.length || 10;
+                    }
+                },
+                "columns": [{
+                    "data": "id_mitra",
+                    render: function(data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    },
+                    "className": 'dt-body-center',
+                }, {
+                    "data": "kode_mitra",
+                    "className": 'dt-body-center',
+                }, {
+                    "data": "nama_mitra",
+                    "className": 'dt-body-center',
+                }, {
+                    "data": "alamat",
+                }, {
+                    "data": "jumlah_pelanggan",
+                    "className": 'dt-body-center',
+                }, {
+                    "data": "terbit",
+                    "className": 'dt-body-center',
+                }, {
+                    "data": "terbayar",
+                    "className": 'dt-body-center',
+                }, {
+                    "data": "total_tagihan",
+                    "className": 'dt-body-center',
+                    render: function(data, type, row) {
+                        html = Intl.NumberFormat("id-ID", {
+                            style: "currency",
+                            currency: "IDR"
+                        }).format(data);
+                        return html;
+                    }
+                }],
+                "responsive": true,
+                "lengthChange": true,
+                "autoWidth": false,
+                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            }).buttons().container().appendTo('#table-responsive .col-md-6:eq(0)');
+
 
             <?php
             if (empty($bulan_angka)) {
@@ -703,55 +754,7 @@
                 "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
             }).buttons().container().appendTo('#table-responsive .col-md-6:eq(0)');
 
-            $("#daftar-piutang-pelanggan").DataTable({
-                "processing": true,
-                "serverSide": true,
-                "serverMethod": 'post',
-                "ajax": "<?= site_url('pelanggan/pelangganAjax'); ?>",
-                "columns": [{
-                    "data": "id_pelanggan",
-                    render: function(data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1;
-                    },
-                    "className": 'dt-body-center',
-                }, {
-                    "data": "nama_pelanggan",
-                    "creator": [{
-                        "kode_pelanggan": "kode_pelanggan",
-                        "nama_pelanggan": "nama_pelanggan",
-                    }],
-                    render: function(data, type, row) {
-                        html = data;
-                        html += "&nbsp;<br/><b><i>(" + row.kode_pelanggan + ")</i></b>";
-                        return html;
-                    }
-                }, {
-                    "data": "alamat_pelanggan",
-                }, {
-                    "data": "telp_pelanggan",
-                    "className": 'dt-body-center',
-                }, {
-                    "data": "piutang",
-                    "className": 'dt-body-center',
-                    render: function(data, type, row) {
-                        html = Intl.NumberFormat("id-ID", {
-                            style: "currency",
-                            currency: "IDR"
-                        }).format(data);
-                        return html;
-                    }
-                }, {
-                    "data": "id_pelanggan",
-                    "className": 'dt-body-center',
-                    render: function(data, type, row) {
-                        return "<a href = '<?= base_url(); ?>tagihan/tagihanpelanggan/" + data + "' class = 'btn btn-success btn-circle btn-sm' title='Detail Tagihan'> <i class='fas fa-file-invoice'> </i> Detail Tagihan</a>";
-                    }
-                }],
-                "responsive": true,
-                "lengthChange": true,
-                "autoWidth": false,
-                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-            }).buttons().container().appendTo('#table-responsive .col-md-6:eq(0)');
+
             <?php
             if (empty($bulan_log)) {
                 $bulan_log = date('m');
@@ -817,188 +820,6 @@
                 "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
             }).buttons().container().appendTo('#daftar-log-admin .col-md-6:eq(0)');
 
-            $("#daftar-bts").DataTable({
-                "processing": true,
-                "serverSide": true,
-                "serverMethod": 'post',
-                "ajax": "<?= site_url('bts/btsAjax'); ?>",
-                "columns": [{
-                    "data": "id_bts",
-                    render: function(data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1;
-                    },
-                    "className": 'dt-body-center',
-                }, {
-                    "data": "jenis",
-                    "className": 'dt-body-center',
-                    render: function(data, id_pelanggan, type, row) {
-                        if (data == 1) {
-                            return "<div class='btn btn-sm bg-success'><i class='fas fa-broadcast-tower'></i>&nbsp;&nbsp;Link</div>";
-
-                        } else if (data == 2) {
-                            return "<div class='btn btn-sm bg-primary'><i class='fas fa-broadcast-tower'></i>&nbsp;&nbsp;BTS</div>";
-                        }
-                    }
-                }, {
-                    "data": "kode",
-                    "className": 'dt-body-center',
-
-                }, {
-                    "data": "nama_bts",
-                }, {
-                    "data": "alamat_bts",
-                }, {
-                    "creator": [{
-                        "id_bts": "id_bts",
-                        "nama_bts": "nama_bts",
-                    }],
-                    "data": "id_bts",
-                    "className": 'dt-body-center',
-                    render: function(data, type, row) {
-                        html = "<a href='<?= base_url(); ?>bts/detail/" + row.id_bts + "' class='btn btn-primary btn-circle btn-sm' title='Detail Data BTS'><i class='fas fa-eye'></i></a>&nbsp;";
-                        html += "<a href='<?= base_url(); ?>bts/edit/" + row.id_bts + "' class='btn btn-warning btn-circle btn-sm' title='Edit Data BTS'><i class='fas fa-edit'></i></a>&nbsp;";
-                        html += "<a href='#' data-target='#hapusModal" + row.id_bts + "' data-toggle='modal' class='btn btn-sm bg-danger' title='Klik untuk Menghapus'><i class='fas fa-trash'></i></a>";
-                        html += "<div class='modal fade' id='hapusModal" + row.id_bts + "' tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true'>";
-                        html += "<form action='<?= base_url(); ?>bts/hapus' method='post'>";
-                        html += "<input type='hidden' name='id_bts' value='" + row.id_bts + "'>";
-                        html += "<input type='hidden' name='nama_bts' value='" + row.nama_bts + "'>";
-                        html += "<div class='modal-dialog' role='document'>";
-                        html += "<div class='modal-content'>";
-                        html += "<div class='modal-header'>";
-                        html += "<h5 class='modal-title' id='exampleModalLabel'>Hapus Data BTS</h5>";
-                        html += "<button class='close' type='button' data-dismiss='modal' aria-label='Close'>";
-                        html += "<span aria-hidden='true'>×</span>";
-                        html += "</button>";
-                        html += "</div>";
-                        html += "<div class='modal-body text-left'>Pilih 'Ya' untuk menghapus Data BTS</div>";
-                        html += "<div class='modal-footer'>";
-                        html += "<button class='btn btn-secondary' type='button' data-dismiss='modal'>Tidak</button>";
-                        html += "<button type='submit' class='btn btn-primary'>Ya</button>";
-                        html += "</div>";
-                        html += "</div>";
-                        html += "</div>";
-                        html += "</form>";
-                        html += "</div>";
-                        return html;
-                    }
-                }],
-                "responsive": true,
-                "lengthChange": true,
-                "autoWidth": false,
-                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-            }).buttons().container().appendTo('#table-responsive .col-md-6:eq(0)');
-
-            $("#daftar-aset").DataTable({
-                "processing": true,
-                "serverSide": true,
-                "serverMethod": 'post',
-                "ajax": "<?= site_url('aset/asetAjax'); ?>",
-                "columns": [{
-                    "data": "id_aset",
-                    render: function(data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1;
-                    },
-                    "className": 'dt-body-center',
-                }, {
-                    "data": "nama_kualifikasi",
-                    "className": 'dt-body-center',
-                }, {
-                    "data": "kode_item",
-                    "className": 'dt-body-center',
-                }, {
-                    "data": "nama_item",
-                }, {
-                    "data": "stok",
-                    "className": 'dt-body-center',
-                }, {
-                    "creator": [{
-                        "id_aset": "id_aset",
-                        "nama_item": "nama_item",
-                    }],
-                    "data": "id_aset",
-                    "className": 'dt-body-center',
-                    render: function(data, type, row) {
-                        html = "<a href='<?= base_url(); ?>aset/detail/" + row.id_aset + "' class='btn btn-primary btn-circle btn-sm' title='Detail Data BTS'><i class='fas fa-eye'></i></a>&nbsp;";
-                        html += "<a href='<?= base_url(); ?>aset/edit/" + row.id_aset + "' class='btn btn-warning btn-circle btn-sm' title='Edit Data BTS'><i class='fas fa-edit'></i></a>&nbsp;";
-                        html += "<a href='#' data-target='#hapusModal" + row.id_aset + "' data-toggle='modal' class='btn btn-sm bg-danger' title='Klik untuk Menghapus'><i class='fas fa-trash'></i></a>";
-                        html += "<div class='modal fade' id='hapusModal" + row.id_aset + "' tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true'>";
-                        html += "<form action='<?= base_url(); ?>aset/hapus' method='post'>";
-                        html += "<input type='hidden' name='id_aset' value='" + row.id_aset + "'>";
-                        html += "<input type='hidden' name='nama_item' value='" + row.nama_item + "'>";
-                        html += "<div class='modal-dialog' role='document'>";
-                        html += "<div class='modal-content'>";
-                        html += "<div class='modal-header'>";
-                        html += "<h5 class='modal-title' id='exampleModalLabel'>Hapus Data Aset</h5>";
-                        html += "<button class='close' type='button' data-dismiss='modal' aria-label='Close'>";
-                        html += "<span aria-hidden='true'>×</span>";
-                        html += "</button>";
-                        html += "</div>";
-                        html += "<div class='modal-body text-left'>Pilih 'Ya' untuk menghapus Data Aset</div>";
-                        html += "<div class='modal-footer'>";
-                        html += "<button class='btn btn-secondary' type='button' data-dismiss='modal'>Tidak</button>";
-                        html += "<button type='submit' class='btn btn-primary'>Ya</button>";
-                        html += "</div>";
-                        html += "</div>";
-                        html += "</div>";
-                        html += "</form>";
-                        html += "</div>";
-                        return html;
-                    }
-                }],
-                "responsive": true,
-                "lengthChange": true,
-                "autoWidth": false,
-                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-            }).buttons().container().appendTo('#table-responsive .col-md-6:eq(0)');
-
-            $("#daftar-pengajuan").DataTable({
-                "responsive": true,
-                "pageLength": 5,
-                "lengthChange": true,
-                "autoWidth": false,
-                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-
-            $("#daftar-survey").DataTable({
-                "responsive": true,
-                "pageLength": 5,
-                "lengthChange": true,
-                "autoWidth": false,
-                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-
-            $("#daftar-setuju").DataTable({
-                "responsive": true,
-                "pageLength": 5,
-                "lengthChange": true,
-                "autoWidth": false,
-                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-
-            $("#daftar-tolak").DataTable({
-                "responsive": true,
-                "pageLength": 5,
-                "lengthChange": true,
-                "autoWidth": false,
-                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-
-            $("#daftar-registrasi").DataTable({
-                "responsive": true,
-                "lengthChange": true,
-                "pageLength": 5,
-                "autoWidth": false,
-                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-
-            $("#daftar-workorder").DataTable({
-                "responsive": true,
-                "lengthChange": true,
-                "pageLength": 30,
-                "autoWidth": false,
-                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-
             $("#daftar-bulan").DataTable({
                 "responsive": true,
                 "pageLength": 50,
@@ -1006,26 +827,6 @@
                 "autoWidth": false,
                 "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
             }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-
-
-            $('#example2').DataTable({
-                "paging": true,
-                "lengthChange": true,
-                "searching": false,
-                "ordering": true,
-                "info": true,
-                "autoWidth": false,
-                "responsive": true,
-            });
-
-            $("#daftar-error-terbanyak").DataTable({
-                "responsive": true,
-                "pageLength": 10,
-                "lengthChange": true,
-                "ordering": false,
-                "autoWidth": false,
-                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-            }).buttons().container().appendTo('#daftar-error-terbanyak .col-md-6:eq(0)');
 
         });
     </script>
@@ -1036,31 +837,6 @@
             $('#summernote').summernote({
                 width: '100%',
                 removeFormat: true,
-            })
-
-            // Summernote
-            $('#summernote1').summernote({
-                width: '100%',
-            })
-
-            // Summernote
-            $('#summernote2').summernote({
-                width: '100%',
-            })
-
-            // Summernote
-            $('#summernote3').summernote({
-                width: '100%',
-            })
-
-            // Summernote
-            $('#summernote4').summernote({
-                width: '100%',
-            })
-
-            // Summernote
-            $('#summernote5').summernote({
-                width: '100%',
             })
         })
     </script>
@@ -1089,147 +865,6 @@
             $("#selUser").select2({
                 ajax: {
                     url: "<?= site_url('pelanggan/ajaxsearch') ?>",
-                    type: "post",
-                    dataType: 'json',
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            searchTerm: params.term // search term
-                        };
-                    },
-                    processResults: function(response) {
-                        return {
-                            results: response.data
-                        };
-                    },
-                    cache: true
-                }
-            });
-
-            // Initialize select2
-            $("#selTeknisi").select2({
-                ajax: {
-                    url: "<?= site_url('pekerjaan/ajaxsearch') ?>",
-                    type: "post",
-                    dataType: 'json',
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            searchTerm: params.term // search term
-                        };
-                    },
-                    processResults: function(response) {
-                        return {
-                            results: response.data
-                        };
-                    },
-                    cache: true
-                }
-            });
-
-            $("#selTeknisi1").select2({
-                ajax: {
-                    url: "<?= site_url('pekerjaan/ajaxsearch') ?>",
-                    type: "post",
-                    dataType: 'json',
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            searchTerm: params.term // search term
-                        };
-                    },
-                    processResults: function(response) {
-                        return {
-                            results: response.data
-                        };
-                    },
-                    cache: true
-                }
-            });
-
-            $("#selTeknisi2").select2({
-                ajax: {
-                    url: "<?= site_url('pekerjaan/ajaxsearch') ?>",
-                    type: "post",
-                    dataType: 'json',
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            searchTerm: params.term // search term
-                        };
-                    },
-                    processResults: function(response) {
-                        return {
-                            results: response.data
-                        };
-                    },
-                    cache: true
-                }
-            });
-
-            $("#selTeknisi3").select2({
-                ajax: {
-                    url: "<?= site_url('pekerjaan/ajaxsearch') ?>",
-                    type: "post",
-                    dataType: 'json',
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            searchTerm: params.term // search term
-                        };
-                    },
-                    processResults: function(response) {
-                        return {
-                            results: response.data
-                        };
-                    },
-                    cache: true
-                }
-            });
-
-            $("#selTeknisi4").select2({
-                ajax: {
-                    url: "<?= site_url('pekerjaan/ajaxsearch') ?>",
-                    type: "post",
-                    dataType: 'json',
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            searchTerm: params.term // search term
-                        };
-                    },
-                    processResults: function(response) {
-                        return {
-                            results: response.data
-                        };
-                    },
-                    cache: true
-                }
-            });
-
-            $("#selHDO").select2({
-                ajax: {
-                    url: "<?= site_url('error/ajaxsearch') ?>",
-                    type: "post",
-                    dataType: 'json',
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            searchTerm: params.term // search term
-                        };
-                    },
-                    processResults: function(response) {
-                        return {
-                            results: response.data
-                        };
-                    },
-                    cache: true
-                }
-            });
-
-            $("#selBTS").select2({
-                ajax: {
-                    url: "<?= site_url('error/ajaxbts') ?>",
                     type: "post",
                     dataType: 'json',
                     delay: 250,

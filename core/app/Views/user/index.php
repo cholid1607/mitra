@@ -30,7 +30,22 @@
             </div>
             <div class="card-body">
                 <div class="col-lg-12 row">
-                    <div class="col-lg-3 col-6">
+                    <!-- ./col -->
+                    <div class="col-lg-4 col-6">
+                        <!-- small box -->
+                        <div class="small-box bg-danger">
+                            <div class="inner">
+                                <h3><?= $jml_mitra; ?></h3>
+
+                                <p>Jumlah Mitra</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <a href="<?= base_url(); ?>mitra" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-6">
                         <!-- small box -->
                         <div class="small-box bg-info">
                             <div class="inner">
@@ -45,7 +60,7 @@
                         </div>
                     </div>
                     <!-- ./col -->
-                    <div class="col-lg-3 col-6">
+                    <div class="col-lg-4 col-6">
                         <!-- small box -->
                         <div class="small-box bg-success">
                             <div class="inner">
@@ -56,42 +71,41 @@
                             <div class="icon">
                                 <i class="fas fa-cogs"></i>
                             </div>
-                            <a href="<?= base_url(); ?>user" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                        </div>
-                    </div>
-                    <!-- ./col -->
-                    <div class="col-lg-3 col-6">
-                        <!-- small box -->
-                        <div class="small-box bg-warning">
-                            <div class="inner">
-                                <h3><?= $jml_mitra; ?></h3>
-
-                                <p>Jumlah Mitra</p>
-                            </div>
-                            <div class="icon">
-                                <i class="fas fa-plus"></i>
-                            </div>
-                            <a href="<?= base_url(); ?>pendaftaran" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                        </div>
-                    </div>
-                    <!-- ./col -->
-                    <div class="col-lg-3 col-6">
-                        <!-- small box -->
-                        <div class="small-box bg-danger">
-                            <div class="inner">
-                                <h3><?= $jml_mitra; ?></h3>
-
-                                <p>Trouble Pelanggan</p>
-                            </div>
-                            <div class="icon">
-                                <i class="fas fa-broadcast-tower"></i>
-                            </div>
-                            <a href="<?= base_url(); ?>error" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                            <a href="<?= base_url(); ?>users" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                         </div>
                     </div>
                 </div>
             </div>
             <!-- /.card-body -->
+        </div>
+        <!-- Default box -->
+        <div class="card card-warning">
+            <div class="card-header">
+                <h3 class="card-title"><b>Daftar Tagihan Pelanggan Mitra <?= date('F') . ' ' . date('Y'); ?></b></h3>
+                <div class="card-tools">
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped dataTable dtr-inline collapsed" id="daftar-mitra-tagihan" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th width="5%" class="text-center">No</th>
+                                <th width="10%" class="text-center">Kode Mitra</th>
+                                <th width="10%" class="text-center">Nama Mitra</th>
+                                <th width="15%" class="text-center">Alamat</th>
+                                <th width="15%" class="text-center">Jumlah Pelanggan</th>
+                                <th width="15%" class="text-center">Sudah Terbit</th>
+                                <th width="15%" class="text-center">Sudah Terbayar</th>
+                                <th width="15%" class="text-center">Total Terbayar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </section>
     <!-- /.content -->
