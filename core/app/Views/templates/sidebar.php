@@ -94,7 +94,13 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="<?= base_url(); ?>pelangganmitra" class="nav-link">
+                        <?php
+                        $username = user()->username;
+                        $db      = \Config\Database::connect();
+                        $builder = $db->table('mitra');
+                        $mitra =  $builder->where('username', $username)->get()->getFirstRow();
+                        ?>
+                        <a href="<?= base_url(); ?>pelanggan/pelangganmitra/<?= $mitra->id_mitra; ?>" class="nav-link">
                             <i class="nav-icon fas fa-users"></i>
                             <p>
                                 Data Pelanggan Mitra

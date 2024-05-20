@@ -51,6 +51,24 @@ class Pelanggan extends BaseController
         return view('pelanggan/daftar', $data);
     }
 
+    public function pelangganmitra($id)
+    {
+        $db      = \Config\Database::connect();
+        $builder = $db->table('log');
+        $log   = $builder->where('id_pelanggan', $id)->limit(55)->orderBy('tgl', 'desc')->get()->getResultArray();
+        $builder_mitra = $db->table('mitra');
+        $mitra = $builder_mitra->where('id_mitra', $id)->get()->getResultArray();
+        $nama_mitra = $mitra[0]['nama_mitra'];
+
+        $data = [
+            'menu' => 'user',
+            'title' => 'Daftar Pelanggan Mitra : ' . $nama_mitra,
+            'id_mitra' => $id,
+            'log' => $log,
+        ];
+        return view('pelanggan/daftar', $data);
+    }
+
     function pelangganAjax($id)
     {
         $param['draw'] = isset($_REQUEST['draw']) ? $_REQUEST['draw'] : '';
