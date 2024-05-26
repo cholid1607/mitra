@@ -93,6 +93,20 @@
                             </div>
                         </div>
                         <div class="form-group row">
+                            <label for="email" class="col-sm-2 col-form-label">Email</label>
+                            <div class="col-sm-10">
+                                <div class="col-sm-3 ml-0 pl-0">
+                                    <div class="input-group row">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                        </div>
+                                        <input name="email" value="<?= old('email') ?>" type="text" class="form-control <?php if (session('errors.telepon')) : ?>is-invalid<?php endif ?>" id="email" placeholder="email"><i style="font-size:16px;" class="mt-2">@t2net.id</i>
+                                    </div>
+                                </div>
+                                <i class="pl-0" style="font-size:14px;">Tuliskan Email tanpa @t2net.id. Contoh : mitra1@t2net.id ditulis mitra1</i>
+                            </div>
+                        </div>
+                        <div class="form-group row">
                             <label for="logo" class="col-sm-2 col-form-label">Logo</label>
                             <div class="col-sm-10">
                                 <div class="input-group row">

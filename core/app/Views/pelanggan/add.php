@@ -70,7 +70,7 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="nik" class="col-sm-2 col-form-label">NIK</label>
+                            <label for="nik" class="col-sm-2 col-form-label">NIK/NPWP</label>
                             <div class="col-sm-10">
                                 <div class="input-group row">
                                     <div class="input-group-prepend">

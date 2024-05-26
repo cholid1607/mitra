@@ -158,11 +158,13 @@ class Mitra extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
         $kode_mitra = $this->request->getVar('kode_mitra');
+        $kode_mitra_pelanggan = $this->request->getVar('kode_mitra_pelanggan');
         $nama_mitra = $this->request->getVar('nama_users');
         $penanggung_jawab = $this->request->getVar('penanggung_jawab');
         $usernamemitra = $this->request->getVar('username');
         $alamat = $this->request->getVar('alamat');
         $telepon = $this->request->getVar('telepon');
+        $email = $this->request->getVar('email');
 
         //ambil gambar
         $fileLogo = $this->request->getFile('logo');
@@ -184,11 +186,13 @@ class Mitra extends BaseController
         //Menyimpan Data Mitra
         $datamitra = [
             'kode_mitra' => $kode_mitra,
+            'kode_mitra_pelanggan' => $kode_mitra_pelanggan,
             'nama_mitra' => $nama_mitra,
             'username' => $usernamemitra,
             'penanggung_jawab' => $penanggung_jawab,
             'alamat' => $alamat,
             'telepon' => $telepon,
+            'email' => $email,
             'logo' => $namaFile,
             'status' => '1'
         ];
@@ -356,17 +360,20 @@ class Mitra extends BaseController
         $cekpenanggung_jawab = $mitra[0]['penanggung_jawab'] == $this->request->getVar('penanggung_jawab') ? '' : ',<br/>Penanggungjawab <b>' . $mitra[0]['penanggung_jawab'] . '</b> menjadi <b>' . $this->request->getVar('penanggung_jawab') . "</b>";
         $cekalamat = $mitra[0]['alamat'] == $this->request->getVar('alamat') ? '' : ',<br/>Alamat <b>' . $mitra[0]['alamat'] . '</b> menjadi <b>' . $this->request->getVar('alamat') . "</b>";
         $cektelepon = $mitra[0]['telepon'] == $this->request->getVar('telepon') ? '' : ',<br/>Telepon <b>' . $mitra[0]['telepon'] . '</b> menjadi <b>' . $this->request->getVar('telepon') . "</b>";
+        $cekemail = $mitra[0]['email'] == $this->request->getVar('email') ? '' : ',<br/>Email <b>' . $mitra[0]['email'] . '</b> menjadi <b>' . $this->request->getVar('email') . "</b>";
 
         $nama_mitra = !empty($this->request->getVar('nama_users')) ? $this->request->getVar('nama_users') : $mitra[0]['nama_mitra'];
         $penanggung_jawab = !empty($this->request->getVar('penanggung_jawab')) ? $this->request->getVar('penanggung_jawab') : $mitra[0]['penanggung_jawab'];
         $alamat = !empty($this->request->getVar('alamat')) ? $this->request->getVar('alamat') : $mitra[0]['alamat'];
         $telepon = !empty($this->request->getVar('telepon')) ? $this->request->getVar('telepon') : $mitra[0]['telepon'];
+        $email = !empty($this->request->getVar('email')) ? $this->request->getVar('email') : $mitra[0]['email'];
 
         $deskripsi = $username . " mengupdate mitra <b>" . $this->request->getVar('nama_users') . "</b>" .
             $ceknama_mitra .
             $cekpenanggung_jawab .
             $cekalamat .
-            $cektelepon;
+            $cektelepon .
+            $cekemail;
 
         //ambil gambar
         $fileLogo = $this->request->getFile('logo');
@@ -395,6 +402,7 @@ class Mitra extends BaseController
             'penanggung_jawab' => $penanggung_jawab,
             'alamat' => $alamat,
             'telepon' => $telepon,
+            'email' => $email,
             'logo' => $namaFile
         ];
 

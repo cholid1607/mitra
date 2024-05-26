@@ -495,27 +495,27 @@
                         html = "<a href = '<?= base_url(); ?>mitra/detail/" + data + "' class = 'btn btn-primary btn-block btn-circle btn-sm' title='Detail Data Mitra'> <i class='fas fa-eye'> </i> Lihat Mitra</a>";
                         html += "<a href = '<?= base_url(); ?>mitra/edit/" + data + "'class = 'btn btn-warning btn-block btn-circle btn-sm mt-2' title = 'Edit Data Mitra' ><i class='fas fa-edit'></i> Edit Data</a>";
                         html += "<a href='<?= base_url(); ?>users/changePassword/" + data + "' class='btn btn-secondary btn-block btn-circle btn-sm mt-2' title='Ubah Password'> <i class='fas fa-key'></i> Reset Password</a>";
-                        html += "<a href='#' data-target='#hapusModal" + data + "' data-toggle='modal' class='btn btn-sm bg-danger btn-block mt-2' title='Klik untuk Menghapus'><i class='fas fa-trash'></i> Hapus Data</a>";
-                        html += "<div class='modal fade' id='hapusModal" + data + "' tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true'>";
-                        html += "<form action='<?= base_url(); ?>mitra/hapus' method='post'>";
-                        html += "<input type='hidden' name='id_mitra' value='" + data + "'>";
-                        html += "<div class='modal-dialog' role='document'>";
-                        html += "<div class='modal-content'>";
-                        html += "<div class='modal-header'>";
-                        html += "<h5 class='modal-title' id='exampleModalLabel'>Hapus Data Mitra</h5>";
-                        html += "<button class='close' type='button' data-dismiss='modal' aria-label='Close'>";
-                        html += "<span aria-hidden='true'>×</span>";
-                        html += "</button>";
-                        html += "</div>";
-                        html += "<div class='modal-body text-left'>Pilih 'Ya' untuk menghapus Data Mitra</div>";
-                        html += "<div class='modal-footer'>";
-                        html += "<button class='btn btn-secondary' type='button' data-dismiss='modal'>Tidak</button>";
-                        html += "<button type='submit' class='btn btn-primary'>Ya</button>";
-                        html += "</div>";
-                        html += "</div>";
-                        html += "</div>";
-                        html += "</form>";
-                        html += "</div>";
+                        // html += "<a href='#' data-target='#hapusModal" + data + "' data-toggle='modal' class='btn btn-sm bg-danger btn-block mt-2' title='Klik untuk Menghapus'><i class='fas fa-trash'></i> Hapus Data</a>";
+                        // html += "<div class='modal fade' id='hapusModal" + data + "' tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true'>";
+                        // html += "<form action='<php base_url(); ?>mitra/hapus' method='post'>";
+                        // html += "<input type='hidden' name='id_mitra' value='" + data + "'>";
+                        // html += "<div class='modal-dialog' role='document'>";
+                        // html += "<div class='modal-content'>";
+                        // html += "<div class='modal-header'>";
+                        // html += "<h5 class='modal-title' id='exampleModalLabel'>Hapus Data Mitra</h5>";
+                        // html += "<button class='close' type='button' data-dismiss='modal' aria-label='Close'>";
+                        // html += "<span aria-hidden='true'>×</span>";
+                        // html += "</button>";
+                        // html += "</div>";
+                        // html += "<div class='modal-body text-left'>Pilih 'Ya' untuk menghapus Data Mitra</div>";
+                        // html += "<div class='modal-footer'>";
+                        // html += "<button class='btn btn-secondary' type='button' data-dismiss='modal'>Tidak</button>";
+                        // html += "<button type='submit' class='btn btn-primary'>Ya</button>";
+                        // html += "</div>";
+                        // html += "</div>";
+                        // html += "</div>";
+                        // html += "</form>";
+                        // html += "</div>";
                         return html;
                     }
                 }],
@@ -667,32 +667,37 @@
                     }],
                     "className": 'dt-body-center',
                     render: function(data, type, row) {
-                        html = "<a href='#' data-target='#batalTagihan" + row.id_tagihan + "' data-toggle='modal' class='btn btn-sm btn-danger'><i class='fas fa-times-circle'></i> Batalkan Tagihan </a>";
-                        //Modal Batal Tagihan
-                        html += "<div class='modal fade' id='batalTagihan" + row.id_tagihan + "' tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true'>";
-                        html += "<form action='<?= base_url(); ?>tagihan/bataltagihanindividu' method='post'>";
-                        html += "<input type='hidden' name='id_pelanggan' value='" + row.id_pelanggan + "'>";
-                        html += "<input type='hidden' name='id_tagihan' value='" + row.id_tagihan + "'>";
-                        html += "<input type='hidden' name='id_mitra' value='" + row.id_mitra + "'>";
-                        html += "<input type='hidden' name='bulan' value='" + row.bulan + "'>";
-                        html += "<input type='hidden' name='tahun' value='" + row.tahun + "'>";
-                        html += "<div class='modal-dialog' role='document'>";
-                        html += "<div class='modal-content'>";
-                        html += "<div class='modal-header'>";
-                        html += "<h5 class='modal-title' id='exampleModalLabel'>Batalkan Tagihan Pelanggan</h5>";
-                        html += "<button class='close' type='button' data-dismiss='modal' aria-label='Close'>";
-                        html += "<span aria-hidden='true'>×</span>";
-                        html += "</button>";
-                        html += "</div>";
-                        html += "<div class='text-left modal-body'>Pilih 'Ya' untuk membatalkan tagihan Pelanggan</div>";
-                        html += "<div class='modal-footer'>";
-                        html += "<button class='btn btn-secondary' type='button' data-dismiss='modal'>Tidak</button>";
-                        html += "<button type='submit' class='btn btn-primary'>Ya</button>";
-                        html += "</div>";
-                        html += "</div>";
-                        html += "</div>";
-                        html += "</form>";
-                        html += "</div>";
+                        <?php if ((in_groups('superuser'))) { ?>
+                            html = "<a href='#' data-target='#batalTagihan" + row.id_tagihan + "' data-toggle='modal' class='btn btn-sm btn-danger'><i class='fas fa-times-circle'></i> Batalkan Tagihan </a>";
+
+                            //Modal Batal Tagihan
+                            html += "<div class='modal fade' id='batalTagihan" + row.id_tagihan + "' tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true'>";
+                            html += "<form action='<?= base_url(); ?>tagihan/bataltagihanindividu' method='post'>";
+                            html += "<input type='hidden' name='id_pelanggan' value='" + row.id_pelanggan + "'>";
+                            html += "<input type='hidden' name='id_tagihan' value='" + row.id_tagihan + "'>";
+                            html += "<input type='hidden' name='id_mitra' value='" + row.id_mitra + "'>";
+                            html += "<input type='hidden' name='bulan' value='" + row.bulan + "'>";
+                            html += "<input type='hidden' name='tahun' value='" + row.tahun + "'>";
+                            html += "<div class='modal-dialog' role='document'>";
+                            html += "<div class='modal-content'>";
+                            html += "<div class='modal-header'>";
+                            html += "<h5 class='modal-title' id='exampleModalLabel'>Batalkan Tagihan Pelanggan</h5>";
+                            html += "<button class='close' type='button' data-dismiss='modal' aria-label='Close'>";
+                            html += "<span aria-hidden='true'>×</span>";
+                            html += "</button>";
+                            html += "</div>";
+                            html += "<div class='text-left modal-body'>Pilih 'Ya' untuk membatalkan tagihan Pelanggan</div>";
+                            html += "<div class='modal-footer'>";
+                            html += "<button class='btn btn-secondary' type='button' data-dismiss='modal'>Tidak</button>";
+                            html += "<button type='submit' class='btn btn-primary'>Ya</button>";
+                            html += "</div>";
+                            html += "</div>";
+                            html += "</div>";
+                            html += "</form>";
+                            html += "</div>";
+                        <?php } else { ?>
+                            html = '-';
+                        <?php } ?>
                         return html;
                     }
                 }],

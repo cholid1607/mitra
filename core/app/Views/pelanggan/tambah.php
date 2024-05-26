@@ -36,17 +36,6 @@
                     <input type="hidden" name="id_mitra" value="<?= $id_mitra; ?>">
                     <div class="card-body">
                         <div class="form-group row">
-                            <label for="kodepelanggan" class="col-sm-2 col-form-label">Kode Pelanggan</label>
-                            <div class="col-sm-10">
-                                <div class="input-group row">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fas fa-info-circle"></i></span>
-                                    </div>
-                                    <input name="kode_pelanggan" type="text" value="<?= old('kode_pelanggan') ?>" class="form-control <?php if (session('errors.kode_pelanggan')) : ?>is-invalid<?php endif ?>" id="kode_pelanggan" placeholder="Kode Pelanggan">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
                             <label for="namapelanggan" class="col-sm-2 col-form-label">Nama Pelanggan</label>
                             <div class="col-sm-10">
                                 <div class="input-group row">
@@ -58,7 +47,7 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="nik" class="col-sm-2 col-form-label">NIK</label>
+                            <label for="nik" class="col-sm-2 col-form-label">NIK/NPWP</label>
                             <div class="col-sm-10">
                                 <div class="input-group row">
                                     <div class="input-group-prepend">

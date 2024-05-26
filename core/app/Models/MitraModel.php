@@ -17,7 +17,8 @@ class MitraModel extends Model
     protected $useSoftDeletes = false;
 
     protected $allowedFields = [
-        'id_mitra', 'kode_mitra', 'nama_mitra', 'username', 'penanggung_jawab', 'alamat', 'telepon', 'logo', 'status'
+        'id_mitra', 'kode_mitra', 'kode_mitra_pelanggan', 'nama_mitra', 'username',
+        'penanggung_jawab', 'alamat', 'telepon', 'email', 'logo', 'status'
     ];
 
     protected $useTimestamps = true;

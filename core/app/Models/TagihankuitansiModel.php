@@ -15,7 +15,8 @@ class TagihankuitansiModel extends Model
     protected $useSoftDeletes = false;
 
     protected $allowedFields = [
-        'id_tagihan_kuitansi', 'id_kuitansi', 'id_tagihan', 'id_pemasukan', 'item_layanan', 'kurang_bayar', 'total_bayar'
+        'id_tagihan_kuitansi', 'id_kuitansi', 'id_tagihan', 'id_pemasukan', 'id_pelanggan',
+        'item_layanan', 'kurang_bayar', 'total_bayar'
     ];
 
     protected $useTimestamps = true;

@@ -136,6 +136,17 @@
             margin: 0;
             text-align: left;
         }
+
+        .no-select {
+            -webkit-user-select: none;
+            /* Safari */
+            -moz-user-select: none;
+            /* Firefox */
+            -ms-user-select: none;
+            /* IE10+/Edge */
+            user-select: none;
+            /* Standard */
+        }
     </style>
     <link rel="shortcut icon" type="image/png" href="t2net.png">
 </head>
@@ -208,11 +219,11 @@
                         <h4 class="judullogo">INTERNET SERVICE PROVIDER</h4>
                     </td>
                     <td class="kontak text-right">
-                        <h2 class="header" style="margin-right:2em;">KUITANSI</h2>
-                        <table style="margin-left:16em; font-size: 12px;">
+                        <h2 class="header" style="margin-right:4em;">KUITANSI</h2>
+                        <table style="margin-left:12em; font-size: 12px;">
                             <tr>
                                 <td>No. Kuitansi</td>
-                                <td>: <?= $row['no_kuitansi']; ?></td>
+                                <td class="no-select">: <?= $row['no_kuitansi']; ?></td>
                             </tr>
                             <tr>
                                 <td>Tgl. Pembayaran</td>

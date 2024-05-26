@@ -146,25 +146,60 @@ class Pelanggan extends BaseController
 
     public function simpan()
     {
-        $rules = [
-            'kode_pelanggan' => [
-                'rules' => 'required|is_unique[pelanggan.kode_pelanggan]',
-                'errors' => [
-                    'required' => '{field} harus diisi',
-                    'is_unique' => '{field} sudah digunakan',
-                ]
-            ],
-        ];
+        // $rules = [
+        //     'kode_pelanggan' => [
+        //         'rules' => 'required|is_unique[pelanggan.kode_pelanggan]',
+        //         'errors' => [
+        //             'required' => '{field} harus diisi',
+        //             'is_unique' => '{field} sudah digunakan',
+        //         ]
+        //     ],
+        // ];
 
-        if (!$this->validate($rules)) {
-            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
-        }
+        // if (!$this->validate($rules)) {
+        //     return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        // }
 
         $pelangganModel = new PelangganModel();
         $logModel = new LogModel();
         $username = user()->username;
 
-        $kode_pelanggan = !empty($this->request->getVar('kode_pelanggan')) ? $this->request->getVar('kode_pelanggan') : '';
+        //DB Connect dan Model Loader
+        $db      = \Config\Database::connect();
+
+        //Mendapatkan ID Mitra
+        $username = user()->username;
+
+        $id_mitra = $this->request->getVar('id_mitra');
+
+        $builder_mitra = $db->table('mitra');
+        $mitra = $builder_mitra->where('id_mitra', $id_mitra)->get()->getFirstRow();
+        $id_mitra = $mitra->id_mitra;
+        $kode_mitra_pelanggan = $mitra->kode_mitra_pelanggan;
+
+        //Mendapatkan ID Pelanggan Terkahir
+        $builder_pelanggan = $db->table('pelanggan');
+        $pelanggan   = $builder_pelanggan->where('id_mitra', $id_mitra)->orderBy('urut', 'desc')->get()->getFirstRow();
+        if ($pelanggan) {
+            $lastpelanggan = $pelanggan->urut;
+        } else {
+            $lastpelanggan = 0;
+        }
+
+        $urut = ++$lastpelanggan;
+        $urut_baru = str_pad($urut, 4, "0", STR_PAD_LEFT);
+        $kode_pelanggan = $kode_mitra_pelanggan . '-' . $urut_baru;
+        //dd($kode_pelanggan);
+
+        $tgl_registrasi = date('d');
+        if ($tgl_registrasi > 10) {
+            // Jika tanggal registrasi kurang dari 10, tambahkan 1 bulan ke dalam periode
+            $periode = date('m-Y', strtotime('+1 month'));
+        } else {
+            // Jika tanggal registrasi 10 atau lebih, gunakan periode saat ini
+            $periode = date('m-Y');
+        }
+
         $nama_pelanggan = !empty($this->request->getVar('nama_pelanggan')) ? $this->request->getVar('nama_pelanggan') : '';
         $nik_pelanggan = !empty($this->request->getVar('nik_pelanggan')) ? $this->request->getVar('nik_pelanggan') : '';
         $alamat_pelanggan = !empty($this->request->getVar('alamat_pelanggan')) ? $this->request->getVar('alamat_pelanggan') : '';
@@ -194,7 +229,10 @@ class Pelanggan extends BaseController
 
         $data = [
             'kode_pelanggan' => $kode_pelanggan,
-            'id_mitra' => $this->request->getVar('id_mitra'),
+            'tgl_registrasi' => date('Y-m-d'),
+            'periode' => $periode,
+            'id_mitra' => $id_mitra,
+            'urut' => $urut,
             'nama_pelanggan' => $nama_pelanggan,
             'nik_pelanggan' => $nik_pelanggan,
             'alamat_pelanggan' => $alamat_pelanggan,

@@ -560,6 +560,10 @@ class Tagihan extends BaseController
             ->where('bulan', $bulan)
             ->where('tahun', $tahun)
             ->get()->getResultArray();
+        $builder_mitra = $db->table('mitra');
+        $mitra = $builder_mitra->where('id_mitra', $id_mitra)->get()->getFirstRow();
+        $kode_mitra = $mitra->kode_mitra;
+
         if (empty($tagihan)) {
             $builder = $db->table('pelanggan');
             $pelanggan   = $builder->where('id_pelanggan', $id_pelanggan)
@@ -669,7 +673,7 @@ class Tagihan extends BaseController
                 }
 
                 $tahunnomer = substr(date("Y"), 2, 2);
-                $no_invoice = 'INV/TTN/' . $row['kode_pelanggan'] . '/' . $bulannomer . '/' . $tahunnomer . '/' . ++$last_inv;
+                $no_invoice = 'INV/' . $kode_mitra . '/' . $row['kode_pelanggan'] . '/' . $tahunnomer . '-' . $bulannomer . '/' . ++$last_inv;
                 $item_layanan = 'Abonemen Internet Periode Bulan ' . $bulankirim . ' ' . $tahun;
 
 
@@ -748,6 +752,10 @@ class Tagihan extends BaseController
         $kode_pelanggan = $pelanggan[0]['kode_pelanggan'];
         $id_mitra = $pelanggan[0]['id_mitra'];
 
+        $builder_mitra = $db->table('mitra');
+        $mitra = $builder_mitra->where('id_mitra', $id_mitra)->get()->getFirstRow();
+        $kode_mitra = $mitra->kode_mitra;
+
         $builder_tagihanakhir2 = $db->table('tagihan');
         $tagihan_akhir_builder2   = $builder_tagihanakhir2->where('id_tagihan', $id_tagihan)
             ->get()->getResultArray();
@@ -763,63 +771,63 @@ class Tagihan extends BaseController
         } else {
             $last_kuitansi = '0';
         }
-        $bulan = date("m");
-        if ($bulan == '01') {
+        $bulan_skrng = date("m");
+        if ($bulan_skrng == '01') {
             $bulannomer = 'I';
-        } else if ($bulan == '02') {
+        } else if ($bulan_skrng == '02') {
             $bulannomer = 'II';
-        } else if ($bulan == '03') {
+        } else if ($bulan_skrng == '03') {
             $bulannomer = 'III';
-        } else if ($bulan == '04') {
+        } else if ($bulan_skrng == '04') {
             $bulannomer = 'IV';
-        } else if ($bulan == '05') {
+        } else if ($bulan_skrng == '05') {
             $bulannomer = 'V';
-        } else if ($bulan == '06') {
+        } else if ($bulan_skrng == '06') {
             $bulannomer = 'VI';
-        } else if ($bulan == '07') {
+        } else if ($bulan_skrng == '07') {
             $bulannomer = 'VII';
-        } else if ($bulan == '08') {
+        } else if ($bulan_skrng == '08') {
             $bulannomer = 'VIII';
-        } else if ($bulan == '09') {
+        } else if ($bulan_skrng == '09') {
             $bulannomer = 'IX';
-        } else if ($bulan == '10') {
+        } else if ($bulan_skrng == '10') {
             $bulannomer = 'X';
-        } else if ($bulan == '11') {
+        } else if ($bulan_skrng == '11') {
             $bulannomer = 'XI';
-        } else if ($bulan == '12') {
+        } else if ($bulan_skrng == '12') {
             $bulannomer = 'XII';
         }
 
-        if ($bulan == '01') {
+        if ($bulan_skrng == '01') {
             $bulanhuruf = 'Januari';
-        } else if ($bulan == '02') {
+        } else if ($bulan_skrng == '02') {
             $bulanhuruf = 'Februari';
-        } else if ($bulan == '03') {
+        } else if ($bulan_skrng == '03') {
             $bulanhuruf = 'Maret';
-        } else if ($bulan == '04') {
+        } else if ($bulan_skrng == '04') {
             $bulanhuruf = 'April';
-        } else if ($bulan == '05') {
+        } else if ($bulan_skrng == '05') {
             $bulanhuruf = 'Mei';
-        } else if ($bulan == '06') {
+        } else if ($bulan_skrng == '06') {
             $bulanhuruf = 'Juni';
-        } else if ($bulan == '07') {
+        } else if ($bulan_skrng == '07') {
             $bulanhuruf = 'Juli';
-        } else if ($bulan == '08') {
+        } else if ($bulan_skrng == '08') {
             $bulanhuruf = 'Agustus';
-        } else if ($bulan == '09') {
+        } else if ($bulan_skrng == '09') {
             $bulanhuruf = 'September';
-        } else if ($bulan == '10') {
+        } else if ($bulan_skrng == '10') {
             $bulanhuruf = 'Oktober';
-        } else if ($bulan == '11') {
+        } else if ($bulan_skrng == '11') {
             $bulanhuruf = 'November';
-        } else if ($bulan == '12') {
+        } else if ($bulan_skrng == '12') {
             $bulanhuruf = 'Desember';
         }
 
         //Mendapatkan Nomer Kuitansi Terbaru
         foreach ($pelanggan as $row) :
             $tahunnomer = substr(date("Y"), 2, 2);
-            $no_kuitansi = 'PYI/' . $row['kode_pelanggan'] . '/' . $bulannomer . '/' . $tahunnomer . '/' . ++$last_kuitansi;
+            $no_kuitansi = 'PYI/' . $kode_mitra . '/' . $row['kode_pelanggan'] . '/' . $tahunnomer . '-' . $bulannomer . '/' . ++$last_kuitansi;
         endforeach;
 
         //Menyimpan Data Awal Kuitansi
@@ -855,6 +863,7 @@ class Tagihan extends BaseController
         $item_layanan = 'Abonemen Internet bulan ' . $bulanhuruf . ' ' . $tahun;
         $datakuitansitagihan = [
             'id_tagihan' => $id_tagihan,
+            'id_pelanggan' => $id_pelanggan,
             'item_layanan' => $item_layanan,
             'total_bayar' => $nominal_kuitansi,
             'kurang_bayar' => '0',
@@ -902,6 +911,9 @@ class Tagihan extends BaseController
         $builder = $db->table('pelanggan');
         $pelanggan   = $builder->where('status', '1')->where('id_mitra', $id_mitra)->get()->getResultArray();
 
+        $builder_mitra = $db->table('mitra');
+        $mitra = $builder_mitra->where('id_mitra', $id_mitra)->get()->getFirstRow();
+        $kode_mitra = $mitra->kode_mitra;
         $pelangganModel = new PelangganModel();
         $tagihanModel = new TagihanModel();
         $invoiceModel = new InvoiceModel();
@@ -1004,7 +1016,7 @@ class Tagihan extends BaseController
             }
 
             $tahunnomer = substr(date("Y"), 2, 2);
-            $no_invoice = 'INV/TTN/' . $row['kode_pelanggan'] . '/' . $bulannomer . '/' . $tahunnomer . '/' . ++$last_inv;
+            $no_invoice = 'INV/' . $kode_mitra . '/' . $row['kode_pelanggan'] . '/' . $tahunnomer . '-' . $bulannomer . '/' . ++$last_inv;
             $item_layanan = 'Abonemen Internet Periode Bulan ' . $bulankirim . ' ' . $tahun;
 
 
