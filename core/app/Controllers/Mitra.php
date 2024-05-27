@@ -173,7 +173,9 @@ class Mitra extends BaseController
         if (!empty($fileLogo->getTempName())) {
             $ext = $fileLogo->getExtension();
             // generate nama file
-            $namaFile = date('Y-m-d') . ' - ' . $nama_mitra . '.' . $ext;
+            $namaasli = $fileLogo->getRandomName();
+            // generate nama file
+            $namaFile = date('Y-m-d') . ' - ' . $nama_mitra . ' - ' . $namaasli;
             $fileLogo->move('img/logo', $namaFile);
         } else {
             $namaFile = '';
@@ -388,7 +390,7 @@ class Mitra extends BaseController
             }
 
             $ext = $fileLogo->getExtension();
-            $namaasli = $fileLogo->getClientName();
+            $namaasli = $fileLogo->getRandomName();
             // generate nama file
             $namaFile = date('Y-m-d') . ' - ' . $nama_mitra . ' - ' . $namaasli;
             $fileLogo->move('img/logo', $namaFile);
@@ -402,7 +404,6 @@ class Mitra extends BaseController
             'penanggung_jawab' => $penanggung_jawab,
             'alamat' => $alamat,
             'telepon' => $telepon,
-            'email' => $email,
             'logo' => $namaFile
         ];
 

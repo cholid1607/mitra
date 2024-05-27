@@ -32,28 +32,52 @@
                         <?php endforeach ?>
                     </ul>
                 <?php endif ?>
-                <form action="<?= base_url(); ?>pelanggan/simpan" method="post">
-                    <input type="hidden" name="id_mitra" value="<?= $id_mitra; ?>">
+                <!-- error data -->
+                <form action="<?= base_url(); ?>profil/update" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="id_mitra" value="<?= $mitra[0]['id_mitra']; ?>">
+                    <?= csrf_field() ?>
                     <div class="card-body">
                         <div class="form-group row">
-                            <label for="namapelanggan" class="col-sm-2 col-form-label">Nama Pelanggan</label>
+                            <label for="kodemitra" class="col-sm-2 col-form-label">Kode Mitra</label>
                             <div class="col-sm-10">
                                 <div class="input-group row">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                        <span class="input-group-text"><i class="fas fa-info-circle"></i></span>
                                     </div>
-                                    <input required name="nama_pelanggan" type="text" value="<?= old('nama_pelanggan') ?>" class="form-control" id="namapelanggan" placeholder="Nama Pelanggan">
+                                    <input disabled style="background-color: #ffffff;" name="kode_mitra" value="<?= $mitra[0]['kode_mitra'] ?>" type="text" value="<?= old('kode_mitra') ?>" class="form-control <?php if (session('errors.kode_mitra')) : ?>is-invalid<?php endif ?>" id="kode_mitra" placeholder="Kode Mitra">
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="nik" class="col-sm-2 col-form-label">NIK/NPWP</label>
+                            <label for="kode_mitra_pelanggan" class="col-sm-2 col-form-label">Kode Mitra Pelanggan</label>
                             <div class="col-sm-10">
                                 <div class="input-group row">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                                        <span class="input-group-text"><i class="fas fa-users"></i></span>
                                     </div>
-                                    <input required name="nik_pelanggan" type="text" value="<?= old('nik_pelanggan') ?>" class="form-control" id="nik" placeholder="NIK Pelanggan">
+                                    <input disabled style="background-color: #ffffff;" name="kode_mitra_pelanggan" value="<?= $mitra[0]['kode_mitra_pelanggan'] ?>" type="text" value="<?= old('kode_mitra_pelanggan') ?>" class="form-control <?php if (session('errors.kode_mitra_pelanggan')) : ?>is-invalid<?php endif ?>" id="kode_mitra_pelanggan" placeholder="Kode Mitra Pelanggan">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="namamitra" class="col-sm-2 col-form-label">Nama Mitra</label>
+                            <div class="col-sm-10">
+                                <div class="input-group row">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-handshake"></i></span>
+                                    </div>
+                                    <input name="nama_users" value="<?= $mitra[0]['nama_mitra'] ?>" type="text" class="form-control <?php if (session('errors.nama_mitra')) : ?>is-invalid<?php endif ?>" id="nama_mitra" placeholder="Nama Mitra">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="penanggungjawab" class="col-sm-2 col-form-label">Penanggung Jawab</label>
+                            <div class="col-sm-10">
+                                <div class="input-group row">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-user-cog"></i></span>
+                                    </div>
+                                    <input name="penanggung_jawab" value="<?= $mitra[0]['penanggung_jawab'] ?>" type="text" class="form-control <?php if (session('errors.penanggung_jawab')) : ?>is-invalid<?php endif ?>" id="penanggungjawab" placeholder="Nama Penanggung Jawab">
                                 </div>
                             </div>
                         </div>
@@ -64,7 +88,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
                                     </div>
-                                    <textarea required name="alamat_pelanggan" class="form-control" id="alamat" placeholder="Alamat Pelanggan"><?= old('alamat_pelanggan') ?></textarea>
+                                    <textarea name="alamat" class="form-control <?php if (session('errors.alamat')) : ?>is-invalid<?php endif ?>" id="alamat" placeholder="Alamat Mitra"><?= $mitra[0]['alamat'] ?></textarea>
                                 </div>
                             </div>
                         </div>
@@ -75,79 +99,48 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><b>+62</b></span>
                                     </div>
-                                    <input required name="telp_pelanggan" type="text" value="<?= old('telp_pelanggan') ?>" class="form-control" id="telepon" placeholder="89123456789">
+                                    <input name="telepon" value="<?= $mitra[0]['telepon'] ?>" type="text" class="form-control <?php if (session('errors.telepon')) : ?>is-invalid<?php endif ?>" id="telepon" placeholder="89123456789">
                                 </div>
                                 <i style="font-size:14px;">Hilangkan angka 0 yang ada di paling depan. Contoh : 089123456789 ditulis 89123456789</i>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="paketlangganan" class="col-sm-2 col-form-label">Paket Langganan</label>
+                            <label for="email" class="col-sm-2 col-form-label">Email</label>
                             <div class="col-sm-10">
                                 <div class="input-group row">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fas fa-list"></i></span>
+                                        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
                                     </div>
-                                    <input name="paket_langganan" type="text" value="<?= old('paket_langganan') ?>" class="form-control" id="paketlangganan" placeholder="Paket Langganan">
+                                    <input disabled style="background-color: #ffffff;" name="email" value="<?= $mitra[0]['email'] ?>" type="text" value="<?= old('email') ?>" class="form-control <?php if (session('errors.email')) : ?>is-invalid<?php endif ?>" id="email" placeholder="Email">
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="bandwidth" class="col-sm-2 col-form-label">Bandwidth</label>
+                            <label for="logo" class="col-sm-2 col-form-label">Logo</label>
                             <div class="col-sm-10">
+                                <?php if ($mitra[0]['logo'] != '') { ?>
+                                    <img style="margin-left:-8px" class="mb-2" src="<?= base_url() ?>/img/logo/<?= $mitra[0]['logo'] ?>" width="200px">
+                                    <i><b>File tersimpan : </b><?= $mitra[0]['logo'] ?></i>
+                                <?php } ?>
                                 <div class="input-group row">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fas fa-signal"></i></span>
+                                        <span class="input-group-text"><i class="fas fa-images"></i></span>
                                     </div>
-                                    <input name="bandwidth" type="text" value="<?= old('bandwidth') ?>" class="form-control" id="bandwidth" placeholder="Bandwidth Pelanggan">
+                                    <div class="custom-file">
+                                        <input type="file" onchange="previewImg()" name="logo" class="custom-file-input  <?php if (session('errors.telepon')) : ?>is-invalid<?php endif ?>" id="logo">
+                                        <label class="custom-file-label" for="logo">Pilih File Gambar</label>
+                                    </div>
                                 </div>
+                                <i style="font-size:14px;">Kosongkan jika tidak ingin merubah. Logo maksimal memiliki dimensi 300 pixels x 100 pixels</i>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="nominal" class="col-sm-2 col-form-label">Harga</label>
-                            <div class="col-sm-10">
+                            <label for="btn" class="col-sm-2 col-form-label"></label>
+                            <div class="col-sm-4">
                                 <div class="input-group row">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
-                                    </div>
-                                    <input required name="harga" type="text" value="<?= old('harga') ?>" class="form-control" id="result_input" placeholder="Nominal Pelanggan">
+                                    <input type="submit" class="btn btn-success" value="Update Data">&nbsp;&nbsp;
+                                    <a onclick="location.replace('<?= base_url(); ?>mitra')" class="btn btn-default">Kembali</a>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="nominal" class="col-sm-2 col-form-label">PPN 11%</label>
-                            <div class="col-sm-10">
-                                <div class="input-group row">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fas fa-hand-holding-usd"></i></span>
-                                    </div>
-                                    <select required name="status_ppn" class="form-control" id="prioritas">
-                                        <option value="Ya">Ya</option>
-                                        <option value="Tidak">Tidak</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="keteranganpelanggan" class="col-sm-2 col-form-label">Ket. Pelanggan</label>
-                            <div class="col-sm-10">
-                                <div class="input-group row">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fas fa-newspaper"></i></span>
-                                    </div>
-                                    <select name="ket_pelanggan" class="form-control" id="keteranganpelanggan">
-                                        <option value="prabayar">Prabayar</option>
-                                        <option value="pascabayar">Pascabayar</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="btn" class="col-sm-2 col-form-label"></label>
-                        <div class="col-sm-4">
-                            <div class="input-group row">
-                                <input type="submit" class="btn btn-success" value="Tambah Pelanggan">&nbsp;&nbsp;
-                                <a onclick="location.replace('<?= base_url(); ?>pelanggan')" class="btn btn-default">Kembali</a>
                             </div>
                         </div>
                     </div>

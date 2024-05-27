@@ -49,6 +49,17 @@
                             </div>
                         </div>
                         <div class="form-group row">
+                            <label for="kode_mitra_pelanggan" class="col-sm-2 col-form-label">Kode Mitra Pelanggan</label>
+                            <div class="col-sm-10">
+                                <div class="input-group row">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-users"></i></span>
+                                    </div>
+                                    <input disabled style="background-color: #ffffff;" name="kode_mitra_pelanggan" value="<?= $mitra[0]['kode_mitra_pelanggan'] ?>" type="text" value="<?= old('kode_mitra_pelanggan') ?>" class="form-control <?php if (session('errors.kode_mitra_pelanggan')) : ?>is-invalid<?php endif ?>" id="kode_mitra_pelanggan" placeholder="Kode Mitra Pelanggan">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
                             <label for="namamitra" class="col-sm-2 col-form-label">Nama Mitra</label>
                             <div class="col-sm-10">
                                 <div class="input-group row">
@@ -91,6 +102,17 @@
                                     <input name="telepon" value="<?= $mitra[0]['telepon'] ?>" type="text" class="form-control <?php if (session('errors.telepon')) : ?>is-invalid<?php endif ?>" id="telepon" placeholder="89123456789">
                                 </div>
                                 <i style="font-size:14px;">Hilangkan angka 0 yang ada di paling depan. Contoh : 089123456789 ditulis 89123456789</i>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="email" class="col-sm-2 col-form-label">Email</label>
+                            <div class="col-sm-10">
+                                <div class="input-group row">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                    </div>
+                                    <input disabled style="background-color: #ffffff;" name="email" value="<?= $mitra[0]['email'] ?>" type="text" value="<?= old('email') ?>" class="form-control <?php if (session('errors.email')) : ?>is-invalid<?php endif ?>" id="email" placeholder="Email">
+                                </div>
                             </div>
                         </div>
                         <div class="form-group row">
