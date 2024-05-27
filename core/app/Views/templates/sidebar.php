@@ -42,6 +42,16 @@
                         </p>
                     </a>
                 </li>
+                <?php if (in_groups('mitra')) : ?>
+                    <li class="nav-item">
+                        <a href="<?= base_url(); ?>profil" class="nav-link">
+                            <i class="nav-icon fas fa-user"></i>
+                            <p>
+                                Profil
+                            </p>
+                        </a>
+                    </li>
+                <?php endif; ?>
                 <li class="nav-item">
                     <a href="<?= base_url(); ?>reset" class="nav-link">
                         <i class="nav-icon fas fa-key"></i>

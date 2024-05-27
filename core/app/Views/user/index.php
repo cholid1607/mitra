@@ -108,14 +108,61 @@
                     </div>
                 </div>
             </div>
-            <div class="card card-warning">
+            <div class="card card-info">
                 <div class="card-header">
-                    <h3 class="card-title"><b>Daftar Tagihan Pelanggan Mitra <?= date('F') . ' ' . date('Y'); ?></b></h3>
+                    <h3 class="card-title"><b>Grafik Jumlah Pelanggan</b></h3>
                     <div class="card-tools">
                     </div>
                 </div>
                 <div class="card-body">
+                    <div class="chart">
+                        <canvas id="lineChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                    </div>
+                    <!-- jQuery -->
+                    <script src="<?= base_url(); ?>plugins/jquery/jquery.min.js"></script>
+                    <!-- ChartJS -->
+                    <script src="<?= base_url(); ?>plugins/chart.js/Chart.min.js"></script>
+                    <script>
+                        $(function() {
+                            /* ChartJS
+                             * -------
+                             * Here we will create a few charts using ChartJS
+                             */
+                            //- LINE CHART -
+                            //--------------
+                            var labels = <?php echo json_encode($chart_data['labels']); ?>;
+                            var values = <?php echo json_encode($chart_data['values']); ?>;
 
+                            var lineChartCanvas = $("#lineChart").get(0).getContext("2d");
+                            var areaChartData = {
+                                labels: labels,
+                                datasets: [{
+                                    backgroundColor: "rgba(60,141,188,0.9)",
+                                    borderColor: "rgba(255,0,0,0.8)",
+                                    data: values,
+                                }, ],
+                            };
+
+                            var areaChartOptions = {
+                                maintainAspectRatio: false,
+                                responsive: true,
+                                legend: {
+                                    display: false,
+                                },
+                            };
+
+                            var lineChartOptions = areaChartOptions;
+                            var lineChartData = areaChartData;
+                            lineChartData.datasets[0].fill = false;
+                            lineChartOptions.datasetFill = false;
+
+                            var lineChart = new Chart(lineChartCanvas, {
+                                type: "line",
+                                data: lineChartData,
+                                options: lineChartOptions,
+                            });
+                        });
+                    </script>
                 </div>
             </div>
         <?php
@@ -130,50 +177,51 @@
                 </div>
                 <div class="card-body">
                     <div class="col-lg-12 row">
-                        <!-- jQuery -->
-                        <script src="<?= base_url(); ?>plugins/jquery/jquery.min.js"></script>
-                        <!-- ChartJS -->
-                        <script src="<?= base_url(); ?>plugins/chart.js/Chart.min.js"></script>
-                        <script>
-                            $(function() {
-                                /* ChartJS
-                                 * -------
-                                 * Here we will create a few charts using ChartJS
-                                 */
-                                //- LINE CHART -
-                                //--------------
-                                var labels = <?php echo json_encode($chart_data['labels']); ?>;
-                                var values = <?php echo json_encode($chart_data['values']); ?>;
+                        <!-- ./col -->
+                        <div class="col-lg-4 col-md-6">
+                            <!-- small box -->
+                            <div class="small-box bg-danger">
+                                <div class="inner">
+                                    <h3><?= $jml_pelanggan_mitra; ?></h3>
 
-                                var lineChartCanvas = $("#lineChart").get(0).getContext("2d");
-                                var areaChartData = {
-                                    labels: labels,
-                                    datasets: [{
-                                        backgroundColor: "rgba(60,141,188,0.9)",
-                                        borderColor: "rgba(255,0,0,0.8)",
-                                        data: values,
-                                    }, ],
-                                };
+                                    <p>Jumlah Pelanggan</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <a href="<?= base_url(); ?>pelanggan" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                        <!-- ./col -->
+                        <div class="col-lg-4 col-md-6">
+                            <!-- small box -->
+                            <div class="small-box bg-info">
+                                <div class="inner">
+                                    <h3>Rp. <?= number_format($total_ppn); ?></h3>
 
-                                var areaChartOptions = {
-                                    maintainAspectRatio: false,
-                                    responsive: true,
-                                    legend: {
-                                        display: false,
-                                    },
-                                };
-                                var lineChartOptions = areaChartOptions;
-                                var lineChartData = areaChartData;
-                                lineChartData.datasets[0].fill = false;
-                                lineChartOptions.datasetFill = false;
+                                    <p>Jumlah PPN yang Dibayarkan Bulan Ini</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-dollar-sign"></i>
+                                </div>
+                                <a href="<?= base_url(); ?>pelanggan" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                        <!-- ./col -->
+                        <div class="col-lg-4 col-md-6">
+                            <!-- small box -->
+                            <div class="small-box bg-secondary">
+                                <div class="inner">
+                                    <h3>Rp. <?= number_format($total_bhp); ?></h3>
 
-                                var lineChart = new Chart(lineChartCanvas, {
-                                    type: "line",
-                                    data: lineChartData,
-                                    options: lineChartOptions,
-                                });
-                            });
-                        </script>
+                                    <p>Jumlah BHP yang Dibayarkan Bulan Ini</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-hand-holding-usd"></i>
+                                </div>
+                                <a href="<?= base_url(); ?>pelanggan" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-lg-12 row">
                         <!-- ./col -->
@@ -212,6 +260,7 @@
             </div>
         <?php endif; ?>
     </section>
+    <br />
     <!-- /.content -->
 </div>
 <?= $this->endSection(); ?>
