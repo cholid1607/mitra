@@ -51,6 +51,14 @@
                             </p>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a href="<?= base_url(); ?>pembayaran" class="nav-link">
+                            <i class="nav-icon fas fa-hand-holding-usd"></i>
+                            <p>
+                                Atur Metode Bayar
+                            </p>
+                        </a>
+                    </li>
                 <?php endif; ?>
                 <li class="nav-item">
                     <a href="<?= base_url(); ?>reset" class="nav-link">
@@ -109,13 +117,15 @@
                         $db      = \Config\Database::connect();
                         $builder = $db->table('mitra');
                         $mitra =  $builder->where('username', $username)->get()->getFirstRow();
+                        if ($mitra) {
                         ?>
-                        <a href="<?= base_url(); ?>pelanggan/pelangganmitra/<?= $mitra->id_mitra; ?>" class="nav-link">
-                            <i class="nav-icon fas fa-users"></i>
-                            <p>
-                                Data Pelanggan Mitra
-                            </p>
-                        </a>
+                            <a href="<?= base_url(); ?>pelanggan/pelangganmitra/<?= $mitra->id_mitra; ?>" class="nav-link">
+                                <i class="nav-icon fas fa-users"></i>
+                                <p>
+                                    Data Pelanggan Mitra
+                                </p>
+                            </a>
+                        <?php } ?>
                     </li>
                 <?php endif; ?>
                 <?php if ((in_groups('superuser'))) : ?>

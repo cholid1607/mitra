@@ -148,6 +148,13 @@
                 "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
             }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 
+            $("#daftar-pembayaran").DataTable({
+                "responsive": true,
+                "lengthChange": true,
+                "autoWidth": false,
+                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
             <?php
             if (empty($id_mitra)) {
                 $id_mitra = 0;
@@ -633,6 +640,7 @@
                         "id_kuitansi": "id_kuitansi",
                         "id_pelanggan": "id_pelanggan",
                         "nama_pelanggan": "nama_pelanggan",
+                        "id_mitra": "id_mitra",
                         "tahun": "tahun",
                         "bulan": "bulan",
                     }],
@@ -641,9 +649,65 @@
                     render: function(data, type, row) {
                         //Tombol Buat Kuitansi
                         if (data == 1 || data == 2 || data == 4) {
-                            html = "<a href='<?= base_url() ?>tagihan/buatkuitansi/" + row.id_pelanggan + "/" + row.id_tagihan + "/" + row.tahun + "/" + row.bulan + "' class='btn btn-warning btn-sm '>";
-                            html += "<i class='fas fa-plus-circle'></i> Buat Kuitansi";
+                            html = "<a href='#' data-target='#metodeBayar" + row.id_tagihan + "' data-toggle='modal' class='btn btn-warning btn-sm'>";
+                            html += "<i class='fas fa-plus'></i>&nbsp;Buat Kuitansi";
                             html += "</a>";
+                            html += "<div class='modal fade' id='metodeBayar" + row.id_tagihan + "' tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true'>";
+                            html += "<form action='<?= base_url(); ?>tagihan/buatkuitansi' method='post'>";
+                            html += "<div class='modal-dialog modal-lg' role='document'>";
+                            html += "<div class='modal-content'>";
+                            html += "<div class='modal-header'>";
+                            html += "<h5 class='modal-title' id='exampleModalLabel'>Pilih Metode Pembayaran</h5>";
+                            html += "<button class='close' type='button' data-dismiss='modal' aria-label='Close'>";
+                            html += "<span aria-hidden='true'>×</span>";
+                            html += "</button>";
+                            html += "</div>";
+                            html += "<div class='modal-body'>";
+                            html += "<div class='list-group-item p-3'>";
+                            html += "<div class='row align-items-start'>";
+                            html += "<div class='col-md-4 mb-8pt mb-md-0'>";
+                            html += "<div class='media align-items-left'>";
+                            html += "<div class='d-flex flex-column media-body media-middle'>";
+                            html += "<span class='card-title'>Metode Bayar</span>";
+                            html += "</div>";
+                            html += "</div>";
+                            html += "</div>";
+                            html += "<div class='col mb-8pt mb-md-0'>";
+                            html += "<input type='hidden' name='id_pembayaran' class='id' value='" + row.id_tagihan + "'>";
+                            html += "<input type='hidden' name='id_pelanggan' class='id' value='" + row.id_pelanggan + "'>";
+                            html += "<input type='hidden' name='id_tagihan' class='id' value='" + row.id_tagihan + "'>";
+                            html += "<input type='hidden' name='tahun' class='id' value='" + row.tahun + "'>";
+                            html += "<input type='hidden' name='bulan' class='id' value='" + row.bulan + "'>";
+                            html += "<select name='id_pembayaran' class='form-control' data-toggle='select'>";
+                            <?php
+                            $db      = \Config\Database::connect();
+
+                            //Cek ID Mitra
+
+                            //Cek Pembayaran Terakhir
+                            $builder = $db->table('pembayaran');
+                            $pembayaran   = $builder->where('id_mitra', $id_mitra)
+                                ->get()->getResultArray();
+                            foreach ($pembayaran as $row) {
+                            ?>
+                                html += "<option value='<?= $row['id_pembayaran']; ?>'><?= $row['nama_bank']; ?> (<?= $row['atas_nama']; ?>)</option>";
+                            <?php
+                            }
+                            ?>
+                            html += "</select>";
+                            html += "</div>";
+                            html += "</div>";
+                            html += "</div>";
+                            html += "</div>";
+                            html += "<div class='modal-footer'>";
+                            html += "<input type='hidden' name='id' class='id'>";
+                            html += "<button class='btn btn-secondary' type='button' data-dismiss='modal'>Batal</button>";
+                            html += "<button type='submit' class='btn btn-success'>Simpan</button>";
+                            html += "</div>";
+                            html += "</div>";
+                            html += "</div>";
+                            html += "</form>";
+                            html += "</div>";
                         }
                         //Tombol Cetak Kuitansi
                         if (data == 3) {

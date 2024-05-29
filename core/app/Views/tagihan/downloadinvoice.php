@@ -321,21 +321,20 @@
                             <tr>
                                 <td>
                                     <ol>
-                                        <li>
-                                            <b>Bank BCA</b> <br />
-                                            No. Rek <i class="rekening">861 01 38 609</i><br />
-                                            Atas nama Titin Setyowati
-                                        </li>
-                                        <li>
-                                            <b>Bank Mandiri</b><br />
-                                            No. Rek <i class="rekening">1370 0066 71677</i><br />
-                                            Atas nama Hari Ismanto
-                                        </li>
-                                        <li>
-                                            <b>Bank BPD DIY</b><br />
-                                            No. Rek <i class="rekening">005 211 031921</i><br />
-                                            Atas nama Hari Ismanto
-                                        </li>
+                                        <?php
+                                        $db      = \Config\Database::connect();
+                                        $builder = $db->table('pembayaran');
+                                        $pembayaran = $builder->where('id_mitra', $row['id_mitra'])->get()->getResultArray();
+                                        foreach ($pembayaran as $pembayaran) :
+                                        ?>
+                                            <li>
+                                                <b><?= $pembayaran['nama_bank']; ?></b> <br />
+                                                <?php if ($pembayaran['nama_bank'] != 'Tunai') { ?>
+                                                    No. Rek <i class="rekening"><?= $pembayaran['rekening']; ?></i><br />
+                                                    Atas nama <?= $pembayaran['atas_nama']; ?>
+                                                <?php } ?>
+                                            </li>
+                                        <?php endforeach; ?>
                                     </ol>
                                 </td>
                             </tr>

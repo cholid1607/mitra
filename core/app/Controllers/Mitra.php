@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\LogModel;
 use App\Models\MitraModel;
+use App\Models\PembayaranModel;
 use App\Models\PendaftaranModel;
 use PhpParser\Node\Expr\New_;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -223,6 +224,7 @@ class Mitra extends BaseController
 
         //Simpan Mitra
         $mitraModel->save($datamitra);
+
         // Save the user
         $allowedPostFields = array_merge(['password'], $this->config->validFields, $this->config->personalFields);
         $user = new User($this->request->getPost($allowedPostFields));
@@ -260,6 +262,25 @@ class Mitra extends BaseController
             'tipe_log' => 'tambah-mitra',
         ];
         $logModel->save($datalog);
+
+        $db      = \Config\Database::connect();
+        //Cek Pemasukan Terakhir
+        $builder = $db->table('mitra');
+        $mitra   = $builder->where('kode_mitra', $kode_mitra)
+            ->get()->getFirstRow();
+
+        //Menyimpan Data Pembayaran
+        $datapembayaran = [
+            'id_mitra' => $mitra->id_mitra,
+            'nama_bank' => 'Tunai',
+            'rekening' => '',
+            'atas_nama' => ''
+        ];
+
+        //Simpan Mitra
+        $pembayaranModel = new PembayaranModel();
+        $pembayaranModel->save($datapembayaran);
+
         session()->setFlashdata('pesan', 'Data Berhasil Disimpan');
         return redirect()->to(base_url('/mitra/index'));
     }

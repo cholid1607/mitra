@@ -736,8 +736,16 @@ class Tagihan extends BaseController
         }
     }
 
-    public function buatkuitansi($id_pelanggan = '0', $id_tagihan = '0', $tahun = '0', $bulan = '0')
+    public function buatkuitansi()
     {
+        //dd($_POST);
+        $id_pelanggan = $this->request->getVar('id_pelanggan');
+        $id_tagihan = $this->request->getVar('id_tagihan');
+        $tahun = $this->request->getVar('tahun');
+        $bulan = $this->request->getVar('bulan');
+        $id_pembayaran = $this->request->getVar('id_pembayaran');
+
+        //dd($bulan);
         //DB Connect dan Model Loader
         $db      = \Config\Database::connect();
         $kuitansiModel = new KuitansiModel();
@@ -798,29 +806,29 @@ class Tagihan extends BaseController
             $bulannomer = 'XII';
         }
 
-        if ($bulan_skrng == '01') {
+        if ($bulan == '01') {
             $bulanhuruf = 'Januari';
-        } else if ($bulan_skrng == '02') {
+        } else if ($bulan == '02') {
             $bulanhuruf = 'Februari';
-        } else if ($bulan_skrng == '03') {
+        } else if ($bulan == '03') {
             $bulanhuruf = 'Maret';
-        } else if ($bulan_skrng == '04') {
+        } else if ($bulan == '04') {
             $bulanhuruf = 'April';
-        } else if ($bulan_skrng == '05') {
+        } else if ($bulan == '05') {
             $bulanhuruf = 'Mei';
-        } else if ($bulan_skrng == '06') {
+        } else if ($bulan == '06') {
             $bulanhuruf = 'Juni';
-        } else if ($bulan_skrng == '07') {
+        } else if ($bulan == '07') {
             $bulanhuruf = 'Juli';
-        } else if ($bulan_skrng == '08') {
+        } else if ($bulan == '08') {
             $bulanhuruf = 'Agustus';
-        } else if ($bulan_skrng == '09') {
+        } else if ($bulan == '09') {
             $bulanhuruf = 'September';
-        } else if ($bulan_skrng == '10') {
+        } else if ($bulan == '10') {
             $bulanhuruf = 'Oktober';
-        } else if ($bulan_skrng == '11') {
+        } else if ($bulan == '11') {
             $bulanhuruf = 'November';
-        } else if ($bulan_skrng == '12') {
+        } else if ($bulan == '12') {
             $bulanhuruf = 'Desember';
         }
 
@@ -834,6 +842,7 @@ class Tagihan extends BaseController
         $datakuitansi = [
             'no_urut' => $last_kuitansi++,
             'no_kuitansi' => $no_kuitansi,
+            'id_pembayaran' => $id_pembayaran,
             'id_pelanggan' => $id_pelanggan,
             'tgl_kuitansi' => date("Y-m-d"),
             'akun_bank' => '-',

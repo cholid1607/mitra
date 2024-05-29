@@ -76,6 +76,12 @@ class Home extends BaseController
             } else {
                 $data['total_terbayar'] = 0;
             }
+        } else {
+            $data['jml_pelanggan_mitra'] = 0;
+            $data['total_bhp'] = 0;
+            $data['total_ppn'] = 0;
+            $data['total_tagihan'] = 0;
+            $data['total_terbayar'] = 0;
         }
 
         // Query ke database untuk mendapatkan data pelanggan

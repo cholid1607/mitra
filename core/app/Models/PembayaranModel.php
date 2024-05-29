@@ -15,7 +15,7 @@ class PembayaranModel extends Model
     protected $useSoftDeletes = false;
 
     protected $allowedFields = [
-        'id_pembayaran', 'id_mitra', 'nama_bank'
+        'id_pembayaran', 'id_mitra', 'nama_bank', 'rekening', 'atas_nama'
     ];
 
     protected $useTimestamps = true;

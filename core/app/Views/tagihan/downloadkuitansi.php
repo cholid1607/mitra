@@ -290,62 +290,25 @@
                     <td width="50%">
                         <b>METODE PEMBAYARAN</b><br />
                         <table>
-                            <tr>
-                                <td>
-                                    <input type="checkbox" <?= $row['akun_bank'] == 'Mandiri - Hari Ismanto' ? 'checked' : ''; ?>>
-                                </td>
-                                <td>
-                                    Mandiri a.n Hari Ismanto
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="checkbox" <?= $row['akun_bank'] == 'BCA - Titin Setyowati' ? 'checked' : ''; ?>>
-                                </td>
-                                <td>
-                                    BCA a.n Titin Setyowati
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="checkbox" <?= $row['akun_bank'] == 'BCA - PT. Tonggak Teknologi Netikom' ? 'checked' : ''; ?>>
-                                </td>
-                                <td>
-                                    BCA - PT. Tonggak Teknologi Netikom
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="checkbox" <?= $row['akun_bank'] == 'BPD - PT. Tonggak Teknologi Netikom' ? 'checked' : ''; ?>>
-                                </td>
-                                <td>
-                                    BPD - PT. Tonggak Teknologi Netikom
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="checkbox" <?= $row['akun_bank'] == 'BPD - Hari Ismanto' ? 'checked' : ''; ?>>
-                                </td>
-                                <td>
-                                    BPD A.n Hari Ismanto
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="checkbox" <?= $row['akun_bank'] == 'QRIS' ? 'checked' : ''; ?>>
-                                </td>
-                                <td>
-                                    QRIS
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="checkbox" <?= $row['akun_bank'] == 'Tunai' ? 'checked' : ''; ?>>
-                                </td>
-                                <td>
-                                    Tunai
-                                </td>
-                            </tr>
+                            <?php
+                            $db      = \Config\Database::connect();
+                            $builder = $db->table('pembayaran');
+                            $pembayaran = $builder->where('id_mitra', $row['id_mitra'])->get()->getResultArray();
+                            foreach ($pembayaran as $pembayaran) :
+                            ?>
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" <?= $row['id_pembayaran'] == $pembayaran['id_pembayaran'] ? 'checked' : ''; ?>>
+                                    </td>
+                                    <td>
+                                        <?php if ($pembayaran['nama_bank'] != 'Tunai') {
+                                            echo $pembayaran['nama_bank'] . " a.n " . $pembayaran['atas_nama'];
+                                        } else {
+                                            echo $pembayaran['nama_bank'];
+                                        } ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
                         </table>
                     </td>
                     <td width="50%" class="text-center">

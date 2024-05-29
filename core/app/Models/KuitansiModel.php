@@ -15,7 +15,7 @@ class KuitansiModel extends Model
     protected $useSoftDeletes = false;
 
     protected $allowedFields = [
-        'id_kuitansi', 'no_urut', 'no_kuitansi', 'akun_bank', 'nominal_kuitansi', 'piutang',
+        'id_kuitansi', 'no_urut', 'no_kuitansi', 'id_pembayaran', 'nominal_kuitansi', 'piutang',
         'informasi_kuitansi', 'id_pelanggan', 'tgl_kuitansi', 'id_pemasukan', 'status', 'bulan', 'tahun', 'diskon'
     ];
 
