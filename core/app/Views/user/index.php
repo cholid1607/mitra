@@ -184,7 +184,7 @@
                                 <div class="inner">
                                     <h3><?= $jml_pelanggan_mitra; ?></h3>
 
-                                    <p>Jumlah Pelanggan</p>
+                                    <p>Jumlah <br />Pelanggan</p>
                                 </div>
                                 <div class="icon">
                                     <i class="fas fa-users"></i>
@@ -199,7 +199,7 @@
                                 <div class="inner">
                                     <h3>Rp. <?= number_format($total_ppn); ?></h3>
 
-                                    <p>Jumlah PPN yang Dibayarkan Bulan Ini</p>
+                                    <p>Jumlah PPN <br />yang Dibayarkan Bulan Ini</p>
                                 </div>
                                 <div class="icon">
                                     <i class="fas fa-dollar-sign"></i>
@@ -214,7 +214,7 @@
                                 <div class="inner">
                                     <h3>Rp. <?= number_format($total_bhp); ?></h3>
 
-                                    <p>Jumlah BHP yang Dibayarkan Bulan Ini</p>
+                                    <p>Jumlah BHP, USO dan Admin <br />yang Dibayarkan Bulan Ini</p>
                                 </div>
                                 <div class="icon">
                                     <i class="fas fa-hand-holding-usd"></i>

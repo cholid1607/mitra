@@ -43,13 +43,16 @@ class Home extends BaseController
             }
 
             // Menghitung Total BHP
-            $total_bhp = $builder->selectSum('total_tagihan', 'jml_tagihan')
+            $total_bhp = $builder->selectSum('nominal', 'jml_tagihan')
                 ->where('tgl_tagihan >=', date('Y-m-d', strtotime('-1 month', strtotime(date('Y-m-10')))))
                 ->where('id_mitra', $id_mitra)
                 ->where('tgl_tagihan <=', date('Y-m-10'))
                 ->get()->getFirstRow();
             if ($total_bhp) {
-                $data['total_bhp'] = ($total_bhp->jml_tagihan) * 0.0125;
+                $bhp = ($total_bhp->jml_tagihan) * 0.005;
+                $uso = ($total_bhp->jml_tagihan) * 0.0125;
+                $admin = ($total_bhp->jml_tagihan) * 0.0125;
+                $data['total_bhp']  = $bhp + $uso + $admin;
             } else {
                 $data['total_bhp'] = 0;
             }
