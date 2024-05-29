@@ -58,8 +58,13 @@ class Home extends BaseController
             }
 
             //Menghitung Total Tagihan
-            if ($total_bhp) {
-                $data['total_tagihan'] = ($total_bhp->jml_tagihan);
+            $total_tagihan = $builder->selectSum('total_tagihan', 'jml_tagihan')
+                ->where('tgl_tagihan >=', date('Y-m-d', strtotime('-1 month', strtotime(date('Y-m-10')))))
+                ->where('id_mitra', $id_mitra)
+                ->where('tgl_tagihan <=', date('Y-m-10'))
+                ->get()->getFirstRow();
+            if ($total_tagihan) {
+                $data['total_tagihan'] = ($total_tagihan->jml_tagihan);
             } else {
                 $data['total_tagihan'] = 0;
             }
