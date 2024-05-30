@@ -31,10 +31,11 @@ class Home extends BaseController
 
 
             //Menghitung Total PPN
-            $total_ppn = $builder->selectSum('ppn', 'total_ppn')
-                ->where('tgl_tagihan >=', date('Y-m-d', strtotime('-1 month', strtotime(date('Y-m-10')))))
+            $total_ppn = $builder_pelanggan->selectSum('ppn', 'total_ppn')
+                //->where('tgl_registrasi >=', date('Y-m-10', strtotime('-1 month', strtotime(date('Y-m-10')))))
                 ->where('id_mitra', $id_mitra)
-                ->where('tgl_tagihan <=', date('Y-m-10'))
+                ->where('status', 1)
+                ->where('tgl_registrasi <=', date('Y-m-10'))
                 ->get()->getFirstRow();
             if ($total_ppn) {
                 $data['total_ppn'] = $total_ppn->total_ppn;
@@ -43,10 +44,11 @@ class Home extends BaseController
             }
 
             // Menghitung Total BHP
-            $total_bhp = $builder->selectSum('nominal', 'jml_tagihan')
-                ->where('tgl_tagihan >=', date('Y-m-d', strtotime('-1 month', strtotime(date('Y-m-10')))))
+            $total_bhp = $builder_pelanggan->selectSum('harga', 'jml_tagihan')
+                //->where('tgl_registrasi >=', date('Y-m-10', strtotime('-1 month', strtotime(date('Y-m-10')))))
                 ->where('id_mitra', $id_mitra)
-                ->where('tgl_tagihan <=', date('Y-m-10'))
+                ->where('status', 1)
+                ->where('tgl_registrasi <=', date('Y-m-10'))
                 ->get()->getFirstRow();
             if ($total_bhp) {
                 $bhp = ($total_bhp->jml_tagihan) * 0.005;
@@ -59,7 +61,7 @@ class Home extends BaseController
 
             //Menghitung Total Tagihan
             $total_tagihan = $builder->selectSum('total_tagihan', 'jml_tagihan')
-                ->where('tgl_tagihan >=', date('Y-m-d', strtotime('-1 month', strtotime(date('Y-m-10')))))
+                ->where('tgl_tagihan >=', date('Y-m-10', strtotime('-1 month', strtotime(date('Y-m-10')))))
                 ->where('id_mitra', $id_mitra)
                 ->where('tgl_tagihan <=', date('Y-m-10'))
                 ->get()->getFirstRow();
@@ -71,7 +73,7 @@ class Home extends BaseController
 
             //Menghitung Tagihan Terbayar
             $total_terbayar = $builder->selectSum('total_tagihan', 'jml_tagihan')
-                ->where('tgl_tagihan >=', date('Y-m-d', strtotime('-1 month', strtotime(date('Y-m-10')))))
+                ->where('tgl_tagihan >=', date('Y-m-10', strtotime('-1 month', strtotime(date('Y-m-10')))))
                 ->where('id_mitra', $id_mitra)
                 ->where('tgl_tagihan <=', date('Y-m-10'))
                 ->where('status', 3)
@@ -81,12 +83,14 @@ class Home extends BaseController
             } else {
                 $data['total_terbayar'] = 0;
             }
+            $data['id_mitra'] = $id_mitra;
         } else {
             $data['jml_pelanggan_mitra'] = 0;
             $data['total_bhp'] = 0;
             $data['total_ppn'] = 0;
             $data['total_tagihan'] = 0;
             $data['total_terbayar'] = 0;
+            $data['id_mitra'] = 0;
         }
 
         // Query ke database untuk mendapatkan data pelanggan

@@ -496,10 +496,92 @@
                         }
                     }
                 }, {
+                    "creator": [{
+                        "id_mitra": "id_mitra",
+                        "kode_mitra": "kode_mitra",
+                        "nama_mitra": "nama_mitra",
+                        "username": "username",
+                    }],
                     "data": "id_mitra",
                     "className": 'dt-body-center',
                     render: function(data, type, row) {
-                        html = "<a href = '<?= base_url(); ?>mitra/detail/" + data + "' class = 'btn btn-primary btn-block btn-circle btn-sm' title='Detail Data Mitra'> <i class='fas fa-eye'> </i> Lihat Mitra</a>";
+                        html = "<a href='#' data-target='#bhpModal" + data + "' data-toggle='modal' class='btn btn-success btn-block btn-circle btn-sm' title='Download BHP'><i class='fas fa-download'></i> Download BHP</a>";
+                        html += "<div class='modal fade' id='bhpModal" + data + "' tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true'>";
+                        html += "<form action='<?= base_url(); ?>mitra/downloadbhp' method='post'>";
+                        html += "<input type='hidden' name='id_mitra' value='" + data + "'>";
+                        html += "<div class='modal-dialog' role='document'>";
+                        html += "<div class='modal-content'>";
+                        html += "<div class='modal-header'>";
+                        html += "<h5 class='modal-title' id='exampleModalLabel'>Downloads BHP</h5>";
+                        html += "<button class='close' type='button' data-dismiss='modal' aria-label='Close'>";
+                        html += "<span aria-hidden='true'>×</span>";
+                        html += "</button>";
+                        html += "</div>";
+                        html += "<div class='modal-body'>";
+                        html += "<div class='list-group-item p-3'>";
+                        html += "<div class='row align-items-start'>";
+                        html += "<div class='col-md-4 mb-8pt mb-md-0'>";
+                        html += "<div class='media align-items-left'>";
+                        html += "<div class='d-flex flex-column media-body media-middle'>";
+                        html += "<span class='card-title' style='font-size:16px'>Pilih Tahun</span>";
+                        html += "</div>";
+                        html += "</div>";
+                        html += "</div>";
+                        html += "<div class='col mb-8pt mb-md-0'>";
+                        html += "<select name='tahun' class='form-control' data-toggle='select'>";
+                        <?php
+                        $bulan_sekarang = date('m');
+                        $tahun_sekarang = date('Y');
+                        $db      = \Config\Database::connect();
+                        $builder = $db->table('tagihan');
+                        $tahun_pekerjaan = $builder->select('tahun')
+                            ->groupBy('tahun')
+                            ->get()->getResultArray();
+                        foreach ($tahun_pekerjaan as $row1) :
+                        ?>
+                            html += "<option <?= $tahun_sekarang == $row1['tahun'] ? 'selected' : ''; ?> value='<?= $row1['tahun'] ?>'><?= $row1['tahun'] ?></option>";
+                        <?php endforeach; ?>
+                        html += "</select>";
+                        html += "</div>";
+                        html += "</div>";
+                        html += "<br />";
+                        html += "<div class='row align-items-start'>";
+                        html += "<div class='col-md-4 mb-8pt mb-md-0'>";
+                        html += "<div class='media align-items-left'>";
+                        html += "<div class='d-flex flex-column media-body media-middle'>";
+                        html += "<span class='card-title' style='font-size:16px'>Pilih Bulan</span>";
+                        html += "</div>";
+                        html += "</div>";
+                        html += "</div>";
+                        html += "<div class='col mb-8pt mb-md-0'>";
+                        html += "<select name='bulan' class='form-control' data-toggle='select'>";
+                        <?php $bulan = date('m'); ?>
+                        html += "<option <?= $bulan == '01' ? 'selected' : ''; ?> value='01'>Januari</option>";
+                        html += "<option <?= $bulan == '02' ? 'selected' : ''; ?> value='02'>Februari</option>";
+                        html += "<option <?= $bulan == '03' ? 'selected' : ''; ?> value='03'>Maret</option>";
+                        html += "<option <?= $bulan == '04' ? 'selected' : ''; ?> value='04'>April</option>";
+                        html += "<option <?= $bulan == '05' ? 'selected' : ''; ?> value='05'>Mei</option>";
+                        html += "<option <?= $bulan == '06' ? 'selected' : ''; ?> value='06'>Juni</option>";
+                        html += "<option <?= $bulan == '07' ? 'selected' : ''; ?> value='07'>Juli</option>";
+                        html += "<option <?= $bulan == '08' ? 'selected' : ''; ?> value='08'>Agustus</option>";
+                        html += "<option <?= $bulan == '09' ? 'selected' : ''; ?> value='09'>September</option>";
+                        html += "<option <?= $bulan == '10' ? 'selected' : ''; ?> value='10'>Oktober</option>";
+                        html += "<option <?= $bulan == '11' ? 'selected' : ''; ?> value='11'>November</option>";
+                        html += "<option <?= $bulan == '12' ? 'selected' : ''; ?> value='12'>Desember</option>";
+                        html += "</select>";
+                        html += "</div>";
+                        html += "</div>";
+                        html += "</div>";
+                        html += "</div>";
+                        html += "<div class='modal-footer'>";
+                        html += "<button class='btn btn-secondary' type='button' data-dismiss='modal'>Batal</button>";
+                        html += "<button type='submit' class='btn btn-primary'>Download Data</button>";
+                        html += "</div>";
+                        html += "</div>";
+                        html += "</div>";
+                        html += "</form>";
+                        html += "</div>";
+                        html += "<a href = '<?= base_url(); ?>mitra/detail/" + data + "' class = 'btn btn-primary btn-block btn-circle btn-sm mt-2' title='Detail Data Mitra'> <i class='fas fa-eye'> </i> Lihat Mitra</a>";
                         html += "<a href = '<?= base_url(); ?>mitra/edit/" + data + "'class = 'btn btn-warning btn-block btn-circle btn-sm mt-2' title = 'Edit Data Mitra' ><i class='fas fa-edit'></i> Edit Data</a>";
                         html += "<a href='<?= base_url(); ?>users/changePassword/" + data + "' class='btn btn-secondary btn-block btn-circle btn-sm mt-2' title='Ubah Password'> <i class='fas fa-key'></i> Reset Password</a>";
                         // html += "<a href='#' data-target='#hapusModal" + data + "' data-toggle='modal' class='btn btn-sm bg-danger btn-block mt-2' title='Klik untuk Menghapus'><i class='fas fa-trash'></i> Hapus Data</a>";

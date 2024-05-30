@@ -492,4 +492,266 @@ class Mitra extends BaseController
 
         return redirect()->to('/mitra');
     }
+
+    public function downloadbhp()
+    {
+        $id_mitra = $this->request->getVar('id_mitra');
+        $bulan = $this->request->getVar('bulan');
+        $tahun = $this->request->getVar('tahun');
+        $tgl = $tahun . '-' . $bulan . '-10';
+        $db = \Config\Database::connect();
+        $builder_tagihan = $db->table('pelanggan');
+        $tagihan = $builder_tagihan->where('id_mitra', $id_mitra)
+            ->where('tgl_registrasi <=', $tgl)
+            ->where('status', 1)->get()->getResultArray();
+        if ($tagihan == null) {
+            session()->setFlashdata('error', 'Pelanggan Tidak Ditemukan');
+            return redirect()->to('/mitra');
+        }
+        $jml_tagihan = $builder_tagihan->where('id_mitra', $id_mitra)
+            ->where('tgl_registrasi <=', $tgl)
+            ->where('status', 1)->countAllResults();
+        $total_tagihan = $builder_tagihan->selectSum('nominal', 'total_tagihan')
+            ->where('tgl_registrasi <=', $tgl)
+            ->where('id_mitra', $id_mitra)
+            ->where('status', 1)->get()->getFirstRow();
+        $total_tagihan = $total_tagihan->total_tagihan;
+        $total_ppn = $builder_tagihan->selectSum('ppn', 'total_ppn')
+            ->where('tgl_registrasi <=', $tgl)
+            ->where('id_mitra', $id_mitra)
+            ->where('status', 1)->get()->getFirstRow();
+        $total_ppn = $total_ppn->total_ppn;
+        $total_nominal = $builder_tagihan->selectSum('harga', 'total_nominal')
+            ->where('tgl_registrasi <=', $tgl)
+            ->where('id_mitra', $id_mitra)
+            ->where('status', 1)->get()->getFirstRow();
+        $total_nominal = $total_nominal->total_nominal;
+
+
+        // Menghitung Total BHP
+        $total_bhp = $builder_tagihan->selectSum('harga', 'jml_tagihan')
+            //->where('tgl_registrasi >=', date('Y-m-10', strtotime('-1 month', strtotime(date('Y-m-10')))))
+            ->where('id_mitra', $id_mitra)
+            ->where('status', 1)
+            ->where('tgl_registrasi <=', $tgl)
+            ->get()->getFirstRow();
+        if ($total_bhp) {
+            $bhp = ($total_bhp->jml_tagihan) * 0.005;
+            $uso = ($total_bhp->jml_tagihan) * 0.0125;
+            $admin = ($total_bhp->jml_tagihan) * 0.0125;
+            $data_total_bhp  = $bhp + $uso + $admin + $total_ppn;
+        } else {
+            $data_total_bhp = 0;
+        }
+
+        $builder_mitra = $db->table('mitra');
+        $mitra = $builder_mitra->where('id_mitra', $id_mitra)->get()->getFirstRow();
+        $nama_mitra = $mitra->nama_mitra;
+        //dd($tagihan);
+
+        //Cek Bulan
+        if ($bulan == '01') {
+            $bulanhuruf = 'Januari';
+        } else if ($bulan == '02') {
+            $bulanhuruf = 'Februari';
+        } else if ($bulan == '03') {
+            $bulanhuruf = 'Maret';
+        } else if ($bulan == '04') {
+            $bulanhuruf = 'April';
+        } else if ($bulan == '05') {
+            $bulanhuruf = 'Mei';
+        } else if ($bulan == '06') {
+            $bulanhuruf = 'Juni';
+        } else if ($bulan == '07') {
+            $bulanhuruf = 'Juli';
+        } else if ($bulan == '08') {
+            $bulanhuruf = 'Agustus';
+        } else if ($bulan == '09') {
+            $bulanhuruf = 'September';
+        } else if ($bulan == '10') {
+            $bulanhuruf = 'Oktober';
+        } else if ($bulan == '11') {
+            $bulanhuruf = 'November';
+        } else if ($bulan == '12') {
+            $bulanhuruf = 'Desember';
+        }
+
+        $spreadsheet = new Spreadsheet();
+
+        $data['title'] = 'Daftar Pelanggan';
+
+        $spreadsheet->setActiveSheetIndex(0)
+            ->setCellValue('A1', 'PT. Tonggak Teknologi Netikom')
+            ->setCellValue('A2', 'Laporan Bulan ' . $bulanhuruf . ' ' . $tahun)
+            ->setCellValue('A3', 'Nama Mitra : ' . $nama_mitra);
+        $spreadsheet->getActiveSheet()->mergeCells('A1:I1');
+        $spreadsheet->getActiveSheet()->mergeCells('A2:I2');
+        $spreadsheet->getActiveSheet()->mergeCells('A3:I3');
+        $spreadsheet->getActiveSheet()->getStyle('A1:I3')->getFont()->setBold(true);
+
+        $spreadsheet->setActiveSheetIndex(0)->getColumnDimension('A')->setAutoSize(true);
+        $spreadsheet->setActiveSheetIndex(0)->getColumnDimension('B')->setAutoSize(true);
+        $spreadsheet->setActiveSheetIndex(0)->getColumnDimension('C')->setAutoSize(true);
+        $spreadsheet->setActiveSheetIndex(0)->getColumnDimension('D')->setAutoSize(true);
+        $spreadsheet->setActiveSheetIndex(0)->getColumnDimension('E')->setAutoSize(true);
+        $spreadsheet->setActiveSheetIndex(0)->getColumnDimension('F')->setAutoSize(true);
+        $spreadsheet->setActiveSheetIndex(0)->getColumnDimension('G')->setAutoSize(true);
+        $spreadsheet->setActiveSheetIndex(0)->getColumnDimension('H')->setAutoSize(true);
+        $spreadsheet->setActiveSheetIndex(0)->getColumnDimension('I')->setAutoSize(true);
+        $spreadsheet->setActiveSheetIndex(0)
+            ->setCellValue('A5', 'No')
+            ->setCellValue('B5', 'Tanggal Registrasi')
+            ->setCellValue('C5', 'Kode Pelanggan')
+            ->setCellValue('D5', 'Nama Pelanggan')
+            ->setCellValue('E5', 'NPWP/NIK')
+            ->setCellValue('F5', 'Alamat')
+            ->setCellValue('G5', 'Berlangganan')
+            ->setCellValue('H5', 'Pajak 11%')
+            ->setCellValue('I5', 'Total');
+
+        //Array Border
+        $styleArray = [
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                    'color' => ['argb' => '00000000'],
+                ],
+            ],
+        ];
+        //Array Header
+        $styleArray2 = [
+            'font' => [
+                'bold' => true,
+            ],
+            'alignment' => [
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+            ],
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                'rotation' => 90,
+                'startColor' => [
+                    'argb' => 'FFA0A0A0',
+                ],
+            ],
+        ];
+
+        $jml_tagihan = $jml_tagihan + 5; //Jumah Baris + Header
+        $jml_isitagihan = $jml_tagihan + 6; //Jumlah Baris tanpa Header
+        $cell_range = 'A5:I' . $jml_tagihan;
+        $cell_rangewrap1 = 'F6:F' . $jml_isitagihan;
+        $spreadsheet->getActiveSheet()->getStyle('G')->getNumberFormat()->setFormatCode('Rp#,##0.00'); // Kolom G
+        $spreadsheet->getActiveSheet()->getStyle('H')->getNumberFormat()->setFormatCode('Rp#,##0.00'); // Kolom H
+        $spreadsheet->getActiveSheet()->getStyle('I')->getNumberFormat()->setFormatCode('Rp#,##0.00'); // Kolom I
+
+
+
+        $spreadsheet->getActiveSheet()->getStyle('A5:I5')->applyFromArray($styleArray2);
+        //Border
+        $spreadsheet->getActiveSheet()->getStyle('A:I')
+            ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+        //Format Header
+        $spreadsheet->getActiveSheet()->getStyle($cell_range)->applyFromArray($styleArray);
+        //Wrap Text
+        $spreadsheet->getActiveSheet()->getStyle($cell_rangewrap1)->getAlignment()->setWrapText(true);
+
+        $column = 6;
+        $no = 1;
+        // tulis data mobil ke cell
+        foreach ($tagihan as $data) {
+            $spreadsheet->setActiveSheetIndex(0)
+                ->setCellValue('A' . $column, $no++)
+                ->setCellValue('B' . $column, $data['tgl_registrasi'])
+                ->setCellValue('C' . $column, $data['kode_pelanggan'])
+                ->setCellValue('D' . $column, $data['nama_pelanggan'])
+                ->setCellValue('E' . $column, "'" . $data['nik_pelanggan'])
+                ->setCellValue('F' . $column, $data['alamat_pelanggan'])
+                ->setCellValue('G' . $column, $data['harga'])
+                ->setCellValue('H' . $column, $data['ppn'])
+                ->setCellValue('I' . $column, $data['nominal']);
+            $column++;
+        }
+        $spreadsheet->getActiveSheet()->getStyle('A' . $column . ':I' . $column)->applyFromArray($styleArray);
+        $spreadsheet->getActiveSheet()->mergeCells('A' . $column . ':F' . $column);
+        $spreadsheet->setActiveSheetIndex(0)
+            ->setCellValue('A' . $column, 'TOTAL')
+            ->setCellValue('G' . $column, $total_nominal)
+            ->setCellValue('H' . $column, $total_ppn)
+            ->setCellValue('I' . $column++, $total_tagihan);
+        $column++;
+        $spreadsheet->getActiveSheet()->mergeCells('A' . $column . ':D' . $column);
+        $spreadsheet->getActiveSheet()->getStyle('E' . $column)->getNumberFormat()->setFormatCode('Rp#,##0.00');
+        $spreadsheet->getActiveSheet()->getStyle('A' . $column)
+            ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT);
+        $spreadsheet->getActiveSheet()->getStyle('A' . $column . ':E' . $column)
+            ->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->setActiveSheetIndex(0)
+            ->setCellValue('A' . $column, "Total yang dibayarkan Pelanggan Union Network")
+            ->setCellValue('E' . $column++, $total_tagihan);
+
+        $spreadsheet->getActiveSheet()->mergeCells('A' . $column . ':D' . $column);
+        $spreadsheet->getActiveSheet()->getStyle('E' . $column)->getNumberFormat()->setFormatCode('Rp#,##0.00');
+        $spreadsheet->getActiveSheet()->getStyle('A' . $column)
+            ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT);
+        $spreadsheet->getActiveSheet()->getStyle('A' . $column . ':E' . $column)
+            ->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->setActiveSheetIndex(0)
+            ->setCellValue('A' . $column, "Total PPN 11% yang dibayarkan Ke PT. TONGGAK TEKNOLOGI NETIKOM")
+            ->setCellValue('E' . $column++, $total_ppn);
+
+        $spreadsheet->getActiveSheet()->mergeCells('A' . $column . ':D' . $column);
+        $spreadsheet->getActiveSheet()->getStyle('E' . $column)->getNumberFormat()->setFormatCode('Rp#,##0.00');
+        $spreadsheet->getActiveSheet()->getStyle('A' . $column)
+            ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT);
+        $spreadsheet->getActiveSheet()->getStyle('A' . $column . ':E' . $column)
+            ->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->setActiveSheetIndex(0)
+            ->setCellValue('A' . $column, "Total BHP 0,5% dibayarkan ke PT. TONGGAK TEKNOLOGI NETIKOM")
+            ->setCellValue('E' . $column++, $bhp);
+
+        $spreadsheet->getActiveSheet()->mergeCells('A' . $column . ':D' . $column);
+        $spreadsheet->getActiveSheet()->getStyle('E' . $column)->getNumberFormat()->setFormatCode('Rp#,##0.00');
+        $spreadsheet->getActiveSheet()->getStyle('A' . $column)
+            ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT);
+        $spreadsheet->getActiveSheet()->getStyle('A' . $column . ':E' . $column)
+            ->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->setActiveSheetIndex(0)
+            ->setCellValue('A' . $column, "Total USO 1,25% dibayarkan ke PT. TONGGAK TEKNOLOGI NETIKOM")
+            ->setCellValue('E' . $column++, $uso);
+
+        $spreadsheet->getActiveSheet()->mergeCells('A' . $column . ':D' . $column);
+        $spreadsheet->getActiveSheet()->getStyle('E' . $column)->getNumberFormat()->setFormatCode('Rp#,##0.00');
+        $spreadsheet->getActiveSheet()->getStyle('A' . $column)
+            ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT);
+        $spreadsheet->getActiveSheet()->getStyle('A' . $column . ':E' . $column)
+            ->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->setActiveSheetIndex(0)
+            ->setCellValue('A' . $column, "Total Administrasi 1,25% ke PT. TONGGAK TEKNOLOGI NETIKOM")
+            ->setCellValue('E' . $column++, $admin);
+
+        $spreadsheet->getActiveSheet()->mergeCells('A' . $column . ':E' . $column);
+        $column++;
+
+        $spreadsheet->getActiveSheet()->mergeCells('A' . $column . ':D' . $column);
+        $spreadsheet->getActiveSheet()->getStyle('E' . $column)->getNumberFormat()->setFormatCode('Rp#,##0.00');
+        $spreadsheet->getActiveSheet()->getStyle('A' . $column)
+            ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT);
+        $spreadsheet->getActiveSheet()->getStyle('A' . $column . ':E' . $column)
+            ->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->setActiveSheetIndex(0)
+            ->setCellValue('A' . $column, "Jadi Total kewajiban Pajak PPN dan BHP &USO yang disetorkan ke PT. T2Net")
+            ->setCellValue('E' . $column++, $data_total_bhp);
+
+
+        // tulis dalam format .xlsx
+        $writer = new Xlsx($spreadsheet);
+        $fileName = 'Rekap Pelanggan Mitra ' . $nama_mitra . ' Bulan ' . $bulanhuruf . ' ' . $tahun;
+
+        // Redirect hasil generate xlsx ke web client
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename=' . $fileName . '.xlsx');
+        header('Cache-Control: max-age=0');
+        setlocale(LC_ALL, 'en_US');
+        ob_end_clean();
+        $writer->save('php://output');
+    }
 }

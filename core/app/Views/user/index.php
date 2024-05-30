@@ -178,7 +178,7 @@
                 <div class="card-body">
                     <div class="col-lg-12 row">
                         <!-- ./col -->
-                        <div class="col-lg-4 col-md-6">
+                        <div class="col-lg-3 col-md-6">
                             <!-- small box -->
                             <div class="small-box bg-danger">
                                 <div class="inner">
@@ -189,11 +189,11 @@
                                 <div class="icon">
                                     <i class="fas fa-users"></i>
                                 </div>
-                                <a href="<?= base_url(); ?>pelanggan" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                             </div>
                         </div>
                         <!-- ./col -->
-                        <div class="col-lg-4 col-md-6">
+                        <div class="col-lg-3 col-md-6">
                             <!-- small box -->
                             <div class="small-box bg-info">
                                 <div class="inner">
@@ -204,11 +204,11 @@
                                 <div class="icon">
                                     <i class="fas fa-dollar-sign"></i>
                                 </div>
-                                <a href="<?= base_url(); ?>pelanggan" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                             </div>
                         </div>
                         <!-- ./col -->
-                        <div class="col-lg-4 col-md-6">
+                        <div class="col-lg-3 col-md-6">
                             <!-- small box -->
                             <div class="small-box bg-secondary">
                                 <div class="inner">
@@ -219,9 +219,99 @@
                                 <div class="icon">
                                     <i class="fas fa-hand-holding-usd"></i>
                                 </div>
-                                <a href="<?= base_url(); ?>pelanggan" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                             </div>
                         </div>
+                        <!-- ./col -->
+                        <div class="col-lg-3 col-md-6">
+                            <!-- small box -->
+                            <div class="small-box bg-pink">
+                                <div class="inner">
+                                    <h3><i class="fas fa-download"></i></h3>
+
+                                    <p>Unduh Rekap <br />BHP, USO, Admin, PPN</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-download"></i>
+                                </div>
+                                <a href="#" data-target="#bhpModal" data-toggle="modal" class="small-box-footer" title="Download BHP">Download <i class="fas fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="bhpModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <form action="<?= base_url(); ?>mitra/downloadbhp" method="post">
+                            <input type="hidden" name="id_mitra" value="<?= $id_mitra; ?>">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Downloads BHP</h5>
+                                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="list-group-item p-3">
+                                            <div class="row align-items-start">
+                                                <div class="col-md-4 mb-8pt mb-md-0">
+                                                    <div class="media align-items-left">
+                                                        <div class="d-flex flex-column media-body media-middle">
+                                                            <span class="card-title" style="font-size:16px">Pilih Tahun</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col mb-8pt mb-md-0">
+                                                    <select name="tahun" class="form-control" data-toggle="select">
+                                                        <?php
+                                                        $bulan_sekarang = date("m");
+                                                        $tahun_sekarang = date("Y");
+                                                        $db      = \Config\Database::connect();
+                                                        $builder = $db->table("tagihan");
+                                                        $tahun_pekerjaan = $builder->select("tahun")
+                                                            ->groupBy("tahun")
+                                                            ->get()->getResultArray();
+                                                        foreach ($tahun_pekerjaan as $row1) :
+                                                        ?>
+                                                            <option <?= $tahun_sekarang == $row1["tahun"] ? "selected" : ""; ?> value="<?= $row1["tahun"] ?>"><?= $row1["tahun"] ?></option>
+                                                        <?php endforeach; ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row align-items-start">
+                                                <div class="col-md-4 mb-8pt mb-md-0">
+                                                    <div class="media align-items-left">
+                                                        <div class="d-flex flex-column media-body media-middle">
+                                                            <span class="card-title" style="font-size:16px">Pilih Bulan</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col mb-8pt mb-md-0">
+                                                    <select name="bulan" class="form-control" data-toggle="select">
+                                                        <?php $bulan = date("m"); ?>
+                                                        <option <?= $bulan == "01" ? "selected" : ""; ?> value="01">Januari</option>
+                                                        <option <?= $bulan == "02" ? "selected" : ""; ?> value="02">Februari</option>
+                                                        <option <?= $bulan == "03" ? "selected" : ""; ?> value="03">Maret</option>
+                                                        <option <?= $bulan == "04" ? "selected" : ""; ?> value="04">April</option>
+                                                        <option <?= $bulan == "05" ? "selected" : ""; ?> value="05">Mei</option>
+                                                        <option <?= $bulan == "06" ? "selected" : ""; ?> value="06">Juni</option>
+                                                        <option <?= $bulan == "07" ? "selected" : ""; ?> value="07">Juli</option>
+                                                        <option <?= $bulan == "08" ? "selected" : ""; ?> value="08">Agustus</option>
+                                                        <option <?= $bulan == "09" ? "selected" : ""; ?> value="09">September</option>
+                                                        <option <?= $bulan == "10" ? "selected" : ""; ?> value="10">Oktober</option>
+                                                        <option <?= $bulan == "11" ? "selected" : ""; ?> value="11">November</option>
+                                                        <option <?= $bulan == "12" ? "selected" : ""; ?> value="12">Desember</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Batal</button>
+                                        <button type="submit" class="btn btn-primary">Download Data</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                     <div class="col-lg-12 row">
                         <!-- ./col -->

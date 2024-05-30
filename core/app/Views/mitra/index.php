@@ -34,6 +34,12 @@
                         <i class="icon fas fa-check"></i> <?= session()->getFlashdata('pesan'); ?>
                     </div>
                 <?php endif; ?>
+                <?php if (session()->getFlashdata('error')) : ?>
+                    <div class="alert alert-warning alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <i class="icon fas fa-exclamation-triangle"></i> <?= session()->getFlashdata('error'); ?>
+                    </div>
+                <?php endif; ?>
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped dataTable dtr-inline collapsed" id="daftar-mitra" width="100%" cellspacing="0">
                         <thead>
