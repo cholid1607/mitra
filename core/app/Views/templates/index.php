@@ -87,7 +87,8 @@
 
         <footer class="main-footer">
 
-            <strong>Copyright &copy; <?= date('Y'); ?> <a target="blank" href="https://t2net.id">PT. T2 Net</a>. <br /></strong> All rights reserved.
+            <i>Sistem Kemitraan T2 Net <strong>v1.0.0</strong></i><br />
+            <strong>Copyright &copy; <?= date('Y'); ?> <a target="blank" href="https://t2net.id">PT. T2 Net</a>. </strong>All rights reserved.
         </footer>
 
         <!-- Control Sidebar -->

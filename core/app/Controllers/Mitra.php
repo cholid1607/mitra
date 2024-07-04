@@ -686,7 +686,7 @@ class Mitra extends BaseController
         $spreadsheet->getActiveSheet()->getStyle('A' . $column . ':E' . $column)
             ->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
         $spreadsheet->setActiveSheetIndex(0)
-            ->setCellValue('A' . $column, "Total yang dibayarkan Pelanggan Union Network")
+            ->setCellValue('A' . $column, "Total yang dibayarkan Mitra " . $nama_mitra)
             ->setCellValue('E' . $column++, $total_tagihan);
 
         $spreadsheet->getActiveSheet()->mergeCells('A' . $column . ':D' . $column);
