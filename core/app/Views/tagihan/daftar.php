@@ -31,9 +31,11 @@
                             <input type="hidden" name="bulan" value="<?= $bulan_angka; ?>">
                             <input type="hidden" name="tahun" value="<?= $tahun; ?>">
                             <input type="hidden" name="id_mitra" value="<?= $id_mitra; ?>">
-                            <div class="row">
-                                <button type="submit" class="btn btn-success"><i class="fas fa-list-alt"></i>&nbsp;&nbsp;&nbsp;Genarate Tagihan <?= $bulan; ?>&nbsp;&nbsp;&nbsp;</button>
-                            </div>
+                            <?php if ($pelanggan != null) { ?>
+                                <div class="row">
+                                    <button type="submit" class="btn btn-success"><i class="fas fa-list-alt"></i>&nbsp;&nbsp;&nbsp;Genarate Tagihan <?= $bulan; ?>&nbsp;&nbsp;&nbsp;</button>
+                                </div>
+                            <?php } ?>
                         </form>
                     </div>
                 <?php } ?>

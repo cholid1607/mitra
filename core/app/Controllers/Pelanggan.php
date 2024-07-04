@@ -365,7 +365,11 @@ class Pelanggan extends BaseController
         $pelangganModel->save($data);
         $logModel->save($datalog);
         session()->setFlashdata('pesan', 'Data Berhasil Disimpan');
-        return redirect()->to(base_url('/pelanggan/index'));
+        if ((in_groups('superuser'))) {
+            return redirect()->to(base_url('/pelanggan/index'));
+        } else {
+            return redirect()->to(base_url('/pelanggan/daftar/' . $id_mitra));
+        }
     }
 
     public function edit($id)

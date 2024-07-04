@@ -13,6 +13,7 @@ class Users extends BaseController
 {
     protected $auth;
     protected $config;
+    protected $requireActivation;
 
     public function __construct()
     {

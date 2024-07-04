@@ -25,6 +25,7 @@ class Mitra extends BaseController
     protected $mitraModel;
     protected $auth;
     protected $config;
+    protected $requireActivation;
 
     public function __construct()
     {

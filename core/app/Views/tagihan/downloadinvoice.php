@@ -121,17 +121,30 @@
 
     ?>
         <div class="container">
+            <div style="position: fixed; 
+            bottom: 500px; 
+            left: 220px;
+            z-index: 10000;
+            font-size:100px; 
+            color: red; 
+            transform:rotate(-30deg);
+            opacity: 0.4;">
+                <img width="250px" src="t2-watermark.png">
+            </div>
             <table width="100%" cellspacing="0">
                 <tr>
 
                     <!--<td><img height="auto" src="data:image/png;base64,{{ base64_encode(file_get_contents('http://localhost/img/AdminLTELogo.png'))}}"></td>-->
-                    <td><img height="auto" width="70%" src='logo-t2net.png'></td>
+                    <td>
+                        <img height="auto" width="auto" height="80px" src='<?= base_url(); ?>/img/logo/<?= $logo_mitra; ?>'>
+                        <br />
+                        Supported By :<br />
+                        PT. Tonggak Teknologi Netikom
+                    </td>
                     <td class="kontak text-right">
-                        <h4>PT. Tonggak Teknologi Netikom</h4>
-                        Jl. Merpati, Jaban Tridadi Sleman D.I. Yogyakarta 55511<br />
-                        Telepon : 0274 288 0464 Website : www.t2net.id <br />
-                        Email : adm@t2net.id Whatsapp : 0878 3869 8898/081353540084<br />
-                        NPWP : 94.703.323.9-542.000 <br />
+                        <h4 style="font-size:20px;"><?= $nama_mitra; ?></h4>
+                        <?= $alamat_mitra; ?><br />
+                        Telepon : <?= $telepon_mitra; ?> Email : <?= $email_mitra; ?> <br />
                     </td>
                 </tr>
             </table>
@@ -342,8 +355,18 @@
                     </td>
                     <td width="50%" class="text-center">
                         <b>PT. TONGGAK TEKNOLOGI NETIKOM</b><br>
-                        <img src="ttd.png" width="40%">
+                        <table width="100%">
+                            <tr>
+                                <td width="60%" class="text-right">
+                                    <img width="60%" src="ttd.png">
+                                </td>
+                                <td width="40%" valign="bottom">
+                                    <?= $qrcode; ?>
+                                </td>
+                            </tr>
+                        </table>
                         <br />
+                        </br>
                         <b>Finance & Billing</b>
                     </td>
                 </tr>

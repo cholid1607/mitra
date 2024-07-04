@@ -116,6 +116,7 @@
     <script src="<?= base_url(); ?>plugins/inputmask/jquery.inputmask.min.js"></script>
     <!-- Bootstrap 4 -->
     <script src="<?= base_url(); ?>plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+
     <!-- AdminLTE App -->
     <script src="<?= base_url(); ?>js/adminlte.min.js"></script>
 
@@ -134,6 +135,7 @@
     <script src="<?= base_url(); ?>plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
     <!-- overlayScrollbars -->
     <script src="<?= base_url(); ?>plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+
 
     <!-- Summernote -->
     <script src="<?= base_url(); ?>plugins/summernote/summernote-bs4.min.js"></script>

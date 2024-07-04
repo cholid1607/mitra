@@ -17,6 +17,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Helper\Sample;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use SimpleSoftwareIO\QrCode\Generator;
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -157,6 +158,11 @@ class Tagihan extends BaseController
         } else if ($bulancek == '12') {
             $bulankirim = 'Desember';
         }
+
+        $builder_pelanggan = $db->table('pelanggan');
+        $pelanggan   = $builder_pelanggan->where('id_mitra', $id_mitra)->get()->getRowArray();
+
+        $data['pelanggan'] = $pelanggan;
         $data['title'] = 'Kelola Tagihan';
         $data['menu'] = 'tagihan';
         $data['bulan'] = $bulankirim;
@@ -307,14 +313,23 @@ class Tagihan extends BaseController
         $builder = $db->table('pelanggan');
         $piutang   = $builder->where('id_pelanggan', $id_pelanggan)
             ->limit(0, 1)
-            ->get()->getResultArray();
-        $last_piutang = $piutang[0]['piutang'];
-        $alamat = $piutang[0]['alamat_pelanggan'];
-        $telepon = $piutang[0]['telp_pelanggan'];
-        $layanan = $piutang[0]['paket_langganan'];
-        $kode_pelanggan = $piutang[0]['kode_pelanggan'];
-        $nama_pelanggan = $piutang[0]['nama_pelanggan'];
+            ->get()->getRowArray();
+        $last_piutang = $piutang['piutang'];
+        $alamat = $piutang['alamat_pelanggan'];
+        $telepon = $piutang['telp_pelanggan'];
+        $layanan = $piutang['paket_langganan'];
+        $kode_pelanggan = $piutang['kode_pelanggan'];
+        $nama_pelanggan = $piutang['nama_pelanggan'];
+        $id_mitra = $piutang['id_mitra'];
 
+        //Ambil Data Mitra
+        $builder_mitra = $db->table('mitra');
+        $mitra   = $builder_mitra->where('id_mitra', $id_mitra)->get()->getRowArray();
+        $data['nama_mitra'] = $mitra['nama_mitra'];
+        $data['alamat_mitra'] = $mitra['alamat'];
+        $data['telepon_mitra'] = $mitra['telepon'];
+        $data['email_mitra'] = $mitra['email'];
+        $data['logo_mitra'] = $mitra['logo'];
 
         $data['last_piutang'] = $last_piutang;
         $data['tagihan_piutang'] = $tagihan_piutang;
@@ -329,6 +344,11 @@ class Tagihan extends BaseController
         $data['last_tagihan'] = $tagihan;
         $data['title'] = 'Konfirmasi Tagihan';
         $data['menu'] = 'tagihan';
+        $qrcode = new Generator;
+        $qrCodes = [];
+        $qrCodes = $qrcode->size(120)->generate('http://16.2.79.66/cekinvoice/view/' . $id_tagihan);
+        $html = '<img width="50px" src="data:image/svg+xml;base64,' . base64_encode($qrCodes) . '" ...>';
+        $data['qrcode'] = $html;
         $str_no_invoice = str_replace("/", "_", $no_invoice);
         $filename2 = 'Invoice ' . $str_no_invoice . ' - ' . $nama_pelanggan;
         //Setup Option Dompdf
@@ -341,6 +361,7 @@ class Tagihan extends BaseController
         $option->set('isRemoteEnabled', true);
         $option->set('chroot', realpath(''));
         $option->setTempDir('temp');
+        // dd($data);
 
         // instantiate and use the dompdf class
         $dompdf = new Dompdf($option);
@@ -361,6 +382,22 @@ class Tagihan extends BaseController
         } else {
             return $dompdf->output();
         }
+    }
+
+    public function qrcode()
+    {
+        $qrcode = new Generator;
+        $qrCodes = [];
+        $qrCodes['simple'] = $qrcode->size(120)->generate('https://www.binaryboxtuts.com/');
+        $qrCodes['changeColor'] = $qrcode->size(120)->color(255, 0, 0)->generate('https://www.binaryboxtuts.com/');
+        $qrCodes['changeBgColor'] = $qrcode->size(120)->color(0, 0, 0)->backgroundColor(255, 0, 0)->generate('https://www.binaryboxtuts.com/');
+
+        $qrCodes['styleDot'] = $qrcode->size(120)->color(0, 0, 0)->backgroundColor(255, 255, 255)->style('dot')->generate('https://www.binaryboxtuts.com/');
+        $qrCodes['styleSquare'] = $qrcode->size(120)->color(0, 0, 0)->backgroundColor(255, 255, 255)->style('square')->generate('https://www.binaryboxtuts.com/');
+        $qrCodes['styleRound'] = $qrcode->size(120)->color(0, 0, 0)->backgroundColor(255, 255, 255)->style('round')->generate('https://www.binaryboxtuts.com/');
+
+        //$qrCodes['withImage'] = $qrcode->size(200)->format('png')->merge('img/logo.png', .4)->generate('https://www.binaryboxtuts.com/');
+        return view('tagihan/qr-codes', $qrCodes);
     }
 
     public function downloadkuitansi($id_pelanggan = '', $id_kuitansi = '', $tahun = '', $bulan = '', $stream = true)
