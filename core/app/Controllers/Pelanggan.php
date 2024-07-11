@@ -366,9 +366,9 @@ class Pelanggan extends BaseController
         $logModel->save($datalog);
         session()->setFlashdata('pesan', 'Data Berhasil Disimpan');
         if ((in_groups('superuser'))) {
-            return redirect()->to(base_url('/pelanggan/index'));
-        } else {
             return redirect()->to(base_url('/pelanggan/daftar/' . $id_mitra));
+        } else {
+            return redirect()->to(base_url('/pelanggan/pelangganmitra/' . $id_mitra));
         }
     }
 
@@ -427,8 +427,14 @@ class Pelanggan extends BaseController
             'status' =>  $active,
         ];
         $pelangganModel->update($this->request->getVar('id_pelanggan'), $data);
+        $pelanggan = $pelangganModel->where('id_pelanggan', $this->request->getVar('id_pelanggan'))->first();
+        $id_mitra = $pelanggan['id_mitra'];
 
-        return redirect()->to(base_url('/pelanggan/index'));
+        if ((in_groups('superuser'))) {
+            return redirect()->to(base_url('/pelanggan/daftar/' . $id_mitra));
+        } else {
+            return redirect()->to(base_url('/pelanggan/pelangganmitra/' . $id_mitra));
+        }
     }
 
     public function download()

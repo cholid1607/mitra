@@ -179,12 +179,13 @@ class Users extends BaseController
         return redirect()->to(base_url('/users/index'));
     }
 
-    public function changePassword($id = null)
+    public function changePassword($id = null, $id_mitra = null)
     {
         if ($id == null) {
             return redirect()->to(base_url('/users/index'));
         } else {
             $data['id'] = $id;
+            $data['id_mitra'] = $id_mitra;
             $data['title'] = 'Update Password';
             $data['menu'] = 'user';
             return view('users/set_password', $data);
@@ -194,6 +195,7 @@ class Users extends BaseController
     public function setPassword()
     {
         $id = $this->request->getVar('id');
+        $id_mitra = $this->request->getVar('id_mitra');
         $rules = [
             'password'     => 'required|strong_password',
             'pass_confirm' => 'required|matches[password]',
@@ -238,8 +240,11 @@ class Users extends BaseController
                 'tipe_log' => 'update-password',
             ];
             $logModel->save($datalog);
-
-            return redirect()->to(base_url('users/changePassword'));
+            if ($id_mitra == '0' || $id_mitra == null) {
+                return redirect()->to(base_url('users/changePassword'));
+            } else {
+                return redirect()->to(base_url('mitra/'));
+            }
         }
     }
 

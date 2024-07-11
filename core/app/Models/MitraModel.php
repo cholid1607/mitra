@@ -52,8 +52,9 @@ class MitraModel extends Model
     function searchAndDisplay($katakunci = null, $start = 0, $length = 10)
     {
         $builder = $this->db->table('mitra');
-        $builder->select('mitra.*,  COUNT(CASE WHEN pelanggan.status = 1 THEN pelanggan.id_pelanggan END) AS jumlah_pelanggan'); // Menambahkan perhitungan jumlah pelanggan
+        $builder->select('mitra.*,  users.id as id_users,COUNT(CASE WHEN pelanggan.status = 1 THEN pelanggan.id_pelanggan END) AS jumlah_pelanggan'); // Menambahkan perhitungan jumlah pelanggan
         $builder->join('pelanggan', 'pelanggan.id_mitra = mitra.id_mitra', 'left'); // Bergabung dengan tabel pelanggan
+        $builder->join('users', 'mitra.username = users.username', 'left'); // Bergabung dengan tabel pelanggan
         $builder->groupBy('mitra.id_mitra'); // Mengelompokkan hasil berdasarkan ID mitra
         if ($katakunci) {
             $arr_katakunci = explode(" ", $katakunci);

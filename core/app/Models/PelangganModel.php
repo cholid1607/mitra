@@ -47,7 +47,9 @@ class PelangganModel extends Model
         if ($builder != '0') {
             $builder = $builder->where('id_mitra', $id);
         }
-        $builder = $builder->where('status', '1');
+        if ((in_groups('mitra'))) {
+            $builder = $builder->where('status', '1');
+        }
         if ($katakunci) {
             $arr_katakunci = explode(" ", $katakunci);
             for ($x = 0; $x < count($arr_katakunci); $x++) {

@@ -425,7 +425,7 @@
                     "data": "id_mitra",
                     "className": 'dt-body-center',
                     render: function(data, type, row) {
-                        html = "<a href='pelanggan/daftar/" + data + "' class='btn btn-sm bg-maroon' title='Klik untuk Melihat Daftar Pelanggan'><i class = 'fas fa-users'></i> Lihat Pelanggan</a>";
+                        html = "<a href='<?= base_url(); ?>pelanggan/daftar/" + data + "' class='btn btn-sm bg-maroon' title='Klik untuk Melihat Daftar Pelanggan'><i class = 'fas fa-users'></i> Lihat Pelanggan</a>";
                         html += "<br/><span style='font-size:14px;padding:7px;' class='mt-2 badge badge bg-lightblue'>Jumlah Pelanggan : " + row.jumlah_pelanggan + "</span>";
                         return html;
                     }
@@ -447,6 +447,7 @@
                             html += "<input type='hidden' name='nama_mitra' value='" + row.nama_mitra + "'>";
                             html += "<input type='hidden' name='id_mitra' value='" + row.id_mitra + "'>";
                             html += "<input type='hidden' name='username' value='" + row.username + "'>";
+                            html += "<input type='hidden' name='active' value='" + row.status + "'>";
                             html += "<div class='modal-dialog' role='document'>";
                             html += "<div class='modal-content'>";
                             html += "<div class='modal-header'>";
@@ -504,6 +505,7 @@
                         "kode_mitra": "kode_mitra",
                         "nama_mitra": "nama_mitra",
                         "username": "username",
+                        "id_users": "id_users",
                     }],
                     "data": "id_mitra",
                     "className": 'dt-body-center',
@@ -586,7 +588,7 @@
                         html += "</div>";
                         html += "<a href = '<?= base_url(); ?>mitra/detail/" + data + "' class = 'btn btn-primary btn-block btn-circle btn-sm mt-2' title='Detail Data Mitra'> <i class='fas fa-eye'> </i> Lihat Mitra</a>";
                         html += "<a href = '<?= base_url(); ?>mitra/edit/" + data + "'class = 'btn btn-warning btn-block btn-circle btn-sm mt-2' title = 'Edit Data Mitra' ><i class='fas fa-edit'></i> Edit Data</a>";
-                        html += "<a href='<?= base_url(); ?>users/changePassword/" + data + "' class='btn btn-secondary btn-block btn-circle btn-sm mt-2' title='Ubah Password'> <i class='fas fa-key'></i> Reset Password</a>";
+                        html += "<a href='<?= base_url(); ?>users/changePassword/" + row.id_users + "/" + row.id_mitra + "' class='btn btn-secondary btn-block btn-circle btn-sm mt-2' title='Ubah Password'> <i class='fas fa-key'></i> Reset Password</a>";
                         // html += "<a href='#' data-target='#hapusModal" + data + "' data-toggle='modal' class='btn btn-sm bg-danger btn-block mt-2' title='Klik untuk Menghapus'><i class='fas fa-trash'></i> Hapus Data</a>";
                         // html += "<div class='modal fade' id='hapusModal" + data + "' tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true'>";
                         // html += "<form action='<php base_url(); ?>mitra/hapus' method='post'>";
@@ -715,7 +717,9 @@
                     }],
                     "className": 'dt-body-center',
                     render: function(data, type, row) {
-                        html = "<a target='_blank' href='<?= base_url() ?>tagihan/downloadinvoice/" + row.id_pelanggan + "/" + row.id_tagihan + "/" + row.tahun + "/" + row.bulan + "' class='btn btn-sm  btn-primary'><i class='fas fa-download'></i> Download Invoice</a>";
+                        html = "<a href='#' onclick=\"window.open('<?= base_url() ?>tagihan/downloadinvoice/" + row.id_pelanggan + "/" + row.id_tagihan + "/" + row.tahun + "/" + row.bulan + "', 'popup', 'width=600,height=600'); return false;\" class='btn btn-sm btn-primary'>";
+                        html += "<i class='fas fa-download'></i> Download Invoice";
+                        html += "</a>";
                         return html;
                     }
                 }, {
@@ -796,7 +800,7 @@
                         }
                         //Tombol Cetak Kuitansi
                         if (data == 3) {
-                            html = "<a target='_blank' href='<?= base_url(); ?>tagihan/downloadkuitansi/" + row.id_pelanggan + "/" + row.id_kuitansi + "' class='btn btn-sm btn-success'>";
+                            html = "<a href='#' onclick=\"window.open('<?= base_url(); ?>tagihan/downloadkuitansi/" + row.id_pelanggan + "/" + row.id_kuitansi + "', 'popup', 'width=600,height=600'); return false;\" class='btn btn-sm btn-success'>";
                             html += "<i class='fas fa-download'></i> Download Kuitansi";
                             html += "</a>";
                         }

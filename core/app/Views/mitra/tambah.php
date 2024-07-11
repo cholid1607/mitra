@@ -54,7 +54,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-users"></i></span>
                                     </div>
-                                    <input name="kode_mitra_pelanggan" type="text" value="<?= old('kode_mitra_pelanggan') ?>" class="form-control <?php if (session('errors.kode_mitra_pelanggan')) : ?>is-invalid<?php endif ?>" id="kode_mitra_pelanggan" placeholder="Kode Mitra Pelanggan">
+                                    <input required name="kode_mitra_pelanggan" type="text" value="<?= old('kode_mitra_pelanggan') ?>" class="form-control <?php if (session('errors.kode_mitra_pelanggan')) : ?>is-invalid<?php endif ?>" id="kode_mitra_pelanggan" placeholder="Kode Mitra Pelanggan">
                                 </div>
                             </div>
                         </div>
@@ -65,7 +65,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-handshake"></i></span>
                                     </div>
-                                    <input name="nama_users" value="<?= old('nama_mitra') ?>" type="text" class="form-control <?php if (session('errors.nama_mitra')) : ?>is-invalid<?php endif ?>" id="nama_mitra" placeholder="Nama Mitra">
+                                    <input name="nama_users" required value="<?= old('nama_mitra') ?>" type="text" class="form-control <?php if (session('errors.nama_mitra')) : ?>is-invalid<?php endif ?>" id="nama_mitra" placeholder="Nama Mitra">
                                 </div>
                             </div>
                         </div>
@@ -76,7 +76,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-user-cog"></i></span>
                                     </div>
-                                    <input name="penanggung_jawab" value="<?= old('penanggung_jawab') ?>" type="text" class="form-control <?php if (session('errors.penanggung_jawab')) : ?>is-invalid<?php endif ?>" id="penanggungjawab" placeholder="Nama Penanggung Jawab">
+                                    <input required name="penanggung_jawab" value="<?= old('penanggung_jawab') ?>" type="text" class="form-control <?php if (session('errors.penanggung_jawab')) : ?>is-invalid<?php endif ?>" id="penanggungjawab" placeholder="Nama Penanggung Jawab">
                                 </div>
                             </div>
                         </div>
@@ -87,7 +87,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
                                     </div>
-                                    <textarea name="alamat" class="form-control <?php if (session('errors.alamat')) : ?>is-invalid<?php endif ?>" id="alamat" placeholder="Alamat Mitra"><?= old('alamat') ?></textarea>
+                                    <textarea required name="alamat" class="form-control <?php if (session('errors.alamat')) : ?>is-invalid<?php endif ?>" id="alamat" placeholder="Alamat Mitra"><?= old('alamat') ?></textarea>
                                 </div>
                             </div>
                         </div>
@@ -98,7 +98,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><b>+62</b></span>
                                     </div>
-                                    <input name="telepon" value="<?= old('telepon') ?>" type="text" class="form-control <?php if (session('errors.telepon')) : ?>is-invalid<?php endif ?>" id="telepon" placeholder="89123456789">
+                                    <input required name="telepon" value="<?= old('telepon') ?>" type="text" class="form-control <?php if (session('errors.telepon')) : ?>is-invalid<?php endif ?>" id="telepon" placeholder="89123456789">
                                 </div>
                                 <i style="font-size:14px;">Hilangkan angka 0 yang ada di paling depan. Contoh : 089123456789 ditulis 89123456789</i>
                             </div>
@@ -125,7 +125,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-envelope"></i></span>
                                     </div>
-                                    <input id="inputEmail" type="email" class="form-control form-control-user <?php if (session('errors.email')) : ?>is-invalid<?php endif ?>" name="email" aria-describedby="emailHelp" placeholder="<?= lang('Auth.email') ?>" value="<?= old('email') ?>">
+                                    <input required id="inputEmail" type="email" class="form-control form-control-user <?php if (session('errors.email')) : ?>is-invalid<?php endif ?>" name="email" aria-describedby="emailHelp" placeholder="<?= lang('Auth.email') ?>" value="<?= old('email') ?>">
                                 </div>
                             </div>
                         </div>
@@ -136,7 +136,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-user"></i></span>
                                     </div>
-                                    <input type="text" id="inputUsername" class="form-control form-control-user <?php if (session('errors.username')) : ?>is-invalid<?php endif ?>" name="username" placeholder="<?= lang('Auth.username') ?>" value="<?= old('username') ?>">
+                                    <input required type="text" id="inputUsername" class="form-control form-control-user <?php if (session('errors.username')) : ?>is-invalid<?php endif ?>" name="username" placeholder="<?= lang('Auth.username') ?>" value="<?= old('username') ?>">
                                 </div>
                             </div>
                         </div>
@@ -147,7 +147,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-key"></i></span>
                                     </div>
-                                    <input type="password" id="inputPassword" name="password" class="form-control form-control-user <?php if (session('errors.password')) : ?>is-invalid<?php endif ?>" placeholder="<?= lang('Auth.password') ?>" autocomplete="off">
+                                    <input required type="password" id="inputPassword" name="password" class="form-control form-control-user <?php if (session('errors.password')) : ?>is-invalid<?php endif ?>" placeholder="<?= lang('Auth.password') ?>" autocomplete="off">
                                 </div>
                             </div>
                         </div>
@@ -158,7 +158,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-key"></i></span>
                                     </div>
-                                    <input type="password" id="inputUlangiPassword" name="pass_confirm" class="form-control form-control-user <?php if (session('errors.pass_confirm')) : ?>is-invalid<?php endif ?>" placeholder="<?= lang('Auth.repeatPassword') ?>" autocomplete="off">
+                                    <input required type="password" id="inputUlangiPassword" name="pass_confirm" class="form-control form-control-user <?php if (session('errors.pass_confirm')) : ?>is-invalid<?php endif ?>" placeholder="<?= lang('Auth.repeatPassword') ?>" autocomplete="off">
                                 </div>
                             </div>
                         </div>

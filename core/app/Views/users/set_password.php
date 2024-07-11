@@ -39,6 +39,7 @@
                 <form action="<?= base_url(); ?>/users/setPassword" method="post">
                     <?= csrf_field() ?>
                     <input type="hidden" name="id" class="id" value="<?= $id; ?>">
+                    <input type="hidden" name="id_mitra" class="id" value="<?= $id_mitra; ?>">
                     <div class="form-group row">
                         <label for="password" class="col-sm-2 col-form-label">Password</label>
                         <div class="col-sm-10">
