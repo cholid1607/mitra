@@ -203,6 +203,7 @@ class Pelanggan extends BaseController
         $nama_pelanggan = !empty($this->request->getVar('nama_pelanggan')) ? $this->request->getVar('nama_pelanggan') : '';
         $nik_pelanggan = !empty($this->request->getVar('nik_pelanggan')) ? $this->request->getVar('nik_pelanggan') : '';
         $alamat_pelanggan = !empty($this->request->getVar('alamat_pelanggan')) ? $this->request->getVar('alamat_pelanggan') : '';
+        $alamat_pemasangan = !empty($this->request->getVar('alamat_pemasangan')) ? $this->request->getVar('alamat_pemasangan') : '';
         if (!empty($this->request->getVar('telp_pelanggan'))) {
             $telp_pelanggan_old = !empty($this->request->getVar('telp_pelanggan')) ? $this->request->getVar('telp_pelanggan') : '';
             $telp_pelanggan = '62' . $telp_pelanggan_old;
@@ -236,6 +237,7 @@ class Pelanggan extends BaseController
             'nama_pelanggan' => $nama_pelanggan,
             'nik_pelanggan' => $nik_pelanggan,
             'alamat_pelanggan' => $alamat_pelanggan,
+            'alamat_pemasangan' => $alamat_pemasangan,
             'telp_pelanggan' => $telp_pelanggan,
             'paket_langganan' => $paket_langganan,
             'bandwidth' => $bandwidth,
@@ -279,6 +281,7 @@ class Pelanggan extends BaseController
         $ceknama_pelanggan = $pelanggan[0]['nama_pelanggan'] == $this->request->getVar('nama_pelanggan') ? '' : ',<br/>Nama Pelanggan <b>' . $pelanggan[0]['nama_pelanggan'] . '</b> menjadi <b>' . $this->request->getVar('nama_pelanggan') . "</b>";
         $ceknik_pelanggan = $pelanggan[0]['nik_pelanggan'] == $this->request->getVar('nik_pelanggan') ? '' : ',<br/>NIK Pelanggan <b>' . $pelanggan[0]['nik_pelanggan'] . '</b> menjadi <b>' . $this->request->getVar('nik_pelanggan') . "</b>";
         $cekalamat_pelanggan = $pelanggan[0]['alamat_pelanggan'] == $this->request->getVar('alamat_pelanggan') ? '' : ',<br/>Alamat Pelanggan <b>' . $pelanggan[0]['alamat_pelanggan'] . '</b> menjadi <b>' . $this->request->getVar('alamat_pelanggan') . "</b>";
+        $cekalamat_pemasangan = $pelanggan[0]['alamat_pemasangan'] == $this->request->getVar('alamat_pemasangan') ? '' : ',<br/>Alamat Pemasangan <b>' . $pelanggan[0]['alamat_pemasangan'] . '</b> menjadi <b>' . $this->request->getVar('alamat_pemasangan') . "</b>";
         $cektelp_pelanggan = $pelanggan[0]['telp_pelanggan'] == $this->request->getVar('telp_pelanggan') ? '' : ',<br/>Telp Pelanggan <b>' . $pelanggan[0]['telp_pelanggan'] . '</b> menjadi <b>' . $this->request->getVar('telp_pelanggan') . "</b>";
         $cekpaket_langganan = $pelanggan[0]['paket_langganan'] == $this->request->getVar('paket_langganan') ? '' : ',<br/>Paket Langganan <b>' . $pelanggan[0]['paket_langganan'] . '</b> menjadi <b>' . $this->request->getVar('paket_langganan') . "</b>";
         $cekbandwidth = $pelanggan[0]['bandwidth'] == $this->request->getVar('bandwidth') ? '' : ',<br/>Bandwidth <b>' . $pelanggan[0]['bandwidth'] . '</b> menjadi <b>' . $this->request->getVar('bandwidth') . "</b>";
@@ -292,6 +295,7 @@ class Pelanggan extends BaseController
         $nama_pelanggan = !empty($this->request->getVar('nama_pelanggan')) ? $this->request->getVar('nama_pelanggan') : $pelanggan[0]['nama_pelanggan'];
         $nik_pelanggan = !empty($this->request->getVar('nik_pelanggan')) ? $this->request->getVar('nik_pelanggan') : $pelanggan[0]['nik_pelanggan'];
         $alamat_pelanggan = !empty($this->request->getVar('alamat_pelanggan')) ? $this->request->getVar('alamat_pelanggan') : $pelanggan[0]['alamat_pelanggan'];
+        $alamat_pemasangan = !empty($this->request->getVar('alamat_pemasangan')) ? $this->request->getVar('alamat_pemasangan') : $pelanggan[0]['alamat_pemasangan'];
         $telp_pelanggan = !empty($this->request->getVar('telp_pelanggan')) ? $this->request->getVar('telp_pelanggan') : $pelanggan[0]['telp_pelanggan'];
         $paket_langganan = !empty($this->request->getVar('paket_langganan')) ? $this->request->getVar('paket_langganan') : $pelanggan[0]['paket_langganan'];
         $bandwidth = !empty($this->request->getVar('bandwidth')) ? $this->request->getVar('bandwidth') : $pelanggan[0]['bandwidth'];
@@ -319,6 +323,7 @@ class Pelanggan extends BaseController
             'nama_pelanggan' => $nama_pelanggan,
             'nik_pelanggan' => $nik_pelanggan,
             'alamat_pelanggan' => $alamat_pelanggan,
+            'alamat_pemasangan' => $alamat_pemasangan,
             'telp_pelanggan' => $telp_pelanggan,
             'paket_langganan' => $paket_langganan,
             'bandwidth' => $bandwidth,
@@ -334,6 +339,7 @@ class Pelanggan extends BaseController
             $ceknama_pelanggan .
             $ceknik_pelanggan .
             $cekalamat_pelanggan .
+            $cekalamat_pemasangan .
             $cektelp_pelanggan .
             $cekpaket_langganan .
             $cekbandwidth .

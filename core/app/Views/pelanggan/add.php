@@ -92,6 +92,17 @@
                             </div>
                         </div>
                         <div class="form-group row">
+                            <label for="alamat" class="col-sm-2 col-form-label">Alamat Pemasangan</label>
+                            <div class="col-sm-10">
+                                <div class="input-group row">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                                    </div>
+                                    <textarea required name="alamat_pemasangan" class="form-control" id="alamat_pemasangan" placeholder="Alamat Pemasangan"><?= old('alamat_pemasangan') ?></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
                             <label for="telepon" class="col-sm-2 col-form-label">Telepon</label>
                             <div class="col-sm-10">
                                 <div class="input-group row">

@@ -17,7 +17,7 @@ class PelangganModel extends Model
 
     protected $allowedFields = [
         'id_pelanggan', 'tgl_registrasi', 'periode', 'id_mitra', 'kode_pelanggan', 'urut', 'nama_pelanggan', 'nik_pelanggan',
-        'alamat_pelanggan', 'telp_pelanggan', 'paket_langganan', 'bandwidth',
+        'alamat_pelanggan', 'alamat_pemasangan', 'telp_pelanggan', 'paket_langganan', 'bandwidth',
         'harga', 'ppn', 'nominal', 'piutang', 'ket_pelanggan', 'status'
     ];
 
