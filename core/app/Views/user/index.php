@@ -43,18 +43,7 @@
                                 <div class="icon">
                                     <i class="fas fa-users"></i>
                                 </div>
-                                <?php if (in_groups('superadmin')) { ?>
-                                    <a href="<?= base_url(); ?>mitra" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                                    <?php } else {
-                                    $username = user()->username;
-                                    $db      = \Config\Database::connect();
-                                    $builder = $db->table('mitra');
-                                    $mitra =  $builder->where('username', $username)->get()->getFirstRow();
-                                    if ($mitra) {
-                                    ?>
-                                    <a href="<?= base_url(); ?>pelanggan/pelangganmitra/<?= $mitra->id_mitra; ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                                <?php }
-                                } ?>
+                                <a href="<?= base_url(); ?>mitra" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                             </div>
                         </div>
                         <div class="col-lg-4 col-6">
@@ -68,18 +57,7 @@
                                 <div class="icon">
                                     <i class="fas fa-user-plus"></i>
                                 </div>
-                                <?php if (in_groups('superadmin')) { ?>
-                                    <a href="<?= base_url(); ?>pelanggan" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                                    <?php } else {
-                                    $username = user()->username;
-                                    $db      = \Config\Database::connect();
-                                    $builder = $db->table('mitra');
-                                    $mitra =  $builder->where('username', $username)->get()->getFirstRow();
-                                    if ($mitra) {
-                                    ?>
-                                        <a href="<?= base_url(); ?>pelanggan/pelangganmitra/<?= $mitra->id_mitra; ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                                <?php }
-                                } ?>
+                                <a href="<?= base_url(); ?>pelanggan" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                             </div>
                         </div>
                         <!-- ./col -->
@@ -348,15 +326,7 @@
                                 <div class="icon">
                                     <i class="fas fa-file-invoice"></i>
                                 </div>
-                                <?php
-                                    $username = user()->username;
-                                    $db      = \Config\Database::connect();
-                                    $builder = $db->table('mitra');
-                                    $mitra =  $builder->where('username', $username)->get()->getFirstRow();
-                                    if ($mitra) {
-                                    ?>
-                                        <a href="<?= base_url(); ?>pelanggan/pelangganmitra/<?= $mitra->id_mitra; ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                                <?php } ?>
+                                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                             </div>
                         </div>
                         <!-- ./col -->
@@ -371,15 +341,7 @@
                                 <div class="icon">
                                     <i class="fas fa-users"></i>
                                 </div>
-                                <?php
-                                    $username = user()->username;
-                                    $db      = \Config\Database::connect();
-                                    $builder = $db->table('mitra');
-                                    $mitra =  $builder->where('username', $username)->get()->getFirstRow();
-                                    if ($mitra) {
-                                    ?>
-                                        <a href="<?= base_url(); ?>pelanggan/pelangganmitra/<?= $mitra->id_mitra; ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                                <?php } ?>
+                                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                             </div>
                         </div>
                     </div>

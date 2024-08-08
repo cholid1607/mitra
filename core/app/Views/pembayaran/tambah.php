@@ -77,7 +77,7 @@
                             <div class="col-sm-4">
                                 <div class="input-group row">
                                     <input type="submit" class="btn btn-success" value="Tambah Metode">&nbsp;&nbsp;
-                                    <a onclick="location.replace('<?= base_url(); ?>mitra')" class="btn btn-default">Kembali</a>
+                                    <a onclick="location.replace('<?= base_url(); ?>pembayaran')" class="btn btn-default">Kembali</a>
                                 </div>
                             </div>
                         </div>

@@ -192,7 +192,18 @@
                             <div class="col-sm-3">
                                 <div class="input-group row">
                                     <input type="submit" class="btn btn-success" value="Update Data">&nbsp;&nbsp;
-                                    <a onclick="location.replace('<?= base_url(); ?>pelanggan')" class=" btn btn-default">Kembali</a>
+                                    <?php if (in_groups('superadmin')) { ?>
+                                        <a onclick="location.replace('<?= base_url(); ?>pelanggan')" class="btn btn-default">Kembali</a>
+                                        <?php } else if (in_groups('mitra')) {
+                                        $username = user()->username;
+                                        $db      = \Config\Database::connect();
+                                        $builder = $db->table('mitra');
+                                        $mitra =  $builder->where('username', $username)->get()->getFirstRow();
+                                        if ($mitra) {
+                                        ?>
+                                            <a onclick="location.replace('<?= base_url(); ?>pelanggan/pelangganmitra/<?= $mitra->id_mitra; ?>')" class="btn btn-default">Kembali</a>
+                                    <?php }
+                                    } ?>
                                 </div>
                             </div>
                         </div>

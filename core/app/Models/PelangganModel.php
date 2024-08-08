@@ -16,9 +16,25 @@ class PelangganModel extends Model
     protected $useSoftDeletes = false;
 
     protected $allowedFields = [
-        'id_pelanggan', 'tgl_registrasi', 'periode', 'id_mitra', 'kode_pelanggan', 'urut', 'nama_pelanggan', 'nik_pelanggan',
-        'alamat_pelanggan', 'alamat_pemasangan', 'telp_pelanggan', 'paket_langganan', 'bandwidth',
-        'harga', 'ppn', 'nominal', 'piutang', 'ket_pelanggan', 'status'
+        'id_pelanggan',
+        'tgl_registrasi',
+        'periode',
+        'id_mitra',
+        'kode_pelanggan',
+        'urut',
+        'nama_pelanggan',
+        'nik_pelanggan',
+        'alamat_pelanggan',
+        'alamat_pemasangan',
+        'telp_pelanggan',
+        'paket_langganan',
+        'bandwidth',
+        'harga',
+        'ppn',
+        'nominal',
+        'piutang',
+        'ket_pelanggan',
+        'status'
     ];
 
     protected $useTimestamps = true;
@@ -46,9 +62,6 @@ class PelangganModel extends Model
         $builder = $this->table('pelanggan');
         if ($builder != '0') {
             $builder = $builder->where('id_mitra', $id);
-        }
-        if ((in_groups('mitra'))) {
-            $builder = $builder->where('status', '1');
         }
         if ($katakunci) {
             $arr_katakunci = explode(" ", $katakunci);
