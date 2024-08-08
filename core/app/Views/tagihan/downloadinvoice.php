@@ -122,13 +122,12 @@
     ?>
         <div class="container">
             <div style="position: fixed; 
-            bottom: 500px; 
+            bottom: 600px; 
             left: 220px;
             z-index: 10000;
             font-size:100px; 
             color: red; 
-            transform:rotate(-30deg);
-            opacity: 0.4;">
+            opacity: 0.6;">
                 <img width="250px" src="t2-watermark.png">
             </div>
             <table width="100%" cellspacing="0">
