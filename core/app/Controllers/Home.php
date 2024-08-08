@@ -102,10 +102,17 @@ class Home extends BaseController
 
         // Format data
         $chart_data = [];
-        foreach ($chart_pelanggan as $row) {
-            $chart_data['values'][] = $row['jumlah'];
-            $chart_data['labels'][] = $row['periode'] . ' (' . $row['jumlah'] . ')';
+        if ($chart_pelanggan != null) {
+            foreach ($chart_pelanggan as $row) {
+
+                $chart_data['values'][] = $row['jumlah'];
+                $chart_data['labels'][] = $row['periode'] . ' (' . $row['jumlah'] . ')';
+            }
+        } else {
+            $chart_data['values'][] = '0';
+            $chart_data['labels'][] = '-';
         }
+
         $data['chart_data'] = $chart_data;
 
         $data['title'] = 'Dashboard';
