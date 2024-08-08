@@ -322,6 +322,11 @@ class Tagihan extends BaseController
         $nama_pelanggan = $piutang['nama_pelanggan'];
         $id_mitra = $piutang['id_mitra'];
 
+        //Ambil Data Billing
+        $builder_billing = $db->table('billing');
+        $billing   = $builder_billing->where('id_mitra', $id_mitra)->get()->getRowObject();
+        $data['billing'] = $billing;
+
         //Ambil Data Mitra
         $builder_mitra = $db->table('mitra');
         $mitra   = $builder_mitra->where('id_mitra', $id_mitra)->get()->getRowArray();
@@ -424,15 +429,30 @@ class Tagihan extends BaseController
         //Cek Total Piutang
         $builder = $db->table('pelanggan');
         $piutang   = $builder->where('id_pelanggan', $id_pelanggan)
-            ->limit(0, 1)
-            ->get()->getResultArray();
-        $alamat = $piutang[0]['alamat_pelanggan'];
-        $telepon = $piutang[0]['telp_pelanggan'];
-        $layanan = $piutang[0]['paket_langganan'];
-        $kode_pelanggan = $piutang[0]['kode_pelanggan'];
-        $nama_pelanggan = $piutang[0]['nama_pelanggan'];
-        $piutang = $piutang[0]['piutang'];
+            ->get()->getRowArray();
+        $id_mitra = $piutang['id_mitra'];
+        $alamat = $piutang['alamat_pelanggan'];
+        $telepon = $piutang['telp_pelanggan'];
+        $layanan = $piutang['paket_langganan'];
+        $kode_pelanggan = $piutang['kode_pelanggan'];
+        $nama_pelanggan = $piutang['nama_pelanggan'];
+        $piutang = $piutang['piutang'];
 
+        //Ambil Data Billing
+        $builder_billing = $db->table('billing');
+        $billing   = $builder_billing->where('id_mitra', $id_mitra)->get()->getRowObject();
+        $data['billing'] = $billing;
+
+        //Ambil Data Mitra
+        $builder_mitra = $db->table('mitra');
+        $mitra   = $builder_mitra->where('id_mitra', $id_mitra)->get()->getRowArray();
+        $data['nama_mitra'] = $mitra['nama_mitra'];
+
+        $qrcode = new Generator;
+        $qrCodes = [];
+        $qrCodes = $qrcode->size(120)->generate('http://103.154.77.102:14045/admin/cekkuitansi/view/' . $id_kuitansi);
+        $html = '<img width="50px" src="data:image/svg+xml;base64,' . base64_encode($qrCodes) . '" ...>';
+        $data['qrcode'] = $html;
 
         $data['kuitansi'] = $kuitansi;
         $data['tagihankuitansi'] = $tagihankuitansi;
@@ -617,7 +637,8 @@ class Tagihan extends BaseController
                 $harga = $row['harga'];
                 $ppn = $row['ppn'];
                 $total_tagihan = $harga + $ppn;
-                $tgl_tagihan_new = $tahun . "-" . $bulan . "-" . 01;
+                $tgl_tagihan_init = $row['tgl_tagihan'];
+                $tgl_tagihan_new = $tahun . "-" . $bulan . "-" . $tgl_tagihan_init;
                 $data = [
                     'id_pelanggan' => $row['id_pelanggan'],
                     'id_mitra' => $id_mitra,
@@ -667,7 +688,7 @@ class Tagihan extends BaseController
                     $bulankirim = 'Desember';
                 }
 
-                $tgl_invoice = $tahun . '-' . $bulan . '-' . 01;
+                $tgl_invoice = $tahun . '-' . $bulan . '-' . $tgl_tagihan_init;
                 $tgl_tempo = date('Y-m-d', strtotime($tgl_invoice . ' + 7 days'));
 
                 $db      = \Config\Database::connect();
@@ -971,7 +992,8 @@ class Tagihan extends BaseController
             $harga = $row['harga'];
             $ppn = $row['ppn'];
             $total_tagihan = $harga + $ppn;
-            $tgl_tagihan_new = $tahun . "-" . $bulan . "-01";
+            $tgl_tagihan_init = $row['tgl_tagihan'];
+            $tgl_tagihan_new = $tahun . "-" . $bulan . "-" . $tgl_tagihan_init;
             $data = [
                 'id_pelanggan' => $row['id_pelanggan'],
                 'id_mitra' => $id_mitra,
@@ -1021,7 +1043,7 @@ class Tagihan extends BaseController
                 $bulankirim = 'Desember';
             }
 
-            $tgl_invoice = $tahun . '-' . $bulan . '-01';
+            $tgl_invoice = $tahun . '-' . $bulan . '-' . $tgl_tagihan_init;
             $tgl_tempo = date('Y-m-d', strtotime($tgl_invoice . ' + 7 days'));
 
             $pelanggan   = $builder->where('id_pelanggan', $row['id_pelanggan'])->get()->getResultArray();

@@ -87,6 +87,55 @@
         </div>
         <!-- /.card -->
         <br />
+        <!-- Default box -->
+        <div class="card">
+            <div class="card-body">
+                <form action="<?= base_url(); ?>pembayaran/ttd" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="id_mitra" value="<?= $row['id_mitra']; ?>">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label for="nama_billing" class="col-sm-2 col-form-label">Nama Billing</label>
+                            <div class="col-sm-10">
+                                <div class="input-group row">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-info-circle"></i></span>
+                                    </div>
+                                    <input style="background-color: #ffffff;" name="nama_billing" value="<?= $billing['nama_billing'] ?>" type="text" value="<?= old('nama_billing') ?>" class="form-control <?php if (session('errors.nama_billing')) : ?>is-invalid<?php endif ?>" id="nama_billing" placeholder="Nama Billing">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="cap" class="col-sm-2 col-form-label">Ttd dan Cap</label>
+                            <div class="col-sm-10">
+                                <?php if ($billing['ttd_cap'] != '') { ?>
+                                    <img style="margin-left:-8px" class="mb-2" src="<?= base_url() ?>/img/cap/<?= $billing['ttd_cap'] ?>" width="200px">
+                                    <i><b>File tersimpan : </b><?= $billing['ttd_cap'] ?></i>
+                                <?php } ?>
+                                <div class="input-group row">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-images"></i></span>
+                                    </div>
+                                    <div class="custom-file">
+                                        <input type="file" onchange="previewImgTtdCap()" name="ttd_cap" class="custom-file-input  <?php if (session('errors.ttd_cap')) : ?>is-invalid<?php endif ?>" id="ttd_cap">
+                                        <label class="custom-file-label ttd_cap_nama" for="ttd_cap">Pilih File Gambar</label>
+                                    </div>
+                                </div>
+                                <i style="font-size:14px;">Kosongkan jika tidak ingin merubah. Ttd dan Cap maksimal memiliki dimensi 300 pixels x 100 pixels</i>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="btn" class="col-sm-2 col-form-label"></label>
+                            <div class="col-sm-4">
+                                <div class="input-group row">
+                                    <input type="submit" class="btn btn-success" value="Update Data">&nbsp;&nbsp;
+                                    <a onclick="location.replace('<?= base_url(); ?>')" class="btn btn-default">Kembali</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </section>
     <!-- /.content -->
 </div>

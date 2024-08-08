@@ -211,7 +211,7 @@
             <div style="position: fixed; 
             bottom: 700px; 
             left: 220px;
-            z-index: 10000;
+            z-index: -10000;
             font-size:100px; 
             color: red; 
             transform:rotate(-30deg);
@@ -323,10 +323,20 @@
                     </td>
                     <td width="50%" class="text-center">
                         <b>PT. TONGGAK TEKNOLOGI NETIKOM</b><br>
-                        <img src="ttd.png" width="40%">
+                        <b><?= $nama_mitra; ?></b><br>
+                        <table width="100%">
+                            <tr>
+                                <td width="60%" class="text-right">
+                                    <img width="60%" src="img/cap/<?= $billing->ttd_cap; ?>">
+                                </td>
+                                <td width="40%" valign="bottom">
+                                    <?= $qrcode; ?>
+                                </td>
+                            </tr>
+                        </table>
                         <br />
-                        <b>Mei Wulan</b>
-                        <br />
+                        </br>
+                        <b><?= $billing->nama_billing ?></b><br />
                         <b>Finance & Billing</b>
                     </td>
                 </tr>

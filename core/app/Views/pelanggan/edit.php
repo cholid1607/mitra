@@ -60,6 +60,17 @@
                                 </div>
                             </div>
                             <div class="form-group row">
+                                <label for="tgl_tagihan" class="col-sm-2 col-form-label">Tanggal Tagihan</label>
+                                <div class="col-sm-10">
+                                    <div class="input-group row">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                                        </div>
+                                        <input required name="tgl_tagihan" value="<?= $pelanggan['tgl_tagihan']; ?>" type="number" value="<?= old('tgl_tagihan') ?>" class="form-control" id="tgl_tagihan" placeholder="Cukup Tuliskan Tanggal Saja">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
                                 <label for="namapelanggan" class="col-sm-2 col-form-label">Nama Pelanggan</label>
                                 <div class="col-sm-10">
                                     <div class="input-group row">

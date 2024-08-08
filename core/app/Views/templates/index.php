@@ -1071,6 +1071,14 @@
             logolabel.textContent = logo.files[0].name;
         }
     </script>
+    <!-- Script Image Preview -->
+    <script>
+        function previewImgTtdCap() {
+            const logo = document.querySelector('#ttd_cap');
+            const logolabel = document.querySelector('.ttd_cap_nama');
+            logolabel.textContent = logo.files[0].name;
+        }
+    </script>
 
 </body>
 

@@ -55,7 +55,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-users"></i></span>
                                     </div>
-                                    <input disabled style="background-color: #ffffff;" name="kode_mitra_pelanggan" value="<?= $mitra[0]['kode_mitra_pelanggan'] ?>" type="text" value="<?= old('kode_mitra_pelanggan') ?>" class="form-control <?php if (session('errors.kode_mitra_pelanggan')) : ?>is-invalid<?php endif ?>" id="kode_mitra_pelanggan" placeholder="Kode Mitra Pelanggan">
+                                    <input style="background-color: #ffffff;" name="kode_mitra_pelanggan" value="<?= $mitra[0]['kode_mitra_pelanggan'] ?>" type="text" value="<?= old('kode_mitra_pelanggan') ?>" class="form-control <?php if (session('errors.kode_mitra_pelanggan')) : ?>is-invalid<?php endif ?>" id="kode_mitra_pelanggan" placeholder="Kode Mitra Pelanggan">
                                 </div>
                             </div>
                         </div>

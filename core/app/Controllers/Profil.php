@@ -41,18 +41,21 @@ class Profil extends BaseController
         $id_mitra = $this->request->getVar('id_mitra');
         $mitra = $mitraModel->where('id_mitra', $id_mitra)->findAll();
 
+        $cekkode_mitra_pelanggan = $mitra[0]['kode_mitra_pelanggan'] == $this->request->getVar('kode_mitra_pelanggan') ? '' : ',<br/>Kode Mitra Pelanggan <b>' . $mitra[0]['kode_mitra_pelanggan'] . '</b> menjadi <b>' . $this->request->getVar('kode_mitra_pelanggan') . "</b>";
         $ceknama_mitra = $mitra[0]['nama_mitra'] == $this->request->getVar('nama_users') ? '' : ',<br/>Nama Mitra <b>' . $mitra[0]['nama_mitra'] . '</b> menjadi <b>' . $this->request->getVar('nama_users') . "</b>";
         $cekpenanggung_jawab = $mitra[0]['penanggung_jawab'] == $this->request->getVar('penanggung_jawab') ? '' : ',<br/>Penanggungjawab <b>' . $mitra[0]['penanggung_jawab'] . '</b> menjadi <b>' . $this->request->getVar('penanggung_jawab') . "</b>";
         $cekalamat = $mitra[0]['alamat'] == $this->request->getVar('alamat') ? '' : ',<br/>Alamat <b>' . $mitra[0]['alamat'] . '</b> menjadi <b>' . $this->request->getVar('alamat') . "</b>";
         $cektelepon = $mitra[0]['telepon'] == $this->request->getVar('telepon') ? '' : ',<br/>Telepon <b>' . $mitra[0]['telepon'] . '</b> menjadi <b>' . $this->request->getVar('telepon') . "</b>";
         $cekemail = $mitra[0]['email'] == $this->request->getVar('email') ? '' : ',<br/>Email <b>' . $mitra[0]['email'] . '</b> menjadi <b>' . $this->request->getVar('email') . "</b>";
 
+        $kode_mitra_pelanggan = !empty($this->request->getVar('kode_mitra_pelanggan')) ? $this->request->getVar('kode_mitra_pelanggan') : $mitra[0]['kode_mitra_pelanggan'];
         $nama_mitra = !empty($this->request->getVar('nama_users')) ? $this->request->getVar('nama_users') : $mitra[0]['nama_mitra'];
         $penanggung_jawab = !empty($this->request->getVar('penanggung_jawab')) ? $this->request->getVar('penanggung_jawab') : $mitra[0]['penanggung_jawab'];
         $alamat = !empty($this->request->getVar('alamat')) ? $this->request->getVar('alamat') : $mitra[0]['alamat'];
         $telepon = !empty($this->request->getVar('telepon')) ? $this->request->getVar('telepon') : $mitra[0]['telepon'];
 
         $deskripsi = $username . " mengupdate mitra <b>" . $this->request->getVar('nama_users') . "</b>" .
+            $cekkode_mitra_pelanggan .
             $ceknama_mitra .
             $cekpenanggung_jawab .
             $cekalamat .
@@ -65,7 +68,7 @@ class Profil extends BaseController
         if (!empty($fileLogo->getTempName())) {
             // Menghapus Gambar Lama
 
-            $file_path = base_url() . '/img/logo/' . $mitra[0]['logo'];
+            $file_path = 'img/logo/' . $mitra[0]['logo'];
             if (file_exists($file_path)) {
                 unlink($file_path);
             }
@@ -81,6 +84,7 @@ class Profil extends BaseController
 
         $data = [
             'id_mitra' => $id_mitra,
+            'kode_mitra_pelanggan' => $kode_mitra_pelanggan,
             'nama_mitra' => $nama_mitra,
             'penanggung_jawab' => $penanggung_jawab,
             'alamat' => $alamat,
@@ -96,6 +100,23 @@ class Profil extends BaseController
             'id_mitra' => $this->request->getVar('id_mitra'),
         ];
         $mitraModel->save($data);
+
+        //Update Data Pelanggan di tabel lain
+        //=======================================
+        $db      = \Config\Database::connect();
+        $pelanggan_mitra =  $db->table('pelanggan')->select('id_pelanggan, kode_pelanggan, urut')
+            ->where('id_mitra', $id_mitra)->get()->getResultArray();
+        $builder_inv = $db->table('invoice');
+        $builder_tagihan = $db->table('tagihan');
+        $builder_pelanggan = $db->table('pelanggan');
+        //Tabel Invoice
+        foreach ($pelanggan_mitra as $row) {
+            $urut_baru = str_pad($row['urut'], 4, "0", STR_PAD_LEFT);
+            $kode_pelanggan = $kode_mitra_pelanggan . '-' . $urut_baru;
+            $builder_pelanggan->set('kode_pelanggan', $kode_pelanggan)->where('id_pelanggan', $row['id_pelanggan'])->update();
+            $builder_inv->set('kode_pelanggan', $kode_pelanggan)->where('id_pelanggan', $row['id_pelanggan'])->update();
+            $builder_tagihan->set('kode_pelanggan', $kode_pelanggan)->where('id_pelanggan', $row['id_pelanggan'])->update();
+        }
         if (
             $ceknama_mitra != '' || $cekpenanggung_jawab != '' || $cekalamat != '' ||
             $cektelepon != ''

@@ -20,13 +20,23 @@ class Pembayaran extends BaseController
         //DB Connect dan Model Loader
         $db      = \Config\Database::connect();
         $builder = $db->table('mitra');
+        $builder_billing = $db->table('billing');
         $mitra = $builder->where('username', $username)->get()->getFirstRow();
         $id_mitra = $mitra->id_mitra;
+        $billing = $builder_billing->where('id_mitra', $id_mitra)->get()->getRowArray();
+        if ($billing == null) {
+            $billing = [
+                'nama_billing' => '',
+                'ttd_cap' => '',
+                'id_mitra' => $id_mitra,
+            ];
+        }
 
         $builder_pembayaran = $db->table('pembayaran');
         $pembayaran = $builder_pembayaran->where('id_mitra', $id_mitra)->get()->getResultArray();
         $data = [
             'pembayaran' => $pembayaran,
+            'billing' => $billing,
             'id_mitra' => $id_mitra,
             'menu' => 'jurnal',
             'title' => 'Kelola Metode Pembayaran',
@@ -185,5 +195,73 @@ class Pembayaran extends BaseController
         $pembayaranModel->delete($id_pembayaran);
         session()->setFlashdata('pesan', 'Data Berhasil Dihapus');
         return redirect()->to('/pembayaran');
+    }
+    public function ttd()
+    {
+        $db      = \Config\Database::connect();
+        $logModel = new LogModel();
+        $username = user()->username;
+        $id_mitra = $this->request->getVar('id_mitra');
+        $nama_billing = $this->request->getVar('nama_billing');
+        $builder_billing = $db->table('billing')->where('id_mitra', $id_mitra)->get()->getRowArray();
+        if ($builder_billing == null) {
+            //ambil gambar
+            $fileLogo = $this->request->getFile('ttd_cap');
+            //dd($fileLogo);
+            //pindahkan file gambar
+            if (!empty($fileLogo->getTempName())) {
+                $ext = $fileLogo->getExtension();
+                $namaasli = $fileLogo->getRandomName();
+                // generate nama file
+                $namaFile = date('Y-m-d') . ' - ' . $nama_billing . ' - ' . $namaasli;
+                $fileLogo->move('img/cap', $namaFile);
+            } else {
+                $namaFile = '';
+            }
+
+            $data = [
+                'id_mitra' => $id_mitra,
+                'nama_billing' => $nama_billing,
+                'ttd_cap' => $namaFile,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
+            ];
+            $db->table('billing')->insert($data);
+            session()->setFlashdata('pesan', 'Data Berhasil Disimpan');
+            return redirect()->to(base_url('/pembayaran'));
+        } else {
+            $id_billing = $builder_billing['id_billing'];
+            $ttd_cap_old = $builder_billing['ttd_cap'];
+            //ambil gambar
+            $fileLogo = $this->request->getFile('ttd_cap');
+            //dd($fileLogo);
+            //pindahkan file gambar
+            if (!empty($fileLogo->getTempName())) {
+                // Menghapus Gambar Lama
+
+                $file_path = 'img/cap/' . $ttd_cap_old;
+                if (file_exists($file_path)) {
+                    unlink($file_path);
+                }
+
+                $ext = $fileLogo->getExtension();
+                $namaasli = $fileLogo->getRandomName();
+                // generate nama file
+                $namaFile = date('Y-m-d') . ' - ' . $nama_billing . ' - ' . $namaasli;
+                $fileLogo->move('img/cap', $namaFile);
+            } else {
+                $namaFile = $ttd_cap_old;
+            }
+            $data = [
+                'id_billing' => $id_billing,
+                'id_mitra' => $id_mitra,
+                'nama_billing' => $nama_billing,
+                'ttd_cap' => $namaFile,
+                'updated_at' => date('Y-m-d H:i:s')
+            ];
+            $db->table('billing')->update($data);
+            session()->setFlashdata('pesan', 'Data Berhasil Disimpan');
+            return redirect()->to(base_url('/pembayaran'));
+        }
     }
 }

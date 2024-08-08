@@ -201,6 +201,7 @@ class Pelanggan extends BaseController
         }
 
         $nama_pelanggan = !empty($this->request->getVar('nama_pelanggan')) ? $this->request->getVar('nama_pelanggan') : '';
+        $tgl_tagihan = !empty($this->request->getVar('tgl_tagihan')) ? $this->request->getVar('tgl_tagihan') : '';
         $nik_pelanggan = !empty($this->request->getVar('nik_pelanggan')) ? $this->request->getVar('nik_pelanggan') : '';
         $alamat_pelanggan = !empty($this->request->getVar('alamat_pelanggan')) ? $this->request->getVar('alamat_pelanggan') : '';
         $alamat_pemasangan = !empty($this->request->getVar('alamat_pemasangan')) ? $this->request->getVar('alamat_pemasangan') : '';
@@ -231,6 +232,7 @@ class Pelanggan extends BaseController
         $data = [
             'kode_pelanggan' => $kode_pelanggan,
             'tgl_registrasi' => date('Y-m-d'),
+            'tgl_tagihan' => $tgl_tagihan,
             'periode' => $periode,
             'id_mitra' => $id_mitra,
             'urut' => $urut,
@@ -279,6 +281,7 @@ class Pelanggan extends BaseController
         $harganew = str_replace(',', '', $this->request->getVar('harga'));
         $cekkode_pelanggan = $pelanggan[0]['kode_pelanggan'] == $this->request->getVar('kode_pelanggan') ? '' : ',<br/>Kode Pelanggan <b>' . $pelanggan[0]['kode_pelanggan'] . '</b> menjadi <b>' . $this->request->getVar('kode_pelanggan') . "</b>";
         $ceknama_pelanggan = $pelanggan[0]['nama_pelanggan'] == $this->request->getVar('nama_pelanggan') ? '' : ',<br/>Nama Pelanggan <b>' . $pelanggan[0]['nama_pelanggan'] . '</b> menjadi <b>' . $this->request->getVar('nama_pelanggan') . "</b>";
+        $cektgl_tagihan = $pelanggan[0]['tgl_tagihan'] == $this->request->getVar('tgl_tagihan') ? '' : ',<br/>Tanggal Tagihan <b>' . $pelanggan[0]['tgl_tagihan'] . '</b> menjadi <b>' . $this->request->getVar('tgl_tagihan') . "</b>";
         $ceknik_pelanggan = $pelanggan[0]['nik_pelanggan'] == $this->request->getVar('nik_pelanggan') ? '' : ',<br/>NIK Pelanggan <b>' . $pelanggan[0]['nik_pelanggan'] . '</b> menjadi <b>' . $this->request->getVar('nik_pelanggan') . "</b>";
         $cekalamat_pelanggan = $pelanggan[0]['alamat_pelanggan'] == $this->request->getVar('alamat_pelanggan') ? '' : ',<br/>Alamat Pelanggan <b>' . $pelanggan[0]['alamat_pelanggan'] . '</b> menjadi <b>' . $this->request->getVar('alamat_pelanggan') . "</b>";
         $cekalamat_pemasangan = $pelanggan[0]['alamat_pemasangan'] == $this->request->getVar('alamat_pemasangan') ? '' : ',<br/>Alamat Pemasangan <b>' . $pelanggan[0]['alamat_pemasangan'] . '</b> menjadi <b>' . $this->request->getVar('alamat_pemasangan') . "</b>";
@@ -293,6 +296,7 @@ class Pelanggan extends BaseController
 
         $kode_pelanggan = !empty($this->request->getVar('kode_pelanggan')) ? $this->request->getVar('kode_pelanggan') : $pelanggan[0]['kode_pelanggan'];
         $nama_pelanggan = !empty($this->request->getVar('nama_pelanggan')) ? $this->request->getVar('nama_pelanggan') : $pelanggan[0]['nama_pelanggan'];
+        $tgl_tagihan = !empty($this->request->getVar('tgl_tagihan')) ? $this->request->getVar('tgl_tagihan') : $pelanggan[0]['tgl_tagihan'];
         $nik_pelanggan = !empty($this->request->getVar('nik_pelanggan')) ? $this->request->getVar('nik_pelanggan') : $pelanggan[0]['nik_pelanggan'];
         $alamat_pelanggan = !empty($this->request->getVar('alamat_pelanggan')) ? $this->request->getVar('alamat_pelanggan') : $pelanggan[0]['alamat_pelanggan'];
         $alamat_pemasangan = !empty($this->request->getVar('alamat_pemasangan')) ? $this->request->getVar('alamat_pemasangan') : $pelanggan[0]['alamat_pemasangan'];
@@ -320,6 +324,7 @@ class Pelanggan extends BaseController
             'id_pelanggan' => $this->request->getVar('id_pelanggan'),
             'id_mitra' => $id_mitra,
             'kode_pelanggan' => $kode_pelanggan,
+            'tgl_tagihan' => $tgl_tagihan,
             'nama_pelanggan' => $nama_pelanggan,
             'nik_pelanggan' => $nik_pelanggan,
             'alamat_pelanggan' => $alamat_pelanggan,
@@ -335,6 +340,7 @@ class Pelanggan extends BaseController
         $deskripsi = $username . " mengupdate pelanggan " . $this->request->getVar('kode_pelanggan') . " a.n " .
             $this->request->getVar('nama_pelanggan') .
             $cekkode_pelanggan .
+            $cektgl_tagihan .
             $ceknama_mitra .
             $ceknama_pelanggan .
             $ceknik_pelanggan .
