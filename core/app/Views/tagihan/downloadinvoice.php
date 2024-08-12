@@ -151,63 +151,80 @@
             <h3>INVOICE BILL<br /></h3>
             <table width="100%" valign="top">
                 <tr valign="top">
-                    <td valign="top" width="10%">Kepada</td>
-                    <td valign="top" width="5%" class="text-right">:</td>
-                    <td valign="top" width="35%"><?= $row['nama_pelanggan']; ?></td>
-                    <td rowspan="4" valign="top" width="15%">
-                        No. Invoice<br />
-                        Tanggal Invoice<br />
-                        Jatuh Tempo<br />
-                        ID Pelanggan<br />
+                    <td width="50%">
+                        <table>
+                            <tr>
+                                <td valign="top">Nama Pelanggan</td>
+                                <td valign="top">:</td>
+                                <td valign="top"><?= $row['nama_pelanggan']; ?></td>
+                            </tr>
+                            <tr valign="top">
+                                <td valign="top">Alamat</td>
+                                <td valign="top" class="text-right">:</td>
+                                <td valign="top"><?= $alamat; ?></td>
+                            </tr>
+                            <tr valign="top">
+                                <td valign="top">Telepon</td>
+                                <td valign="top" class="text-right">:</td>
+                                <td valign="top"><?= $telepon; ?></td>
+                            </tr>
+                        </table>
                     </td>
-                    <td rowspan="4" valign="top" class="text-right" width="5%">
-                        :<br />
-                        :<br />
-                        :<br />
-                        :<br />
-                    </td>
-                    <td rowspan="4" valign="top" width="30%">
-                        <?= $row['no_invoice']; ?><br />
-                        <?php
-                        function tgl_indo($tanggal)
-                        {
-                            $bulan = array(
-                                1 =>   'Januari',
-                                'Februari',
-                                'Maret',
-                                'April',
-                                'Mei',
-                                'Juni',
-                                'Juli',
-                                'Agustus',
-                                'September',
-                                'Oktober',
-                                'November',
-                                'Desember'
-                            );
-                            $pecahkan = explode('-', $tanggal);
+                    <td width="50%">
+                        <table>
+                            <tr>
+                                <td>No. Invoice</td>
+                                <td>:</td>
+                                <td><?= $row['no_invoice']; ?></td>
+                            </tr>
+                            <tr>
+                                <td>Tanggal Invoice</td>
+                                <td>:</td>
+                                <td>
+                                    <?php
+                                    function tgl_indo($tanggal)
+                                    {
+                                        $bulan = array(
+                                            1 =>   'Januari',
+                                            'Februari',
+                                            'Maret',
+                                            'April',
+                                            'Mei',
+                                            'Juni',
+                                            'Juli',
+                                            'Agustus',
+                                            'September',
+                                            'Oktober',
+                                            'November',
+                                            'Desember'
+                                        );
+                                        $pecahkan = explode('-', $tanggal);
 
-                            // variabel pecahkan 0 = tanggal
-                            // variabel pecahkan 1 = bulan
-                            // variabel pecahkan 2 = tahun
+                                        // variabel pecahkan 0 = tanggal
+                                        // variabel pecahkan 1 = bulan
+                                        // variabel pecahkan 2 = tahun
 
-                            return $pecahkan[2] . ' ' . $bulan[(int)$pecahkan[1]] . ' ' . $pecahkan[0];
-                        }
-                        ?>
-                        <?= tgl_indo($row['tgl_invoice']); ?><br />
-                        <?= tgl_indo($row['tgl_jatuhtempo']); ?><br />
-                        <?= $row['kode_pelanggan']; ?><br />
+                                        return $pecahkan[2] . ' ' . $bulan[(int)$pecahkan[1]] . ' ' . $pecahkan[0];
+                                    }
+                                    ?>
+                                    <?= tgl_indo($row['tgl_invoice']); ?><br />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Jatuh Tempo</td>
+                                <td>:</td>
+                                <td><?= tgl_indo($row['tgl_jatuhtempo']); ?></td>
+                            </tr>
+                            <tr>
+                                <td>ID Pelanggan</td>
+                                <td>:</td>
+                                <td><?= $row['kode_pelanggan']; ?></td>
+                            </tr>
+                        </table>
+                        <br />
+                        <br />
+                        <br />
                     </td>
-                </tr>
-                <tr valign="top">
-                    <td valign="top">Alamat</td>
-                    <td valign="top" class="text-right">:</td>
-                    <td valign="top"><?= $alamat; ?></td>
-                </tr>
-                <tr valign="top">
-                    <td valign="top">Telepon</td>
-                    <td valign="top" class="text-right">:</td>
-                    <td valign="top"><?= $telepon; ?></td>
                 </tr>
             </table>
             <br /><br />
@@ -340,8 +357,10 @@
                                         foreach ($pembayaran as $pembayaran) :
                                         ?>
                                             <li>
-                                                <b><?= $pembayaran['nama_bank']; ?></b> <br />
-                                                <?php if ($pembayaran['nama_bank'] != 'Tunai') { ?>
+                                                <?php if (($pembayaran['nama_bank'] == 'Tunai') || ($pembayaran['nama_bank'] == 'TUNAI')) { ?>
+                                                    <b><?= $pembayaran['nama_bank']; ?></b> <br />
+                                                <?php } else { ?>
+                                                    <b><?= $pembayaran['nama_bank']; ?></b> <br />
                                                     No. Rek <i class="rekening"><?= $pembayaran['rekening']; ?></i><br />
                                                     Atas nama <?= $pembayaran['atas_nama']; ?>
                                                 <?php } ?>
@@ -358,7 +377,11 @@
                         <table width="100%">
                             <tr>
                                 <td width="60%" class="text-right">
-                                    <img width="60%" src="img/cap/<?= $billing->ttd_cap; ?>">
+                                    <?php if ($billing != null) { ?>
+                                        <img width="60%" src="img/cap/<?= $billing->ttd_cap; ?>">
+                                    <?php } else { ?>
+                                        <img width="60%" src="ttd.png">
+                                    <?php } ?>
                                 </td>
                                 <td width="40%" valign="bottom">
                                     <?= $qrcode; ?>
@@ -367,7 +390,13 @@
                         </table>
                         <br />
                         </br>
-                        <b><?= $billing->nama_billing ?></b>
+                        <b>
+                            <?php if ($billing != null) { ?>
+                                <?= $billing->nama_billing ?>
+                            <?php } else { ?>
+                                Finance & Billing
+                            <?php } ?>
+                        </b>
                     </td>
                 </tr>
             </table>

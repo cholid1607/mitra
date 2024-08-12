@@ -311,10 +311,10 @@
                                         <input type="checkbox" <?= $row['id_pembayaran'] == $pembayaran['id_pembayaran'] ? 'checked' : ''; ?>>
                                     </td>
                                     <td>
-                                        <?php if ($pembayaran['nama_bank'] != 'Tunai') {
-                                            echo $pembayaran['nama_bank'] . " a.n " . $pembayaran['atas_nama'];
-                                        } else {
+                                        <?php if (($pembayaran['nama_bank'] == 'Tunai') || ($pembayaran['nama_bank'] == 'TUNAI')) {
                                             echo $pembayaran['nama_bank'];
+                                        } else {
+                                            echo $pembayaran['nama_bank'] . " a.n " . $pembayaran['atas_nama'];
                                         } ?>
                                     </td>
                                 </tr>
@@ -327,7 +327,11 @@
                         <table width="100%">
                             <tr>
                                 <td width="60%" class="text-right">
-                                    <img width="60%" src="img/cap/<?= $billing->ttd_cap; ?>">
+                                    <?php if ($billing != null) { ?>
+                                        <img width="60%" src="img/cap/<?= $billing->ttd_cap; ?>">
+                                    <?php } else { ?>
+                                        <img width="60%" src="ttd.png">
+                                    <?php } ?>
                                 </td>
                                 <td width="40%" valign="bottom">
                                     <?= $qrcode; ?>
@@ -336,8 +340,11 @@
                         </table>
                         <br />
                         </br>
-                        <b><?= $billing->nama_billing ?></b><br />
-                        <b>Finance & Billing</b>
+                        <?php if ($billing != null) { ?>
+                            <?= $billing->nama_billing ?>
+                        <?php } else { ?>
+                            Finance & Billing
+                        <?php } ?>
                     </td>
                 </tr>
             </table>
