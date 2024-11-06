@@ -61,14 +61,15 @@ class PelangganModel extends Model
     function searchAndDisplay($katakunci = null, $id = 0, $start = 0, $length = 0)
     {
         $builder = $this->table('pelanggan');
-        if ($builder != '0') {
-            $builder = $builder->where('id_mitra', $id);
-        }
+        $builder = $builder->where('id_mitra', $id);
         if ($katakunci) {
             $arr_katakunci = explode(" ", $katakunci);
             for ($x = 0; $x < count($arr_katakunci); $x++) {
-                $builder = $builder->like('nama_pelanggan', $arr_katakunci[$x]);
-                $builder = $builder->orLike('kode_pelanggan', $arr_katakunci[$x]);
+                // Add keyword search conditions with orLike
+                $builder = $builder->groupStart()
+                    ->like('nama_pelanggan', $arr_katakunci[$x])
+                    ->orLike('kode_pelanggan', $arr_katakunci[$x])
+                    ->groupEnd();
             }
         }
         if ($start != 0 || $length != 0) {

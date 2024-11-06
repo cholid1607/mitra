@@ -755,4 +755,36 @@ class Mitra extends BaseController
         ob_end_clean();
         $writer->save('php://output');
     }
+
+    public function reset()
+    {
+        $id_mitra = $this->request->getVar('id_mitra');
+        $db = \Config\Database::connect();
+        $builder_tagihan = $db->table('pelanggan');
+        $pelanggan = $builder_tagihan->where('id_mitra', $id_mitra)->get()->getResultArray();
+        foreach ($pelanggan as $pelanggan) {
+            $id_pelanggan = $pelanggan['id_pelanggan'];
+            //Delete invoice
+            $builder_invoice = $db->table('invoice');
+            $builder_invoice->where('id_pelanggan', $id_pelanggan);
+            $builder_invoice->delete();
+
+            //Delete Tagihan
+            $builder_tagihan = $db->table('tagihan');
+            $builder_tagihan->where('id_pelanggan', $id_pelanggan);
+            $builder_tagihan->delete();
+
+            //Delete Kuitansi
+            $builder_kuitansi = $db->table('kuitansi');
+            $builder_kuitansi->where('id_pelanggan', $id_pelanggan);
+            $builder_kuitansi->delete();
+
+            //Delete Tagihan Kuitansi
+            $builder_tag_kuitansi = $db->table('tagihan_kuitansi');
+            $builder_tag_kuitansi->where('id_pelanggan', $id_pelanggan);
+            $builder_tag_kuitansi->delete();
+        }
+        session()->setFlashdata('pesan', 'Data Mitra Berhasil Direset');
+        return redirect()->to('/mitra');
+    }
 }

@@ -67,10 +67,11 @@ class Profil extends BaseController
         //pindahkan file gambar
         if (!empty($fileLogo->getTempName())) {
             // Menghapus Gambar Lama
-
-            $file_path = 'img/logo/' . $mitra[0]['logo'];
-            if (file_exists($file_path)) {
-                unlink($file_path);
+            if ($mitra[0]['logo'] != null || $mitra[0]['logo'] != '') {
+                $file_path = 'img/logo/' . $mitra[0]['logo'];
+                if (file_exists($file_path)) {
+                    unlink($file_path);
+                }
             }
 
             $ext = $fileLogo->getExtension();
